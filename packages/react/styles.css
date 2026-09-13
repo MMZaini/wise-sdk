@@ -1,0 +1,30 @@
+.wise-card {
+  --wise-text: #1c3020;
+  --wise-muted: #566258;
+  --wise-border: #dce3dc;
+  --wise-surface: #fff;
+  --wise-accent: #315e22;
+  box-sizing: border-box;
+  color: var(--wise-text);
+  background: var(--wise-surface);
+  border: 1px solid var(--wise-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  min-width: 0;
+}
+.wise-card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.wise-card-header h2 { margin: 0; font-size: 1.1rem; font-weight: 650; overflow-wrap: anywhere; }
+.wise-currency { color: var(--wise-accent, #315e22); background: #ecf5df; padding: .3rem .55rem; border-radius: .4rem; font-size: .75rem; font-weight: 650; }
+.wise-balance { color: var(--wise-text, #1c3020); padding: 1.7rem 0; }
+.wise-label { color: var(--wise-muted, #566258); margin: 0 0 .4rem; font-size: .85rem; }
+.wise-balance-value { margin: 0; font-size: clamp(1.6rem, 5vw, 2rem); font-weight: 600; letter-spacing: -.04em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.wise-receive-option + .wise-receive-option { margin-top: 1.5rem; }
+.wise-receive-option h3 { margin: 0 0 .8rem; font-size: .85rem; font-weight: 650; }
+.wise-details { margin: 0; color: var(--wise-text, #1c3020); }
+.wise-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 1rem; padding: .8rem 0; border-top: 1px solid var(--wise-border, #dce3dc); font-size: .875rem; }
+.wise-detail dt { color: var(--wise-muted, #566258); overflow-wrap: anywhere; }
+.wise-detail dd { margin: 0; text-align: right; white-space: pre-line; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; min-width: 0; }
+.wise-empty, .wise-state { color: var(--wise-muted, #566258); font-size: .875rem; }
+.wise-state { padding: 2rem 0; }
+.wise-card-footer { border-top: 1px solid var(--wise-border); margin-top: .25rem; padding-top: 1.15rem; font-size: .875rem; }
