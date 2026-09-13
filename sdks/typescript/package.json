@@ -1,0 +1,64 @@
+{
+  "name": "@mmzaini/wise-sdk",
+  "version": "0.1.0",
+  "description": "Typed TypeScript client for the Wise Platform API",
+  "license": "MIT",
+  "author": "MMZaini",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMZaini/wise-sdk.git",
+    "directory": "sdks/typescript"
+  },
+  "homepage": "https://github.com/MMZaini/wise-sdk#readme",
+  "bugs": "https://github.com/MMZaini/wise-sdk/issues",
+  "keywords": [
+    "wise",
+    "transferwise",
+    "payments",
+    "sdk",
+    "typescript"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json && node ../../scripts/cjs-types.mjs sdks/typescript",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.2",
+    "tsup": "8.5.1",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "esbuild": "^0.28.2"
+  }
+}

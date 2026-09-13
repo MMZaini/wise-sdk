@@ -29,7 +29,7 @@ for (const [path, item] of Object.entries(spec.paths)) {
     assert(!names.has(qualified), `Duplicate SDK name: ${qualified}`);
     assert(operation.operationId && !ids.has(operation.operationId), "Missing or duplicate operation ID");
     names.add(qualified); ids.add(operation.operationId);
-    if (!["get", "head", "options"].includes(method)) {
+    if (!["get", "head", "options"].includes(method) || [].concat(group).includes("simulations")) {
       assert.equal(override["x-fern-retries"]?.disabled, true, `Disable retries for ${operation.operationId}`);
     }
     const server = override["x-fern-server-name"];

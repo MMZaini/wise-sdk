@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { readdir, readFile, rm } from "node:fs/promises";
 import { resolve, sep } from "node:path";
+import { postprocess } from "./postprocess.mjs";
 
 const groups = process.argv.slice(2);
 if (!groups.length) groups.push("typescript", "python");
@@ -28,4 +29,5 @@ for (const group of groups) {
     if (!target.startsWith(directory + sep)) throw new Error("Generation cleanup escaped its output directory");
     await rm(target, { force: true, recursive: true });
   }
+  await postprocess(group);
 }

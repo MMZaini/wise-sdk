@@ -1,0 +1,12 @@
+export type { CheckVerificationStatusProfilesRequest } from "./CheckVerificationStatusProfilesRequest.js";
+export type { CloseUpdateWindowProfilesRequest } from "./CloseUpdateWindowProfilesRequest.js";
+export { CreateBusinessProfilesRequest } from "./CreateBusinessProfilesRequest.js";
+export type { CreatePersonalProfilesRequest } from "./CreatePersonalProfilesRequest.js";
+export { CreateVerificationDocumentProfilesRequest } from "./CreateVerificationDocumentProfilesRequest.js";
+export type { GetBusinessRepresentativeProfilesRequest } from "./GetBusinessRepresentativeProfilesRequest.js";
+export type { GetProfilesRequest } from "./GetProfilesRequest.js";
+export type { OpenUpdateWindowProfilesRequest } from "./OpenUpdateWindowProfilesRequest.js";
+export { UpdateBusinessProfilesRequest } from "./UpdateBusinessProfilesRequest.js";
+export { UpdateBusinessRepresentativeProfilesRequest } from "./UpdateBusinessRepresentativeProfilesRequest.js";
+export type { UpdatePersonalProfilesRequest } from "./UpdatePersonalProfilesRequest.js";
+export { UpdateVerificationDocumentProfilesRequest } from "./UpdateVerificationDocumentProfilesRequest.js";

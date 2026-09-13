@@ -1085,6 +1085,8 @@ paths:
       x-fern-server-name: api
       security:
         - AccessToken: []
+      x-fern-retries:
+        disabled: true
   /simulation/transfers/{transferId}/payout-failure:
     post:
       x-fern-sdk-group-name: simulations
@@ -1155,6 +1157,8 @@ paths:
       x-fern-server-name: api
       security:
         - AccessToken: []
+      x-fern-retries:
+        disabled: true
   /simulation/spend/profiles/{profileId}/cards/{cardToken}/production:
     post:
       x-fern-sdk-group-name: simulations
@@ -1171,6 +1175,8 @@ paths:
       x-fern-server-name: api
       security:
         - AccessToken: []
+      x-fern-retries:
+        disabled: true
   /simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements/add:
     post:
       x-fern-sdk-group-name: simulations
