@@ -77,8 +77,8 @@ Read calls may retry twice on transient failure. Writes, OAuth exchanges and
 state-changing simulations never retry automatically. `401`, `403` and `409`
 responses are returned to the caller. Redirects are not followed.
 
-TypeScript's default 60-second deadline covers retries and buffered response
-bodies. Download streams remain the caller's responsibility after response
+TypeScript's default 60-second deadline covers token and header suppliers, retries
+and buffered response bodies. Download streams remain the caller's responsibility after response
 headers arrive; pass an `AbortSignal` that covers the entire download when needed.
 Python uses HTTPX's per-phase timeouts; a complete operation can take longer when
 it retries. A supplied Python HTTP client's timeout is retained unless overridden.

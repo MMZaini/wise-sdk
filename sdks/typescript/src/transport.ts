@@ -1,5 +1,5 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { fetcher, unknownRawResponse, type FetchFunction, type Fetcher } from "./generated/core/fetcher/index.js";
+import { fetcher, unknownRawResponse, type APIResponse, type Fetcher } from "./generated/core/fetcher/index.js";
 
 function retryDelay(headers: Headers, attempt: number): number {
   const value = headers.get("Retry-After");
@@ -11,8 +11,24 @@ function retryDelay(headers: Headers, attempt: number): number {
   return Math.min(1000 * 2 ** attempt, 60000) * (0.9 + Math.random() * 0.2);
 }
 
-/** One deadline covers retries and buffered responses. Only reads retry. */
-export const requestWithDeadline: FetchFunction = async <R>(args: Fetcher.Args) => {
+async function untilAborted<T>(operation: () => Promise<T>, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted();
+  let abort!: () => void;
+  const cancelled = new Promise<never>((_resolve, reject) => {
+    abort = () => reject(signal.reason);
+    signal.addEventListener("abort", abort, { once: true });
+  });
+  try {
+    // Observe late failures without cancelling shared token rotation or persistence.
+    return await Promise.race([Promise.resolve().then(operation), cancelled]);
+  } finally {
+    signal.removeEventListener("abort", abort);
+  }
+}
+
+/** One deadline covers credentials, retries and buffered responses. Only reads retry. */
+export async function requestWithDeadline<R>(args: Fetcher.Args,
+  prepare?: () => Promise<Fetcher.Args>): Promise<APIResponse<R, Fetcher.Error>> {
   const read = ["GET", "HEAD", "OPTIONS"].includes(args.method.toUpperCase()) &&
     !new URL(args.url).pathname.includes("/simulation/");
   const retries = read ? (args.maxRetries ?? 2) : 0;
@@ -26,9 +42,11 @@ export const requestWithDeadline: FetchFunction = async <R>(args: Fetcher.Args) 
     ? { reason: "unknown" as const, errorMessage: "The user aborted a request", cause: args.abortSignal.reason }
     : { reason: "timeout" as const, cause: deadline.signal.reason }, rawResponse: unknownRawResponse });
   try {
+    if (signal.aborted) return aborted();
+    const prepared = prepare ? await untilAborted(prepare, signal) : args;
     for (let attempt = 0; ; attempt++) {
       if (signal.aborted) return aborted();
-      const response = await fetcher<R>({ ...args, timeoutMs: undefined, maxRetries: 0, abortSignal: signal });
+      const response = await untilAborted(() => fetcher<R>({ ...prepared, timeoutMs: undefined, maxRetries: 0, abortSignal: signal }), signal);
       if (signal.aborted) return aborted();
       if (response.ok || response.error.reason !== "status-code" || attempt >= retries ||
           !([408, 429].includes(response.error.statusCode) || response.error.statusCode >= 500)) return response;
@@ -40,4 +58,4 @@ export const requestWithDeadline: FetchFunction = async <R>(args: Fetcher.Args) 
   } finally {
     clearTimeout(timer);
   }
-};
+}

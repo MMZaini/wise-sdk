@@ -61,9 +61,10 @@ export class WiseClient extends GeneratedClient {
     const guardedFetch: typeof fetch = (input, init) => {
       const url = new URL(input instanceof Request ? input.url : String(input));
       if (!origins.has(url.origin) || url.username || url.password) throw new TypeError("Unexpected request origin");
+      init?.signal?.throwIfAborted();
       return send(input, { ...init, redirect: "manual" });
     };
-    const guardedFetcher: FetchFunction = async (args) => {
+    const guardedFetcher: FetchFunction = (args) => requestWithDeadline(args, async () => {
       const headers = Object.fromEntries(Object.entries(args.headers ?? {}).filter(([key]) => key.toLowerCase() !== "authorization"));
       if (new URL(args.url).pathname.endsWith("/oauth/token")) {
         headers.Authorization = basicAuthorization(options.clientId, options.clientSecret);
@@ -75,8 +76,8 @@ export class WiseClient extends GeneratedClient {
           headers.Authorization = `Bearer ${token}`;
         }
       }
-      return requestWithDeadline({ ...args, headers, fetchFn: guardedFetch });
-    };
+      return { ...args, headers, fetchFn: guardedFetch };
+    });
     super({ environment, auth: false, headers: { "User-Agent": "wise-sdk", ...options.headers },
       externalCorrelationId: options.externalCorrelationId, timeoutInSeconds: options.timeoutInSeconds,
       maxRetries: options.maxRetries, logging: options.logging, fetch: guardedFetch, fetcher: guardedFetcher });

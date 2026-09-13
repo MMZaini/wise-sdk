@@ -165,6 +165,10 @@ fails. The next call retries persistence. Multiple processes or manager instance
 need a shared lock and token store in your application. A `401` is returned to the
 caller; API operations are never automatically replayed after a token refresh.
 
+Cancelling or timing out a request waiting for a token does not cancel the shared
+refresh or its persistence callback. Other requests can use the saved token when
+that work completes.
+
 ## SCA and other partner security
 
 SCA challenges retain their HTTP status and headers in `WiseError.rawResponse` /
