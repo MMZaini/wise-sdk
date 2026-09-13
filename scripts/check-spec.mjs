@@ -2,11 +2,12 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import YAML from "yaml";
+import { prepareSpec } from "./prepare-spec.mjs";
 
 const bytes = await readFile("openapi/wise.json");
 const source = JSON.parse(await readFile("openapi/source.json", "utf8"));
 assert.equal(createHash("sha256").update(bytes).digest("hex"), source.sha256, "Upstream checksum changed");
-const spec = JSON.parse(bytes);
+const spec = await prepareSpec(JSON.parse(bytes));
 const overrides = YAML.parse(await readFile("fern/overrides.yml", "utf8"));
 const config = YAML.parse(await readFile("fern/generators.yml", "utf8"));
 assert.equal(source.apiVersion, "2026Q3", "A new API quarter requires an explicit migration");
@@ -38,7 +39,8 @@ for (const [path, item] of Object.entries(spec.paths)) {
     const basic = security.some((requirement) => "BasicAuth" in requirement);
     assert.deepEqual(override.security, basic ? [{ ClientCredentials: [] }] : security.length ? [{ AccessToken: [] }] : []);
     operations.push({ method: method.toUpperCase(), path, operationId: operation.operationId,
-      group, name, server, security, generated: true });
+      group, name, server, security, generated: true,
+      ...(operation["x-wise-sdk-supplement"] ? { supplementSource: operation["x-wise-sdk-supplement"] } : {}) });
   }
 }
 for (const [path, item] of Object.entries(overrides.paths ?? {})) {
@@ -49,7 +51,8 @@ for (const [path, item] of Object.entries(overrides.paths ?? {})) {
 await mkdir("docs", { recursive: true });
 await writeFile("openapi/operations.json", JSON.stringify(operations, null, 2) + "\n");
 const snake = (value) => value.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-const lines = ["# Endpoint map", "", `Generated from Wise's ${source.apiVersion} specification and the Fern overrides. These ${operations.length} REST operations describe SDK coverage; account permissions still apply. Original authentication alternatives are recorded in \`openapi/operations.json\`.`, "", "| HTTP | Path | TypeScript | Python | Server |", "| --- | --- | --- | --- | --- |"];
+const supplemental = operations.filter((operation) => operation.supplementSource).length;
+const lines = ["# Endpoint map", "", `Generated from Wise's ${source.apiVersion} specification and the Fern overrides: ${operations.length - supplemental} upstream REST operations and ${supplemental} documented format supplement. Account permissions still apply. Original authentication alternatives and supplement sources are recorded in \`openapi/operations.json\`.`, "", "| HTTP | Path | TypeScript | Python | Server |", "| --- | --- | --- | --- | --- |"];
 for (const op of operations) {
   const group = [].concat(op.group).join(".");
   lines.push(`| ${op.method} | \`${op.path}\` | \`${group}.${op.name}\` | \`${snake(group)}.${snake(op.name)}\` | ${op.server} |`);

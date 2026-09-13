@@ -1,6 +1,6 @@
 api:
   specs:
-    - openapi: ../openapi/wise.json
+    - openapi: ./.generated/openapi.json
       overrides: ./overrides.yml
   auth:
     any:

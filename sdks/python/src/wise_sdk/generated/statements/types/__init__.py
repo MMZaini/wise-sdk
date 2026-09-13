@@ -6,6 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
+    from .download_statements_request_format import DownloadStatementsRequestFormat
+    from .download_statements_request_type import DownloadStatementsRequestType
     from .get_statements_request_type import GetStatementsRequestType
     from .get_statements_response import GetStatementsResponse
     from .get_statements_response_account_holder import GetStatementsResponseAccountHolder
@@ -43,6 +45,8 @@ if typing.TYPE_CHECKING:
     from .get_statements_response_transactions_item_total_fees import GetStatementsResponseTransactionsItemTotalFees
     from .get_statements_response_transactions_item_type import GetStatementsResponseTransactionsItemType
 _dynamic_imports: typing.Dict[str, str] = {
+    "DownloadStatementsRequestFormat": ".download_statements_request_format",
+    "DownloadStatementsRequestType": ".download_statements_request_type",
     "GetStatementsRequestType": ".get_statements_request_type",
     "GetStatementsResponse": ".get_statements_response",
     "GetStatementsResponseAccountHolder": ".get_statements_response_account_holder",
@@ -90,6 +94,8 @@ def __dir__():
 
 
 __all__ = [
+    "DownloadStatementsRequestFormat",
+    "DownloadStatementsRequestType",
     "GetStatementsRequestType",
     "GetStatementsResponse",
     "GetStatementsResponseAccountHolder",

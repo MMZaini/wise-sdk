@@ -3,3 +3,5 @@ export { WiseClient, type WiseClientOptions, type AccessToken } from "./client.j
 export { fromJson as parseWiseJson, toJson as stringifyWiseJson } from "./json.js";
 export * from "./auth/oauth.js";
 export * from "./auth/mtls.js";
+export * from "./webhooks.js";
+export * from "./pagination.js";

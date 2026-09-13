@@ -1,6 +1,6 @@
 # Endpoint map
 
-Generated from Wise's 2026Q3 specification and the Fern overrides. These 210 REST operations describe SDK coverage; account permissions still apply. Original authentication alternatives are recorded in `openapi/operations.json`.
+Generated from Wise's 2026Q3 specification and the Fern overrides: 210 upstream REST operations and 1 documented format supplement. Account permissions still apply. Original authentication alternatives and supplement sources are recorded in `openapi/operations.json`.
 
 | HTTP | Path | TypeScript | Python | Server |
 | --- | --- | --- | --- | --- |
@@ -214,3 +214,4 @@ Generated from Wise's 2026Q3 specification and the Fern overrides. These 210 RES
 | GET | `/profiles/{profileId}/subscriptions` | `webhooks.profiles.list` | `webhooks.profiles.list` | api |
 | GET | `/profiles/{profileId}/subscriptions/{subscriptionId}` | `webhooks.profiles.get` | `webhooks.profiles.get` | api |
 | DELETE | `/profiles/{profileId}/subscriptions/{subscriptionId}` | `webhooks.profiles.delete` | `webhooks.profiles.delete` | api |
+| GET | `/profiles/{profileId}/balance-statements/{balanceId}/statement.{format}` | `statements.download` | `statements.download` | api |

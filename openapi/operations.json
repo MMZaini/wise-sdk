@@ -3241,5 +3241,23 @@
       }
     ],
     "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/balance-statements/{balanceId}/statement.{format}",
+    "operationId": "downloadBalanceStatement",
+    "group": "statements",
+    "name": "download",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true,
+    "supplementSource": "https://docs.wise.com/api-reference/balance-statement"
   }
 ]

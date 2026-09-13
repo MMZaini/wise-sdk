@@ -90,6 +90,9 @@ const SENSITIVE_HEADERS = new Set([
     "x-xsrf-token",
     "x-session-token",
     "x-access-token",
+    "x-2fa-approval",
+    "one-time-token",
+    "x-tw-twcard-card-token",
 ]);
 
 function redactHeaders(headers: Headers | Record<string, string>): Record<string, string> {

@@ -18,6 +18,29 @@ async function patch(path, before, after, count = 1) {
 export async function postprocess(group) {
   if (group === "python") {
     const root = "sdks/python/src/wise_sdk/generated";
+    await patch(`${root}/core/http_client.py`,
+      '        "x-access-token",',
+      '        "x-access-token",\n        "x-2fa-approval",\n        "one-time-token",\n        "x-tw-twcard-card-token",');
+    await patch(`${root}/core/http_client.py`,
+      'return response.status_code >= 500 or response.status_code in [429, 408, 409]',
+      'return (500 <= response.status_code < 600 or response.status_code in [429, 408]) and (_parse_retry_after(response.headers) or 0) <= MAX_RETRY_DELAY_SECONDS');
+    await patch(`${root}/core/http_client.py`,
+      'return int(retry_after_ms) / 1000 if retry_after_ms > 0 else 0',
+      'return max(0, int(retry_after_ms) / 1000)');
+    await patch(`${root}/core/http_client.py`, 'if retry_after is not None and retry_after > 0:', 'if retry_after is not None and retry_after >= 0:');
+    await patch(`${root}/core/http_client.py`, `        max_retries: int = (
+            request_options.get("max_retries", self.base_max_retries)
+            if request_options is not None
+            else self.base_max_retries
+        )`, `        max_retries: int = (
+            request_options.get("max_retries", self.base_max_retries)
+            if request_options is not None
+            else self.base_max_retries
+        )
+        if not isinstance(max_retries, int) or isinstance(max_retries, bool) or max_retries < 0:
+            raise ValueError("max_retries must be a non-negative integer")
+        if method.upper() not in ("GET", "HEAD", "OPTIONS") or (path and path.lstrip("/").startswith("simulation/")):
+            max_retries = 0`, 2);
     await patch(`${root}/simulations/raw_client.py`,
       "if _response is None or not _response.text.strip():",
       "if 200 <= _response.status_code < 300 and not _response.text.strip():", 6);
@@ -80,6 +103,8 @@ export async function postprocess(group) {
     await writeFile(parser, source);
   }
   const fetcher = `${root}/core/fetcher/Fetcher.ts`;
+  await patch(fetcher, '    "x-access-token",',
+    '    "x-access-token",\n    "x-2fa-approval",\n    "one-time-token",\n    "x-tw-twcard-card-token",');
   await patch(fetcher, "response.status >= 200 && response.status < 400", "response.status >= 200 && response.status < 300");
   await patch(fetcher, 'import { getResponseBody } from "./getResponseBody.js";',
     'import { getResponseBody, InvalidJsonResponseError } from "./getResponseBody.js";');

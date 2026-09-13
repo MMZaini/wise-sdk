@@ -1,0 +1,8 @@
+# Wise documents these formats in the statement operation's prose.
+# Parameters and errors are inherited from the upstream JSON statement endpoint.
+statementDownloads:
+  source: https://docs.wise.com/api-reference/balance-statement
+  basePath: /profiles/{profileId}/balance-statements/{balanceId}/statement.json
+  path: /profiles/{profileId}/balance-statements/{balanceId}/statement.{format}
+  operationId: downloadBalanceStatement
+  formats: [csv, pdf, xlsx, xml, mt940, qif]

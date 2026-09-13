@@ -66,7 +66,7 @@ def _parse_retry_after(response_headers: httpx.Headers) -> typing.Optional[float
     retry_after_ms = response_headers.get("retry-after-ms")
     if retry_after_ms is not None:
         try:
-            return int(retry_after_ms) / 1000 if retry_after_ms > 0 else 0
+            return max(0, int(retry_after_ms) / 1000)
         except Exception:
             pass
 
@@ -139,7 +139,7 @@ def _retry_timeout(response: httpx.Response, retries: int) -> float:
 
     # 1. Check Retry-After header first
     retry_after = _parse_retry_after(response.headers)
-    if retry_after is not None and retry_after > 0:
+    if retry_after is not None and retry_after >= 0:
         return min(retry_after, MAX_RETRY_DELAY_SECONDS)
 
     # 2. Check X-RateLimit-Reset header (with positive jitter)
@@ -159,7 +159,7 @@ def _retry_timeout_from_retries(retries: int) -> float:
 
 
 def _should_retry(response: httpx.Response) -> bool:
-    return response.status_code >= 500 or response.status_code in [429, 408, 409]
+    return (500 <= response.status_code < 600 or response.status_code in [429, 408]) and (_parse_retry_after(response.headers) or 0) <= MAX_RETRY_DELAY_SECONDS
 
 
 _SENSITIVE_HEADERS = frozenset(
@@ -180,6 +180,9 @@ _SENSITIVE_HEADERS = frozenset(
         "x-xsrf-token",
         "x-session-token",
         "x-access-token",
+        "x-2fa-approval",
+        "one-time-token",
+        "x-tw-twcard-card-token",
     }
 )
 
@@ -450,6 +453,10 @@ class HttpClient:
             if request_options is not None
             else self.base_max_retries
         )
+        if not isinstance(max_retries, int) or isinstance(max_retries, bool) or max_retries < 0:
+            raise ValueError("max_retries must be a non-negative integer")
+        if method.upper() not in ("GET", "HEAD", "OPTIONS") or (path and path.lstrip("/").startswith("simulation/")):
+            max_retries = 0
 
         try:
             response = self.httpx_client.request(
@@ -760,6 +767,10 @@ class AsyncHttpClient:
             if request_options is not None
             else self.base_max_retries
         )
+        if not isinstance(max_retries, int) or isinstance(max_retries, bool) or max_retries < 0:
+            raise ValueError("max_retries must be a non-negative integer")
+        if method.upper() not in ("GET", "HEAD", "OPTIONS") or (path and path.lstrip("/").startswith("simulation/")):
+            max_retries = 0
 
         try:
             response = await self.httpx_client.request(

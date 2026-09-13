@@ -2,7 +2,7 @@
 import json
 import os
 import sys
-from wise_sdk import WiseClient, AsyncWiseClient, WiseEnvironment
+from wise_sdk import WiseClient, WiseEnvironment
 
 if not os.getenv("WISE_ACCESS_TOKEN"):
     raise SystemExit("Set WISE_ACCESS_TOKEN to a sandbox token")

@@ -1,0 +1,5 @@
+{
+  "body": "{ \"event_type\": \"transfers#state-change\", \"data\": { \"resource\": { \"id\": 9223372036854775807 } } }",
+  "signature": "RG4pWwjAOm6lUhw6tH8DzMdIsGkL64xTbhUK4Hj9iop4Rc5I2/ZKWeh89AkddFOyvwfW8MpXneKZSskq8IQYR45M3eDGJO6iUm77Azw+rz684f6JvbvYU4sSqY20Ok9XGmjVmgEBvFODGT6zMxRGqOYIe3B2CvyOCqbBpla9mo+D+w4vr1PagYckEut22CX/p7K1PV8cv2WLmsq4VbJas/0+GH9R6KeWdEAGYTwhKl0X8xAsF5dUR0Wsqm8lggq8pZA+BvGtLw3tkXR+qqKxP+gfjIGrKx7bneQXdGG6d8mQnes5N8peiZ3MxwcjmThoDpiq+n8xNWrKZHADe0ItRA==",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5IZPzNt4NckwlZq6mqnD\nKXqKnoZerK8sw+wSsHx71V6FVYDrAAwxk0y553pzuS48wP7jpMsqlbhKbw6O4K7W\nf5iIvywZYpZ5fo6CPRpdtEVK6lGQW07Skm162rDHlkQCNn0EscgAgQO3eW1eCRox\nD/OYUXvAbNYge13wzs3gty1prqvqYlnhl9ib1aSY9f45Mp2+huuPB6MIWAIksH2H\n2CDMOh6kp7VTRsbxPmcBLoeWr3h9UzOuDdI7Zgdz+s1pdaHHF9tJtQEDsQ6sv028\n3+9myUxFszx4LRwexKS8P3qthiPHqeF1hPCdWBMUaUxPeYdJkOIBI8iGclsl3b1o\nHwIDAQAB\n-----END PUBLIC KEY-----\n"
+}

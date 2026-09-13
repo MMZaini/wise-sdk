@@ -1824,3 +1824,10 @@ paths:
       x-fern-server-name: api
       security:
         - AccessToken: []
+  /profiles/{profileId}/balance-statements/{balanceId}/statement.{format}:
+    get:
+      x-fern-sdk-group-name: statements
+      x-fern-sdk-method-name: download
+      x-fern-server-name: api
+      security:
+        - AccessToken: []

@@ -6,6 +6,8 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from .raw_client import AsyncRawStatementsClient, RawStatementsClient
+from .types.download_statements_request_format import DownloadStatementsRequestFormat
+from .types.download_statements_request_type import DownloadStatementsRequestType
 from .types.get_statements_request_type import GetStatementsRequestType
 from .types.get_statements_response import GetStatementsResponse
 
@@ -132,6 +134,98 @@ class StatementsClient:
             request_options=request_options,
         )
         return _response.data
+
+    def download(
+        self,
+        *,
+        profile_id: int,
+        balance_id: int,
+        format: DownloadStatementsRequestFormat,
+        currency: str,
+        interval_start: dt.datetime,
+        interval_end: dt.datetime,
+        type: typing.Optional[DownloadStatementsRequestType] = None,
+        statement_locale: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> typing.Iterator[bytes]:
+        """
+        Download one of the statement formats documented at https://docs.wise.com/api-reference/balance-statement. Query parameters and errors match the JSON statement endpoint. XML uses CAMT.053.
+
+        Parameters
+        ----------
+        profile_id : int
+            The profile ID.
+
+        balance_id : int
+            The balance ID to get the statement for.
+
+        format : DownloadStatementsRequestFormat
+            Statement file format. XML uses CAMT.053.
+
+        currency : str
+            Currency of the balance statement requested (ISO 4217 Alphabetic Code).
+
+        interval_start : dt.datetime
+            Statement start time in UTC.
+
+        interval_end : dt.datetime
+            Statement end time in UTC.
+
+        type : typing.Optional[DownloadStatementsRequestType]
+            Statement type:
+            - `COMPACT` - Single statement line per transaction
+            - `FLAT` - Accounting statements where transaction fees are on a separate line
+
+        statement_locale : typing.Optional[str]
+            Language for the statement. Supports 2 character language codes.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration. You can pass in configuration such as `chunk_size`, and more to customize the request and response.
+
+        Returns
+        -------
+        typing.Iterator[bytes]
+            OK - Successfully retrieved balance statement.
+
+        Examples
+        --------
+        import datetime
+
+        from wise_sdk.generated import WiseClient
+        from wise_sdk.generated.environment import WiseClientEnvironment
+
+        client = WiseClient(
+            external_correlation_id="YOUR_EXTERNAL_CORRELATION_ID",
+            client_id="YOUR_CLIENT_ID",
+            client_secret="YOUR_CLIENT_SECRET",
+            access_token="YOUR_ACCESS_TOKEN",
+            environment=WiseClientEnvironment.SANDBOX,
+        )
+        client.statements.download(
+            profile_id=1000000,
+            balance_id=1000000,
+            format="csv",
+            currency="currency",
+            interval_start=datetime.datetime.fromisoformat(
+                "2024-01-15 09:30:00+00:00",
+            ),
+            interval_end=datetime.datetime.fromisoformat(
+                "2024-01-15 09:30:00+00:00",
+            ),
+        )
+        """
+        with self._raw_client.download(
+            profile_id=profile_id,
+            balance_id=balance_id,
+            format=format,
+            currency=currency,
+            interval_start=interval_start,
+            interval_end=interval_end,
+            type=type,
+            statement_locale=statement_locale,
+            request_options=request_options,
+        ) as r:
+            yield from r.data
 
 
 class AsyncStatementsClient:
@@ -263,3 +357,103 @@ class AsyncStatementsClient:
             request_options=request_options,
         )
         return _response.data
+
+    async def download(
+        self,
+        *,
+        profile_id: int,
+        balance_id: int,
+        format: DownloadStatementsRequestFormat,
+        currency: str,
+        interval_start: dt.datetime,
+        interval_end: dt.datetime,
+        type: typing.Optional[DownloadStatementsRequestType] = None,
+        statement_locale: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> typing.AsyncIterator[bytes]:
+        """
+        Download one of the statement formats documented at https://docs.wise.com/api-reference/balance-statement. Query parameters and errors match the JSON statement endpoint. XML uses CAMT.053.
+
+        Parameters
+        ----------
+        profile_id : int
+            The profile ID.
+
+        balance_id : int
+            The balance ID to get the statement for.
+
+        format : DownloadStatementsRequestFormat
+            Statement file format. XML uses CAMT.053.
+
+        currency : str
+            Currency of the balance statement requested (ISO 4217 Alphabetic Code).
+
+        interval_start : dt.datetime
+            Statement start time in UTC.
+
+        interval_end : dt.datetime
+            Statement end time in UTC.
+
+        type : typing.Optional[DownloadStatementsRequestType]
+            Statement type:
+            - `COMPACT` - Single statement line per transaction
+            - `FLAT` - Accounting statements where transaction fees are on a separate line
+
+        statement_locale : typing.Optional[str]
+            Language for the statement. Supports 2 character language codes.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration. You can pass in configuration such as `chunk_size`, and more to customize the request and response.
+
+        Returns
+        -------
+        typing.AsyncIterator[bytes]
+            OK - Successfully retrieved balance statement.
+
+        Examples
+        --------
+        import asyncio
+        import datetime
+
+        from wise_sdk.generated import AsyncWiseClient
+        from wise_sdk.generated.environment import WiseClientEnvironment
+
+        client = AsyncWiseClient(
+            external_correlation_id="YOUR_EXTERNAL_CORRELATION_ID",
+            client_id="YOUR_CLIENT_ID",
+            client_secret="YOUR_CLIENT_SECRET",
+            access_token="YOUR_ACCESS_TOKEN",
+            environment=WiseClientEnvironment.SANDBOX,
+        )
+
+
+        async def main() -> None:
+            await client.statements.download(
+                profile_id=1000000,
+                balance_id=1000000,
+                format="csv",
+                currency="currency",
+                interval_start=datetime.datetime.fromisoformat(
+                    "2024-01-15 09:30:00+00:00",
+                ),
+                interval_end=datetime.datetime.fromisoformat(
+                    "2024-01-15 09:30:00+00:00",
+                ),
+            )
+
+
+        asyncio.run(main())
+        """
+        async with self._raw_client.download(
+            profile_id=profile_id,
+            balance_id=balance_id,
+            format=format,
+            currency=currency,
+            interval_start=interval_start,
+            interval_end=interval_end,
+            type=type,
+            statement_locale=statement_locale,
+            request_options=request_options,
+        ) as r:
+            async for _chunk in r.data:
+                yield _chunk

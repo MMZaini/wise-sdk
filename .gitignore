@@ -21,6 +21,7 @@ playwright-report/
 *.pfx
 *.tgz
 .fern/
+fern/.generated/
 .fern-metadata.json
 .DS_Store
 Thumbs.db

@@ -1130,6 +1130,8 @@ if typing.TYPE_CHECKING:
         UpdateProfileSpendLimitsRequestType,
     )
     from .statements import (
+        DownloadStatementsRequestFormat,
+        DownloadStatementsRequestType,
         GetStatementsRequestType,
         GetStatementsResponse,
         GetStatementsResponseAccountHolder,
@@ -1594,6 +1596,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "DisputeReason": ".types",
     "DisputeStatus": ".types",
     "DisputeSubStatus": ".types",
+    "DownloadStatementsRequestFormat": ".statements",
+    "DownloadStatementsRequestType": ".statements",
     "EntityNotFoundErrorErrorPayload": ".types",
     "Error400BadRequest": ".types",
     "Error401Unauthorized": ".types",
@@ -2865,6 +2869,8 @@ __all__ = [
     "DisputeReason",
     "DisputeStatus",
     "DisputeSubStatus",
+    "DownloadStatementsRequestFormat",
+    "DownloadStatementsRequestType",
     "EntityNotFoundErrorErrorPayload",
     "Error400BadRequest",
     "Error401Unauthorized",

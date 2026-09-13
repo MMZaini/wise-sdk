@@ -7,6 +7,8 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import (
+        DownloadStatementsRequestFormat,
+        DownloadStatementsRequestType,
         GetStatementsRequestType,
         GetStatementsResponse,
         GetStatementsResponseAccountHolder,
@@ -31,6 +33,8 @@ if typing.TYPE_CHECKING:
         GetStatementsResponseTransactionsItemType,
     )
 _dynamic_imports: typing.Dict[str, str] = {
+    "DownloadStatementsRequestFormat": ".types",
+    "DownloadStatementsRequestType": ".types",
     "GetStatementsRequestType": ".types",
     "GetStatementsResponse": ".types",
     "GetStatementsResponseAccountHolder": ".types",
@@ -78,6 +82,8 @@ def __dir__():
 
 
 __all__ = [
+    "DownloadStatementsRequestFormat",
+    "DownloadStatementsRequestType",
     "GetStatementsRequestType",
     "GetStatementsResponse",
     "GetStatementsResponseAccountHolder",
