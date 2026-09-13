@@ -21,7 +21,6 @@ Review authentication and return shapes when replacing a client. A personal toke
 does not grant partner access. The OAuth, mTLS and SCA setup is described in
 [authentication](authentication.md).
 
-If you also use the [Starling SDK](https://github.com/MMZaini/starling-sdk), the
-package layout and client style will be familiar. Wise profiles, currency balances,
-dynamic recipient requirements and major-unit amounts have different semantics;
-do not carry over Starling's account IDs, money conversion or request signing.
+Check how your existing integration handles Wise profiles, currency balances,
+dynamic recipient requirements and major-unit amounts. Preserve transfer
+idempotency keys and review request signing before switching clients.

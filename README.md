@@ -76,10 +76,14 @@ before using transfers, money values or pagination.
 
 ## Why another SDK
 
-This follows the structure of my [Starling SDK](https://github.com/MMZaini/starling-sdk):
-one upstream specification, generated clients and small helpers for behavior that
-does not belong in OpenAPI. Stable resource names live in Fern overrides, so ordinary
-updates require a spec refresh and regeneration.
+Wise does not offer an official JavaScript SDK for its Platform API. The unofficial
+clients I found were outdated or did not meet the structure and maintenance
+standards I wanted. This project provides typed clients, consistent resource names
+and a clear update process.
+
+Both clients come from Wise's official OpenAPI specification, with small helpers
+for behavior that does not belong in OpenAPI. Stable resource names live in Fern
+overrides, so ordinary updates require a spec refresh and regeneration.
 
 A daily workflow checks Wise's specification. Compatible changes regenerate, pass
 CI, merge and publish automatically; changes that need review open a draft PR.

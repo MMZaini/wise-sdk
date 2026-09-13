@@ -24,8 +24,8 @@ data. Native `JSON.stringify()` throws on `bigint`. For data sent to your browse
 convert IDs to strings explicitly.
 
 Wise amounts generally use **major currency units**: GBP `12.34` means £12.34.
-Do not apply Starling's `minorUnits` convention. API fields retain their documented
-number/string types. Use decimal arithmetic in your application for calculations;
+API fields retain their documented number/string types. Use decimal arithmetic
+in your application for calculations;
 the SDK does not add money, convert units or round payment amounts for you.
 
 ## Pagination
