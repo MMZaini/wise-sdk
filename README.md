@@ -9,7 +9,7 @@ generated from Wise's official OpenAPI specification with [Fern](https://github.
 | --- | --- | --- |
 | [TypeScript / JavaScript](https://www.npmjs.com/package/@mmzaini/wise-sdk), Node 22+ | `npm install @mmzaini/wise-sdk` | [TypeScript SDK](sdks/typescript/README.md) |
 | [Python](https://pypi.org/project/wise-sdk/), Python 3.11+ | `pip install wise-sdk` | [Python SDK](sdks/python/README.md) |
-| [Optional React components](https://www.npmjs.com/package/@mmzaini/wise-react), React 18/19 | `npm install @mmzaini/wise-react` | [React package](packages/react/README.md) |
+| [Optional React components](https://www.npmjs.com/package/@mmzaini/wise-react), React 18/19 | `npm install @mmzaini/wise-react` | [React package](packages/react/README.md) · [Live preview](https://mmzaini.github.io/wise-sdk/) |
 
 Community maintained and not affiliated with Wise. Both SDKs default to the sandbox.
 

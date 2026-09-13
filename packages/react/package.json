@@ -55,6 +55,8 @@
     "test": "node --import tsx --test tests/*.test.tsx",
     "test:browser": "playwright test",
     "dev": "vite example --host 127.0.0.1",
+    "build:example": "vite build example --base ./",
+    "preview:example": "vite preview example --host 127.0.0.1",
     "prepublishOnly": "npm run typecheck && npm run build"
   },
   "devDependencies": {

@@ -30,8 +30,11 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-These cover keyboard masking controls, mobile overflow and automated accessibility
-checks. `npm --prefix packages/react run dev` serves the example for visual review.
+These build and serve the production showcase, then check keyboard navigation,
+masking, currencies and locales, invalid amounts, clipboard actions, responsive
+layouts and automated accessibility. `npm --prefix packages/react run dev` serves
+the example for visual review. The [live preview](https://mmzaini.github.io/wise-sdk/)
+is deployed separately from package releases by the React preview workflow.
 
 ## Installed packages
 

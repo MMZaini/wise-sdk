@@ -4,6 +4,9 @@ Display-only components for Wise account details and balances. Compatible with
 React 18.3 and 19, server rendering and modern browsers. No SDK or credentials
 are needed in the browser.
 
+[Explore the live preview](https://mmzaini.github.io/wise-sdk/) — try all three
+components, change their props, and copy the matching code. Uses fictional data.
+
 ```sh
 npm install @mmzaini/wise-react
 ```
@@ -74,12 +77,22 @@ From this package directory:
 ```sh
 npm ci
 npm run dev
+npm run build:example
+npm run preview:example
 npm test
 npm run build
 npx playwright install chromium
 npm run test:browser
 ```
 
-The example uses fictional data and demonstrates keyboard-controlled disclosure,
-loading/error states and a narrow-screen layout. Community maintained; not
-affiliated with Wise. [MIT](LICENSE).
+The single-page example showcases all three components and `formatMoney` with
+live currency, locale, masking, footer and state controls. Each component includes
+a copyable code example that follows its current settings. The page uses fictional
+data, supports keyboard navigation and narrow screens, and includes loading, error
+and empty states. `build:example` produces a static site in `example/dist` with
+relative asset paths for hosting at a root or subdirectory. Browser tests build and
+test this production site. The separate [preview workflow](../../.github/workflows/react-preview.yml)
+checks changes and deploys `example/dist` to GitHub Pages after updates to `main`.
+It does not publish packages or change the SDK release process.
+
+Community maintained; not affiliated with Wise. [MIT](LICENSE).
