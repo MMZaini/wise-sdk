@@ -1,0 +1,1820 @@
+# SDK naming and authentication, layered over Wise's unchanged specification.
+info:
+  version: 2026Q3
+components:
+  securitySchemes:
+    AccessToken:
+      type: http
+      scheme: bearer
+    ClientCredentials:
+      type: http
+      scheme: basic
+  schemas:
+    Address:
+      x-fern-type-name: AddressRecord
+    address:
+      x-fern-type-name: ProfileAddress
+paths:
+  /spend/profiles/{profileId}/3dsecure/challenge-result:
+    post:
+      x-fern-sdk-group-name: threeDs
+      x-fern-sdk-method-name: submitResult
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/activities:
+    get:
+      x-fern-sdk-group-name: activities
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/additional-verification/upload-evidences:
+    post:
+      x-fern-sdk-group-name: verification
+      x-fern-sdk-method-name: uploadEvidence
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/verification-status/upload-document:
+    post:
+      x-fern-sdk-group-name: verification
+      x-fern-sdk-method-name: uploadDocument
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/verification-status/required-evidences:
+    get:
+      x-fern-sdk-group-name: verification
+      x-fern-sdk-method-name: getRequiredEvidence
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /addresses:
+    post:
+      x-fern-sdk-group-name: addresses
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: addresses
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /addresses/{addressId}:
+    get:
+      x-fern-sdk-group-name: addresses
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /address-requirements:
+    get:
+      x-fern-sdk-group-name: addresses
+      x-fern-sdk-method-name: getRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    post:
+      x-fern-sdk-group-name: addresses
+      x-fern-sdk-method-name: refreshRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/balances:
+    post:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/balances/{balanceId}:
+    get:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    delete:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: delete
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/balance-movements:
+    post:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: move
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/balance-capacity:
+    get:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: getCapacity
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/excess-money-account:
+    post:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: getExcessMoneyAccount
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/total-funds/{currency}:
+    get:
+      x-fern-sdk-group-name: balances
+      x-fern-sdk-method-name: getTotalFunds
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/balances/hold-limit-breach:
+    get:
+      x-fern-sdk-group-name:
+        - balances
+        - holdLimitBreaches
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/balances/hold-limit-breach/{holdLimitBreachId}:
+    post:
+      x-fern-sdk-group-name:
+        - balances
+        - holdLimitBreaches
+      x-fern-sdk-method-name: close
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/balance-statements/{balanceId}/statement.json:
+    get:
+      x-fern-sdk-group-name: statements
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/bank-details:
+    post:
+      x-fern-sdk-group-name: accountDetails
+      x-fern-sdk-method-name: createBankDetails
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/account-details:
+    get:
+      x-fern-sdk-group-name: accountDetails
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/account-details-orders:
+    post:
+      x-fern-sdk-group-name:
+        - accountDetails
+        - orders
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - accountDetails
+        - orders
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/account-details/payments/{paymentId}/returns:
+    post:
+      x-fern-sdk-group-name: accountDetails
+      x-fern-sdk-method-name: returnPayment
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/batch-groups:
+    post:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/batch-groups/{batchGroupId}:
+    get:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    patch:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: update
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/batch-groups/{batchGroupId}/transfers:
+    post:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: createTransfer
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/batch-payments/{batchGroupId}/payments:
+    post:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: fund
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/batch-groups/{batchGroupId}/payment-initiations:
+    post:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: createPaymentInitiation
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/batch-groups/{batchGroupId}/payment-initiations/{paymentInitiationId}:
+    get:
+      x-fern-sdk-group-name: batchGroups
+      x-fern-sdk-method-name: getPaymentInitiation
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /settlements:
+    post:
+      x-fern-sdk-group-name: bulkSettlements
+      x-fern-sdk-method-name: createJournal
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards:
+    get:
+      x-fern-sdk-group-name: cards
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/cards/{cardToken}:
+    get:
+      x-fern-sdk-group-name: cards
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/cards/{cardToken}/status:
+    put:
+      x-fern-sdk-group-name: cards
+      x-fern-sdk-method-name: updateStatus
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/{cardToken}/reset-pin-count:
+    post:
+      x-fern-sdk-group-name: cards
+      x-fern-sdk-method-name: resetPinAttempts
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/{cardToken}/spending-permissions:
+    patch:
+      x-fern-sdk-group-name: cards
+      x-fern-sdk-method-name: updatePermissions
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /twcard-data/v1/clientSideEncryption/fetchEncryptingKey:
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - sensitiveDetails
+      x-fern-sdk-method-name: getEncryptionKey
+      x-fern-server-name: cards
+      security:
+        - AccessToken: []
+  /twcard-data/v1/sensitive-card-data/details:
+    post:
+      x-fern-sdk-group-name:
+        - cards
+        - sensitiveDetails
+      x-fern-sdk-method-name: get
+      x-fern-server-name: cards
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /twcard-data/v1/sensitive-card-data/pin:
+    post:
+      x-fern-sdk-group-name:
+        - cards
+        - sensitiveDetails
+      x-fern-sdk-method-name: getPin
+      x-fern-server-name: cards
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /twcard-data/v1/sensitive-card-data/preset-pin:
+    post:
+      x-fern-sdk-group-name:
+        - cards
+        - sensitiveDetails
+      x-fern-sdk-method-name: presetPin
+      x-fern-server-name: cards
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/{cardToken}/production:
+    put:
+      x-fern-sdk-group-name:
+        - cards
+        - kiosk
+      x-fern-sdk-method-name: produce
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - kiosk
+      x-fern-sdk-method-name: getProduction
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/card-orders:
+    post:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/card-orders/{cardOrderId}:
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/card-orders/availability:
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: getPrograms
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/card-orders/{cardOrderId}/requirements:
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: getRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/card-orders/{cardOrderId}/status:
+    put:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: updateStatus
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/address/validate:
+    post:
+      x-fern-sdk-group-name:
+        - cards
+        - orders
+      x-fern-sdk-method-name: validateAddress
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/transactions/{transactionId}:
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - transactions
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/cards/{cardToken}/transactions:
+    get:
+      x-fern-sdk-group-name:
+        - cards
+        - transactions
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /user/claim-account:
+    post:
+      x-fern-sdk-group-name: accountClaims
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /comparisons:
+    get:
+      x-fern-sdk-group-name: comparisons
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security: []
+  /profiles/{profileId}/contacts:
+    post:
+      x-fern-sdk-group-name: contacts
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /currencies:
+    get:
+      x-fern-sdk-group-name: currencies
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /delivery-estimates/{transferId}:
+    get:
+      x-fern-sdk-group-name: deliveryEstimates
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/cards/{cardToken}/payment-tokens:
+    post:
+      x-fern-sdk-group-name: digitalWallets
+      x-fern-sdk-method-name: listPaymentTokens
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/{cardToken}/payment-tokens/{paymentTokenUniqueReference}/activation:
+    post:
+      x-fern-sdk-group-name: digitalWallets
+      x-fern-sdk-method-name: activatePaymentToken
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /twcard-data/v1/push-provisioning/encrypted-payload/google-pay:
+    post:
+      x-fern-sdk-group-name: digitalWallets
+      x-fern-sdk-method-name: getGooglePayPayload
+      x-fern-server-name: cards
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /twcard-data/v1/push-provisioning/encrypted-payload/apple-pay:
+    post:
+      x-fern-sdk-group-name: digitalWallets
+      x-fern-sdk-method-name: getApplePayPayload
+      x-fern-server-name: cards
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/direct-debit-accounts:
+    post:
+      x-fern-sdk-group-name: directDebitAccounts
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: directDebitAccounts
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/dispute-form/flows/step/{scheme}/{reason}:
+    post:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: submitStep
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/dispute-form/reasons:
+    get:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: getReasons
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/dispute-form/flows/{scheme}/{reason}:
+    post:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: submit
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/dispute-form/file:
+    post:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: uploadFile
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/disputes:
+    get:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/disputes/{disputeId}:
+    get:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/profiles/{profileId}/disputes/{disputeId}/status:
+    put:
+      x-fern-sdk-group-name: disputes
+      x-fern-sdk-method-name: withdraw
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /facetec/public-key:
+    get:
+      x-fern-sdk-group-name: faceTec
+      x-fern-sdk-method-name: getPublicKey
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /auth/jose/response/public-keys:
+    get:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: getResponsePublicKeys
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /auth/jose/request/public-keys:
+    post:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: createRequestPublicKeys
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /auth/jose/playground/jws:
+    post:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: testJws
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /auth/jose/playground/jwe:
+    get:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: getTestJwe
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    post:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: postTestJwe
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /auth/jose/playground/jwe-direct-encryption:
+    post:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: testDirectEncryption
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /auth/jose/playground/jwsjwe:
+    post:
+      x-fern-sdk-group-name: jose
+      x-fern-sdk-method-name: testJwsJwe
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/kyc-reviews:
+    post:
+      x-fern-sdk-group-name: kycReviews
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: kycReviews
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/kyc-reviews/{kycReviewId}:
+    get:
+      x-fern-sdk-group-name: kycReviews
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    patch:
+      x-fern-sdk-group-name: kycReviews
+      x-fern-sdk-method-name: updateRedirectUrl
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/kyc-requirements/{requirementKey}:
+    post:
+      x-fern-sdk-group-name: kycReviews
+      x-fern-sdk-method-name: submitRequirement
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /borderless-accounts-configuration/profiles/{profileId}/available-currencies:
+    get:
+      x-fern-sdk-group-name: multiCurrencyAccounts
+      x-fern-sdk-method-name: getAvailableCurrencies
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /borderless-accounts-configuration/profiles/{profileId}/payin-currencies:
+    get:
+      x-fern-sdk-group-name: multiCurrencyAccounts
+      x-fern-sdk-method-name: getPayinCurrencies
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/multi-currency-account:
+    get:
+      x-fern-sdk-group-name: multiCurrencyAccounts
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /multi-currency-account/eligibility:
+    get:
+      x-fern-sdk-group-name: multiCurrencyAccounts
+      x-fern-sdk-method-name: getEligibility
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /oauth/token:
+    post:
+      x-fern-sdk-group-name: oauth
+      x-fern-sdk-method-name: createToken
+      x-fern-server-name: api
+      security:
+        - ClientCredentials: []
+      x-fern-retries:
+        disabled: true
+  /cases:
+    post:
+      x-fern-sdk-group-name: cases
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /cases/{caseId}:
+    get:
+      x-fern-sdk-group-name: cases
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /cases/{caseId}/messages:
+    post:
+      x-fern-sdk-group-name: cases
+      x-fern-sdk-method-name: submitMessage
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/payin-sessions/{payinSessionId}/paynow:
+    post:
+      x-fern-sdk-group-name: payins
+      x-fern-sdk-method-name: createPaynow
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/transfers/{transferId}/deposit-details/bank-transfer:
+    get:
+      x-fern-sdk-group-name: payinDepositDetails
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles:
+    get:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/personal-profile:
+    post:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: createPersonal
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/business-profile:
+    post:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: createBusiness
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}:
+    get:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/personal-profile:
+    put:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: updatePersonal
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/business-profile:
+    put:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: updateBusiness
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/business-profile/business-representative:
+    get:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: getBusinessRepresentative
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    put:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: updateBusinessRepresentative
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/verification-documents:
+    post:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: createVerificationDocument
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    put:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: updateVerificationDocument
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/directors:
+    post:
+      x-fern-sdk-group-name:
+        - profiles
+        - directors
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - profiles
+        - directors
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    put:
+      x-fern-sdk-group-name:
+        - profiles
+        - directors
+      x-fern-sdk-method-name: update
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/ubos:
+    post:
+      x-fern-sdk-group-name:
+        - profiles
+        - beneficialOwners
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - profiles
+        - beneficialOwners
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    put:
+      x-fern-sdk-group-name:
+        - profiles
+        - beneficialOwners
+      x-fern-sdk-method-name: update
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/update-window:
+    post:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: openUpdateWindow
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    delete:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: closeUpdateWindow
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/verification-status/bank-transfer:
+    post:
+      x-fern-sdk-group-name: profiles
+      x-fern-sdk-method-name: checkVerificationStatus
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /quotes:
+    post:
+      x-fern-sdk-group-name: quotes
+      x-fern-sdk-method-name: createUnauthenticated
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/quotes:
+    post:
+      x-fern-sdk-group-name: quotes
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/quotes/{quoteId}:
+    get:
+      x-fern-sdk-group-name: quotes
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    patch:
+      x-fern-sdk-group-name: quotes
+      x-fern-sdk-method-name: update
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /rates:
+    get:
+      x-fern-sdk-group-name: rates
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /accounts:
+    get:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    post:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /accounts/{accountId}:
+    get:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    delete:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: deactivate
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /quotes/{quoteId}/account-requirements:
+    get:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: getRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    post:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: refreshRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /accounts/{accountId}/quotes/{quoteId}/compatibility:
+    post:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: checkCompatibility
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /accounts/{accountId}/confirmations:
+    patch:
+      x-fern-sdk-group-name: recipients
+      x-fern-sdk-method-name: acceptConfirmations
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/transfers/{transferId}/{status}:
+    get:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: changeTransferState
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /simulation/transfers/{transferId}/payout-failure:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: failTransferPayout
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/profiles/{profileId}/verifications:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: verifyUser
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/verify-profile:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: verifyProfile
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/balance/topup:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: topUpBalance
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions/authorisation:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: authorizeCardTransaction
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions/clearing:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: clearCardTransaction
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions/reversal:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: reverseCardTransaction
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions:
+    get:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: createCardTransactions
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /simulation/spend/profiles/{profileId}/cards/{cardToken}/production:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: produceCard
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements:
+    get:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: listKycRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements/add:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: addKycRequirement
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements/submit:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: submitKycRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/verify:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: verifyKycReview
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/profiles/{profileId}/bank-transactions/import:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: importBankTransaction
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /simulation/profiles/{profileId}/swift-in:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: createSwiftIncomingTransfer
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/applications/{clientId}/spend-controls/rules:
+    post:
+      x-fern-sdk-group-name: spendControls
+      x-fern-sdk-method-name: createRule
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: spendControls
+      x-fern-sdk-method-name: listRules
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/applications/{clientId}/spend-controls/rules/apply:
+    post:
+      x-fern-sdk-group-name: spendControls
+      x-fern-sdk-method-name: applyRule
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/applications/{clientId}/spend-controls/rules/unapply:
+    post:
+      x-fern-sdk-group-name: spendControls
+      x-fern-sdk-method-name: unapplyRule
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/applications/{clientId}/spend-controls/rules/applied:
+    get:
+      x-fern-sdk-group-name: spendControls
+      x-fern-sdk-method-name: listAppliedRules
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /spend/applications/{clientId}/spend-controls/rules/{ruleId}:
+    delete:
+      x-fern-sdk-group-name: spendControls
+      x-fern-sdk-method-name: deleteRule
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/spend-limits:
+    get:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: getProfile
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    patch:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: updateProfile
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/{cardToken}/spend-limits:
+    get:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: getCard
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    patch:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: updateCard
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{profileId}/cards/{cardToken}/spend-limits/{granularity}:
+    delete:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: deleteCard
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /spend/profiles/{businessProfileId}/card-holder-profiles/{cardHolderProfileId}/spend-limits:
+    get:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: getCardHolder
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    patch:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: updateCardHolder
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    delete:
+      x-fern-sdk-group-name: spendLimits
+      x-fern-sdk-method-name: deleteCardHolder
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/status:
+    get:
+      x-fern-sdk-group-name: sca
+      x-fern-sdk-method-name: getOneTimeTokenStatus
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/sca-sessions/authorise:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - sessions
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/pin:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - pin
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    delete:
+      x-fern-sdk-group-name:
+        - sca
+        - pin
+      x-fern-sdk-method-name: delete
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/pin/verify:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - pin
+      x-fern-sdk-method-name: verify
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/device-fingerprints:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - deviceFingerprints
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/device-fingerprints/verify:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - deviceFingerprints
+      x-fern-sdk-method-name: verify
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/device-fingerprints/{deviceFingerprintId}:
+    delete:
+      x-fern-sdk-group-name:
+        - sca
+        - deviceFingerprints
+      x-fern-sdk-method-name: delete
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/facemaps:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - facemaps
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    delete:
+      x-fern-sdk-group-name:
+        - sca
+        - facemaps
+      x-fern-sdk-method-name: delete
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/facemaps/verify:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - facemaps
+      x-fern-sdk-method-name: verify
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /application/users/{userId}/phone-numbers:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: registerPhoneNumber
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/sms/trigger:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: sendSms
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/sms/verify:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: verifySms
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/whatsapp/trigger:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: sendWhatsapp
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/whatsapp/verify:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: verifyWhatsapp
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/voice/trigger:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: sendVoice
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /one-time-token/voice/verify:
+    post:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: verifyVoice
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /application/users/{userId}/phone-numbers/{phoneNumberId}:
+    delete:
+      x-fern-sdk-group-name:
+        - sca
+        - otp
+      x-fern-sdk-method-name: deletePhoneNumber
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /transfers/{transferId}:
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /transfers/{transferId}/cancel:
+    put:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: cancel
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /transfer-requirements:
+    post:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: validateRequirements
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/transfers/{transferId}/payments:
+    post:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: fund
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /transfers/{transferId}/payments:
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: listPayments
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /transfers/{transferId}/invoices/bankingpartner:
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: getPayoutInfo
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /transfers/{transferId}/receipt.pdf:
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: getReceipt
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /transfers/{transferId}/us-combined-receipt.pdf:
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: getUsCombinedReceipt
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /transfers/{transferId}/documents/noc:
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: getNoticeOfChange
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /transfers:
+    post:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: transfers
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/third-party-transfers:
+    post:
+      x-fern-sdk-group-name:
+        - transfers
+        - thirdParty
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/third-party-transfers/{transferId}:
+    get:
+      x-fern-sdk-group-name:
+        - transfers
+        - thirdParty
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /incoming-transfers/{incomingTransferId}:
+    get:
+      x-fern-sdk-group-name: incomingTransfers
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /gpi-tracking:
+    post:
+      x-fern-sdk-group-name: gpiTracking
+      x-fern-sdk-method-name: lookup
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /me:
+    get:
+      x-fern-sdk-group-name: users
+      x-fern-sdk-method-name: getCurrent
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /users/{userId}:
+    get:
+      x-fern-sdk-group-name: users
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /user/signup/registration_code:
+    post:
+      x-fern-sdk-group-name: users
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /users/exists:
+    post:
+      x-fern-sdk-group-name: users
+      x-fern-sdk-method-name: checkExists
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /users/{userId}/contact-email:
+    put:
+      x-fern-sdk-group-name: users
+      x-fern-sdk-method-name: setContactEmail
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name: users
+      x-fern-sdk-method-name: getContactEmail
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /applications/{clientKey}/subscriptions:
+    post:
+      x-fern-sdk-group-name:
+        - webhooks
+        - applications
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - webhooks
+        - applications
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /applications/{clientKey}/subscriptions/{subscriptionId}:
+    get:
+      x-fern-sdk-group-name:
+        - webhooks
+        - applications
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    delete:
+      x-fern-sdk-group-name:
+        - webhooks
+        - applications
+      x-fern-sdk-method-name: delete
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /applications/{clientKey}/subscriptions/{subscriptionId}/test-notifications:
+    post:
+      x-fern-sdk-group-name:
+        - webhooks
+        - applications
+      x-fern-sdk-method-name: test
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/subscriptions:
+    post:
+      x-fern-sdk-group-name:
+        - webhooks
+        - profiles
+      x-fern-sdk-method-name: create
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+    get:
+      x-fern-sdk-group-name:
+        - webhooks
+        - profiles
+      x-fern-sdk-method-name: list
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+  /profiles/{profileId}/subscriptions/{subscriptionId}:
+    get:
+      x-fern-sdk-group-name:
+        - webhooks
+        - profiles
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+    delete:
+      x-fern-sdk-group-name:
+        - webhooks
+        - profiles
+      x-fern-sdk-method-name: delete
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/embedded-flows/link-requests/recipients:
+    post:
+      x-fern-sdk-group-name: linkRequests
+      x-fern-sdk-method-name: createRecipient
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/embedded-flows/link-requests/payment-instrument:
+    post:
+      x-fern-sdk-group-name: linkRequests
+      x-fern-sdk-method-name: createPaymentInstrument
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /profiles/{profileId}/embedded-flows/link-requests/kyc-reviews:
+    post:
+      x-fern-sdk-group-name: linkRequests
+      x-fern-sdk-method-name: createKycReview
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
+  /embedded-flows/link-requests/{embeddedLinkRequestId}:
+    get:
+      x-fern-sdk-group-name: linkRequests
+      x-fern-sdk-method-name: get
+      x-fern-server-name: api
+      security:
+        - AccessToken: []

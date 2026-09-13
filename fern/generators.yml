@@ -1,0 +1,66 @@
+api:
+  specs:
+    - openapi: ../openapi/wise.json
+      overrides: ./overrides.yml
+  auth:
+    any:
+      - AccessToken
+      - ClientCredentials
+  environments:
+    Sandbox:
+      urls:
+        api: https://api.wise-sandbox.com/2026Q3
+        cards: https://twcard.wise-sandbox.com
+    Production:
+      urls:
+        api: https://api.wise.com/2026Q3
+        cards: https://twcard.wise.com
+    SandboxMtls:
+      urls:
+        api: https://api-mtls.wise-sandbox.com/2026Q3
+        cards: https://twcard.wise-sandbox.com
+    ProductionMtls:
+      urls:
+        api: https://api-mtls.transferwise.com/2026Q3
+        cards: https://twcard.wise.com
+
+auth-schemes:
+  AccessToken:
+    scheme: bearer
+    token:
+      name: accessToken
+      env: WISE_ACCESS_TOKEN
+  ClientCredentials:
+    scheme: basic
+    username:
+      name: clientId
+    password:
+      name: clientSecret
+
+groups:
+  typescript:
+    generators:
+      - name: fernapi/fern-typescript-sdk
+        version: 3.92.0
+        output:
+          location: local-file-system
+          path: ../sdks/typescript/src/generated
+        config:
+          namespaceExport: Wise
+          outputSourceFiles: true
+          allowCustomFetcher: true
+          inlinePathParameters: true
+          flattenRequestParameters: true
+          useBigInt: true
+  python:
+    generators:
+      - name: fernapi/fern-python-sdk
+        version: 5.30.0
+        output:
+          location: local-file-system
+          path: ../sdks/python/src/wise_sdk/generated
+        config:
+          client_class_name: WiseClient
+          package_name: wise_sdk.generated
+          inline_path_params: true
+          encode_path_params: true

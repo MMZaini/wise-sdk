@@ -1,0 +1,3245 @@
+[
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/3dsecure/challenge-result",
+    "operationId": "3dsChallengeResultPost",
+    "group": "threeDs",
+    "name": "submitResult",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/activities",
+    "operationId": "activityList",
+    "group": "activities",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/additional-verification/upload-evidences",
+    "operationId": "verificationUploadEvidences",
+    "group": "verification",
+    "name": "uploadEvidence",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/verification-status/upload-document",
+    "operationId": "verificationUploadDocument",
+    "group": "verification",
+    "name": "uploadDocument",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/verification-status/required-evidences",
+    "operationId": "verificationGetRequiredEvidences",
+    "group": "verification",
+    "name": "getRequiredEvidence",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/addresses",
+    "operationId": "addressCreate",
+    "group": "addresses",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/addresses",
+    "operationId": "addressList",
+    "group": "addresses",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/addresses/{addressId}",
+    "operationId": "addressGet",
+    "group": "addresses",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/address-requirements",
+    "operationId": "addressRequirementsGet",
+    "group": "addresses",
+    "name": "getRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/address-requirements",
+    "operationId": "addressRequirementsPost",
+    "group": "addresses",
+    "name": "refreshRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/balances",
+    "operationId": "balanceCreate",
+    "group": "balances",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/balances",
+    "operationId": "balanceList",
+    "group": "balances",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/balances/{balanceId}",
+    "operationId": "balanceGet",
+    "group": "balances",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/profiles/{profileId}/balances/{balanceId}",
+    "operationId": "balanceDelete",
+    "group": "balances",
+    "name": "delete",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/balance-movements",
+    "operationId": "balanceMovement",
+    "group": "balances",
+    "name": "move",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/balance-capacity",
+    "operationId": "balanceCapacity",
+    "group": "balances",
+    "name": "getCapacity",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/excess-money-account",
+    "operationId": "excessMoneyAccount",
+    "group": "balances",
+    "name": "getExcessMoneyAccount",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/total-funds/{currency}",
+    "operationId": "totalFunds",
+    "group": "balances",
+    "name": "getTotalFunds",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/balances/hold-limit-breach",
+    "operationId": "holdLimitBreachList",
+    "group": [
+      "balances",
+      "holdLimitBreaches"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/balances/hold-limit-breach/{holdLimitBreachId}",
+    "operationId": "holdLimitBreachClose",
+    "group": [
+      "balances",
+      "holdLimitBreaches"
+    ],
+    "name": "close",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/balance-statements/{balanceId}/statement.json",
+    "operationId": "balanceStatementGet",
+    "group": "statements",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/bank-details",
+    "operationId": "bankAccountDetailsBankDetailsCreate",
+    "group": "accountDetails",
+    "name": "createBankDetails",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/account-details",
+    "operationId": "bankAccountDetailsGet",
+    "group": "accountDetails",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/account-details-orders",
+    "operationId": "bankAccountDetailsOrderCreate",
+    "group": [
+      "accountDetails",
+      "orders"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/account-details-orders",
+    "operationId": "bankAccountDetailsOrdersList",
+    "group": [
+      "accountDetails",
+      "orders"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/account-details/payments/{paymentId}/returns",
+    "operationId": "bankAccountDetailsReturnsCreate",
+    "group": "accountDetails",
+    "name": "returnPayment",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/batch-groups",
+    "operationId": "batchGroupCreate",
+    "group": "batchGroups",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/batch-groups/{batchGroupId}",
+    "operationId": "batchGroupGet",
+    "group": "batchGroups",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/profiles/{profileId}/batch-groups/{batchGroupId}",
+    "operationId": "batchGroupUpdate",
+    "group": "batchGroups",
+    "name": "update",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/batch-groups/{batchGroupId}/transfers",
+    "operationId": "batchGroupTransferCreate",
+    "group": "batchGroups",
+    "name": "createTransfer",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/batch-payments/{batchGroupId}/payments",
+    "operationId": "batchGroupFund",
+    "group": "batchGroups",
+    "name": "fund",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/batch-groups/{batchGroupId}/payment-initiations",
+    "operationId": "batchGroupPaymentInitiationCreate",
+    "group": "batchGroups",
+    "name": "createPaymentInitiation",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/batch-groups/{batchGroupId}/payment-initiations/{paymentInitiationId}",
+    "operationId": "batchGroupPaymentInitiationGet",
+    "group": "batchGroups",
+    "name": "getPaymentInitiation",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/settlements",
+    "operationId": "bulkSettlementJournalCreate",
+    "group": "bulkSettlements",
+    "name": "createJournal",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/cards",
+    "operationId": "cardList",
+    "group": "cards",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}",
+    "operationId": "cardGet",
+    "group": "cards",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/status",
+    "operationId": "cardStatusUpdate",
+    "group": "cards",
+    "name": "updateStatus",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/reset-pin-count",
+    "operationId": "cardPinCountReset",
+    "group": "cards",
+    "name": "resetPinAttempts",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/spending-permissions",
+    "operationId": "cardPermissionsBulkUpdate",
+    "group": "cards",
+    "name": "updatePermissions",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/twcard-data/v1/clientSideEncryption/fetchEncryptingKey",
+    "operationId": "cardEncryptionKeyGet",
+    "group": [
+      "cards",
+      "sensitiveDetails"
+    ],
+    "name": "getEncryptionKey",
+    "server": "cards",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/twcard-data/v1/sensitive-card-data/details",
+    "operationId": "cardSensitiveDetailsGet",
+    "group": [
+      "cards",
+      "sensitiveDetails"
+    ],
+    "name": "get",
+    "server": "cards",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/twcard-data/v1/sensitive-card-data/pin",
+    "operationId": "cardPinGet",
+    "group": [
+      "cards",
+      "sensitiveDetails"
+    ],
+    "name": "getPin",
+    "server": "cards",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/production",
+    "operationId": "cardKioskCollectionProduce",
+    "group": [
+      "cards",
+      "kiosk"
+    ],
+    "name": "produce",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/production",
+    "operationId": "cardKioskCollectionProductionGet",
+    "group": [
+      "cards",
+      "kiosk"
+    ],
+    "name": "getProduction",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/card-orders",
+    "operationId": "cardOrderCreate",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/card-orders",
+    "operationId": "cardOrderList",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/card-orders/{cardOrderId}",
+    "operationId": "cardOrderGet",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/card-orders/availability",
+    "operationId": "cardOrderProgramsGet",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "getPrograms",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/card-orders/{cardOrderId}/requirements",
+    "operationId": "cardOrderRequirementsGet",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "getRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/spend/profiles/{profileId}/card-orders/{cardOrderId}/status",
+    "operationId": "cardOrderStatusUpdate",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "updateStatus",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/address/validate",
+    "operationId": "cardOrderValidateAddress",
+    "group": [
+      "cards",
+      "orders"
+    ],
+    "name": "validateAddress",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/twcard-data/v1/sensitive-card-data/preset-pin",
+    "operationId": "cardOrderPresetPin",
+    "group": [
+      "cards",
+      "sensitiveDetails"
+    ],
+    "name": "presetPin",
+    "server": "cards",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/cards/transactions/{transactionId}",
+    "operationId": "cardTransactionGet",
+    "group": [
+      "cards",
+      "transactions"
+    ],
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/transactions",
+    "operationId": "cardTransactionList",
+    "group": [
+      "cards",
+      "transactions"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/claim-account",
+    "operationId": "claimAccountCreate",
+    "group": "accountClaims",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/comparisons",
+    "operationId": "comparisonGet",
+    "group": "comparisons",
+    "name": "get",
+    "server": "api",
+    "security": [],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/contacts",
+    "operationId": "contactCreate",
+    "group": "contacts",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/currencies",
+    "operationId": "currenciesGet",
+    "group": "currencies",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/delivery-estimates/{transferId}",
+    "operationId": "deliveryEstimateGet",
+    "group": "deliveryEstimates",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/direct-debit-accounts",
+    "operationId": "directDebitAccountCreate",
+    "group": "directDebitAccounts",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/direct-debit-accounts",
+    "operationId": "directDebitAccountGet",
+    "group": "directDebitAccounts",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/dispute-form/flows/step/{scheme}/{reason}",
+    "operationId": "disputeDynamicFlowStep",
+    "group": "disputes",
+    "name": "submitStep",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/dispute-form/reasons",
+    "operationId": "disputeReasonsGet",
+    "group": "disputes",
+    "name": "getReasons",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/dispute-form/flows/{scheme}/{reason}",
+    "operationId": "disputeSubmit",
+    "group": "disputes",
+    "name": "submit",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/dispute-form/file",
+    "operationId": "disputeFileUpload",
+    "group": "disputes",
+    "name": "uploadFile",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/disputes",
+    "operationId": "disputeList",
+    "group": "disputes",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/disputes/{disputeId}",
+    "operationId": "disputeGet",
+    "group": "disputes",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/spend/profiles/{profileId}/disputes/{disputeId}/status",
+    "operationId": "disputeWithdraw",
+    "group": "disputes",
+    "name": "withdraw",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/facetec/public-key",
+    "operationId": "facetecPublicKeyGet",
+    "group": "faceTec",
+    "name": "getPublicKey",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/auth/jose/response/public-keys",
+    "operationId": "joseResponsePublicKeysGet",
+    "group": "jose",
+    "name": "getResponsePublicKeys",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/auth/jose/request/public-keys",
+    "operationId": "joseRequestPublicKeysCreate",
+    "group": "jose",
+    "name": "createRequestPublicKeys",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/auth/jose/playground/jws",
+    "operationId": "josePlaygroundJws",
+    "group": "jose",
+    "name": "testJws",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/auth/jose/playground/jwe",
+    "operationId": "josePlaygroundJweGet",
+    "group": "jose",
+    "name": "getTestJwe",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/auth/jose/playground/jwe",
+    "operationId": "josePlaygroundJwePost",
+    "group": "jose",
+    "name": "postTestJwe",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/auth/jose/playground/jwe-direct-encryption",
+    "operationId": "josePlaygroundJweDirectEncryption",
+    "group": "jose",
+    "name": "testDirectEncryption",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/auth/jose/playground/jwsjwe",
+    "operationId": "josePlaygroundJwsJwe",
+    "group": "jose",
+    "name": "testJwsJwe",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/kyc-reviews",
+    "operationId": "kycReviewCreate",
+    "group": "kycReviews",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/kyc-reviews",
+    "operationId": "kycReviewList",
+    "group": "kycReviews",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/kyc-reviews/{kycReviewId}",
+    "operationId": "kycReviewGet",
+    "group": "kycReviews",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/profiles/{profileId}/kyc-reviews/{kycReviewId}",
+    "operationId": "kycReviewRedirectUrlUpdate",
+    "group": "kycReviews",
+    "name": "updateRedirectUrl",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/kyc-requirements/{requirementKey}",
+    "operationId": "kycReviewRequirementSubmit",
+    "group": "kycReviews",
+    "name": "submitRequirement",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/embedded-flows/link-requests/recipients",
+    "operationId": "recipientEmbeddedLinkRequestCreate",
+    "group": "linkRequests",
+    "name": "createRecipient",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/embedded-flows/link-requests/payment-instrument",
+    "operationId": "paymentInstrumentEmbeddedLinkRequestCreate",
+    "group": "linkRequests",
+    "name": "createPaymentInstrument",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/embedded-flows/link-requests/kyc-reviews",
+    "operationId": "kycReviewsEmbeddedLinkRequestCreate",
+    "group": "linkRequests",
+    "name": "createKycReview",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/embedded-flows/link-requests/{embeddedLinkRequestId}",
+    "operationId": "embeddedLinkRequestGet",
+    "group": "linkRequests",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/borderless-accounts-configuration/profiles/{profileId}/available-currencies",
+    "operationId": "mcaAvailableCurrenciesGet",
+    "group": "multiCurrencyAccounts",
+    "name": "getAvailableCurrencies",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/borderless-accounts-configuration/profiles/{profileId}/payin-currencies",
+    "operationId": "mcaPayinCurrenciesGet",
+    "group": "multiCurrencyAccounts",
+    "name": "getPayinCurrencies",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/multi-currency-account",
+    "operationId": "mcaGet",
+    "group": "multiCurrencyAccounts",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/multi-currency-account/eligibility",
+    "operationId": "mcaEligibilityGet",
+    "group": "multiCurrencyAccounts",
+    "name": "getEligibility",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/oauth/token",
+    "operationId": "oauthTokenCreate",
+    "group": "oauth",
+    "name": "createToken",
+    "server": "api",
+    "security": [
+      {
+        "BasicAuth": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/application/users/{userId}/phone-numbers",
+    "operationId": "userSecurityPhoneNumberCreate",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "registerPhoneNumber",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/one-time-token/status",
+    "operationId": "ottStatusGet",
+    "group": "sca",
+    "name": "getOneTimeTokenStatus",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/one-time-token/sms/trigger",
+    "operationId": "ottSmsTrigger",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "sendSms",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/one-time-token/sms/verify",
+    "operationId": "ottSmsVerify",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "verifySms",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/one-time-token/whatsapp/trigger",
+    "operationId": "ottWhatsappTrigger",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "sendWhatsapp",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/one-time-token/whatsapp/verify",
+    "operationId": "ottWhatsappVerify",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "verifyWhatsapp",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/one-time-token/voice/trigger",
+    "operationId": "ottVoiceTrigger",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "sendVoice",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/one-time-token/voice/verify",
+    "operationId": "ottVoiceVerify",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "verifyVoice",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/application/users/{userId}/phone-numbers/{phoneNumberId}",
+    "operationId": "userSecurityPhoneNumberDelete",
+    "group": [
+      "sca",
+      "otp"
+    ],
+    "name": "deletePhoneNumber",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/cases",
+    "operationId": "caseCreate",
+    "group": "cases",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/cases/{caseId}",
+    "operationId": "caseGet",
+    "group": "cases",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/cases/{caseId}/messages",
+    "operationId": "caseSubmitMessage",
+    "group": "cases",
+    "name": "submitMessage",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/payin-sessions/{payinSessionId}/paynow",
+    "operationId": "paynowCreate",
+    "group": "payins",
+    "name": "createPaynow",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/transfers/{transferId}/deposit-details/bank-transfer",
+    "operationId": "payinDepositDetailGet",
+    "group": "payinDepositDetails",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles",
+    "operationId": "profileList",
+    "group": "profiles",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/personal-profile",
+    "operationId": "profilePersonalCreate",
+    "group": "profiles",
+    "name": "createPersonal",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/business-profile",
+    "operationId": "profileBusinessCreateV5",
+    "group": "profiles",
+    "name": "createBusiness",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}",
+    "operationId": "profileGet",
+    "group": "profiles",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/profiles/{profileId}/personal-profile",
+    "operationId": "profilePersonalUpdate",
+    "group": "profiles",
+    "name": "updatePersonal",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/profiles/{profileId}/business-profile",
+    "operationId": "profileBusinessUpdateV3",
+    "group": "profiles",
+    "name": "updateBusiness",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/business-profile/business-representative",
+    "operationId": "profileBusinessRepresentativeGet",
+    "group": "profiles",
+    "name": "getBusinessRepresentative",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/profiles/{profileId}/business-profile/business-representative",
+    "operationId": "profileBusinessRepresentativeUpdate",
+    "group": "profiles",
+    "name": "updateBusinessRepresentative",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/verification-documents",
+    "operationId": "profileVerificationDocumentCreate",
+    "group": "profiles",
+    "name": "createVerificationDocument",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/profiles/{profileId}/verification-documents",
+    "operationId": "profileVerificationDocumentUpdate",
+    "group": "profiles",
+    "name": "updateVerificationDocument",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/directors",
+    "operationId": "profileDirectorCreate",
+    "group": [
+      "profiles",
+      "directors"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/directors",
+    "operationId": "profileDirectorList",
+    "group": [
+      "profiles",
+      "directors"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/profiles/{profileId}/directors",
+    "operationId": "profileDirectorUpdate",
+    "group": [
+      "profiles",
+      "directors"
+    ],
+    "name": "update",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/ubos",
+    "operationId": "profileUboCreate",
+    "group": [
+      "profiles",
+      "beneficialOwners"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/ubos",
+    "operationId": "profileUboList",
+    "group": [
+      "profiles",
+      "beneficialOwners"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/profiles/{profileId}/ubos",
+    "operationId": "profileUboUpdate",
+    "group": [
+      "profiles",
+      "beneficialOwners"
+    ],
+    "name": "update",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/update-window",
+    "operationId": "profileUpdateWindowOpen",
+    "group": "profiles",
+    "name": "openUpdateWindow",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/profiles/{profileId}/update-window",
+    "operationId": "profileUpdateWindowClose",
+    "group": "profiles",
+    "name": "closeUpdateWindow",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/verification-status/bank-transfer",
+    "operationId": "profileVerificationStatusCheck",
+    "group": "profiles",
+    "name": "checkVerificationStatus",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/payment-tokens",
+    "operationId": "pushProvisioningPaymentTokensList",
+    "group": "digitalWallets",
+    "name": "listPaymentTokens",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/payment-tokens/{paymentTokenUniqueReference}/activation",
+    "operationId": "digitalWalletActivatePaymentToken",
+    "group": "digitalWallets",
+    "name": "activatePaymentToken",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/twcard-data/v1/push-provisioning/encrypted-payload/google-pay",
+    "operationId": "pushProvisioningGooglePayGet",
+    "group": "digitalWallets",
+    "name": "getGooglePayPayload",
+    "server": "cards",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/twcard-data/v1/push-provisioning/encrypted-payload/apple-pay",
+    "operationId": "pushProvisioningApplePayGet",
+    "group": "digitalWallets",
+    "name": "getApplePayPayload",
+    "server": "cards",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/quotes",
+    "operationId": "quoteCreateUnauthenticated",
+    "group": "quotes",
+    "name": "createUnauthenticated",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      },
+      {}
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/quotes",
+    "operationId": "quoteCreate",
+    "group": "quotes",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/quotes/{quoteId}",
+    "operationId": "quoteGet",
+    "group": "quotes",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/profiles/{profileId}/quotes/{quoteId}",
+    "operationId": "quoteUpdate",
+    "group": "quotes",
+    "name": "update",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/rates",
+    "operationId": "rateGet",
+    "group": "rates",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/accounts",
+    "operationId": "recipientList",
+    "group": "recipients",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/accounts",
+    "operationId": "recipientCreate",
+    "group": "recipients",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}",
+    "operationId": "recipientGet",
+    "group": "recipients",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/accounts/{accountId}",
+    "operationId": "recipientDeactivate",
+    "group": "recipients",
+    "name": "deactivate",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/quotes/{quoteId}/account-requirements",
+    "operationId": "recipientAccountRequirementsGet",
+    "group": "recipients",
+    "name": "getRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/quotes/{quoteId}/account-requirements",
+    "operationId": "recipientAccountRequirementsPost",
+    "group": "recipients",
+    "name": "refreshRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/quotes/{quoteId}/compatibility",
+    "operationId": "recipientCompatibilityCheck",
+    "group": "recipients",
+    "name": "checkCompatibility",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/accounts/{accountId}/confirmations",
+    "operationId": "recipientConfirmationsAccept",
+    "group": "recipients",
+    "name": "acceptConfirmations",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/simulation/transfers/{transferId}/{status}",
+    "operationId": "simulationTransferStateChange",
+    "group": "simulations",
+    "name": "changeTransferState",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/transfers/{transferId}/payout-failure",
+    "operationId": "simulationTransferPayoutFailure",
+    "group": "simulations",
+    "name": "failTransferPayout",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/profiles/{profileId}/verifications",
+    "operationId": "simulationVerification",
+    "group": "simulations",
+    "name": "verifyUser",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/verify-profile",
+    "operationId": "simulationVerifyProfile",
+    "group": "simulations",
+    "name": "verifyProfile",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/balance/topup",
+    "operationId": "simulationBalanceTopup",
+    "group": "simulations",
+    "name": "topUpBalance",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions/authorisation",
+    "operationId": "simulationCardTransactionAuthorisation",
+    "group": "simulations",
+    "name": "authorizeCardTransaction",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions/clearing",
+    "operationId": "simulationCardTransactionClearing",
+    "group": "simulations",
+    "name": "clearCardTransaction",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions/reversal",
+    "operationId": "simulationCardTransactionReversal",
+    "group": "simulations",
+    "name": "reverseCardTransaction",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/simulation/spend/profiles/{profileId}/cards/{cardToken}/transactions",
+    "operationId": "simulationCardTransactions",
+    "group": "simulations",
+    "name": "createCardTransactions",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/spend/profiles/{profileId}/cards/{cardToken}/production",
+    "operationId": "simulationCardProduction",
+    "group": "simulations",
+    "name": "produceCard",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements",
+    "operationId": "simulationKycReviewRequirementsList",
+    "group": "simulations",
+    "name": "listKycRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements/add",
+    "operationId": "simulationKycReviewRequirementsAdd",
+    "group": "simulations",
+    "name": "addKycRequirement",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/requirements/submit",
+    "operationId": "simulationKycReviewRequirementsSubmit",
+    "group": "simulations",
+    "name": "submitKycRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/verify",
+    "operationId": "simulationKycReviewVerify",
+    "group": "simulations",
+    "name": "verifyKycReview",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/profiles/{profileId}/bank-transactions/import",
+    "operationId": "simulationBankTransactionImport",
+    "group": "simulations",
+    "name": "importBankTransaction",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/profiles/{profileId}/swift-in",
+    "operationId": "simulationSwiftIn",
+    "group": "simulations",
+    "name": "createSwiftIncomingTransfer",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/applications/{clientId}/spend-controls/rules",
+    "operationId": "spendControlsRuleCreate",
+    "group": "spendControls",
+    "name": "createRule",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/applications/{clientId}/spend-controls/rules",
+    "operationId": "spendControlsRulesList",
+    "group": "spendControls",
+    "name": "listRules",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/applications/{clientId}/spend-controls/rules/apply",
+    "operationId": "spendControlsRuleApply",
+    "group": "spendControls",
+    "name": "applyRule",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/spend/applications/{clientId}/spend-controls/rules/unapply",
+    "operationId": "spendControlsRuleUnapply",
+    "group": "spendControls",
+    "name": "unapplyRule",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/applications/{clientId}/spend-controls/rules/applied",
+    "operationId": "spendControlsAppliedRulesList",
+    "group": "spendControls",
+    "name": "listAppliedRules",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/spend/applications/{clientId}/spend-controls/rules/{ruleId}",
+    "operationId": "spendControlsRuleDelete",
+    "group": "spendControls",
+    "name": "deleteRule",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/spend-limits",
+    "operationId": "spendLimitsProfileGet",
+    "group": "spendLimits",
+    "name": "getProfile",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/spend/profiles/{profileId}/spend-limits",
+    "operationId": "spendLimitsProfileUpdate",
+    "group": "spendLimits",
+    "name": "updateProfile",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/spend-limits",
+    "operationId": "spendLimitsCardGet",
+    "group": "spendLimits",
+    "name": "getCard",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/spend-limits",
+    "operationId": "spendLimitsCardUpdate",
+    "group": "spendLimits",
+    "name": "updateCard",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/spend/profiles/{profileId}/cards/{cardToken}/spend-limits/{granularity}",
+    "operationId": "spendLimitsCardDelete",
+    "group": "spendLimits",
+    "name": "deleteCard",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/spend/profiles/{businessProfileId}/card-holder-profiles/{cardHolderProfileId}/spend-limits",
+    "operationId": "spendLimitsCardHolderGet",
+    "group": "spendLimits",
+    "name": "getCardHolder",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PATCH",
+    "path": "/spend/profiles/{businessProfileId}/card-holder-profiles/{cardHolderProfileId}/spend-limits",
+    "operationId": "spendLimitsCardHolderUpdate",
+    "group": "spendLimits",
+    "name": "updateCardHolder",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/spend/profiles/{businessProfileId}/card-holder-profiles/{cardHolderProfileId}/spend-limits",
+    "operationId": "spendLimitsCardHolderDelete",
+    "group": "spendLimits",
+    "name": "deleteCardHolder",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/pin",
+    "operationId": "scaPinCreate",
+    "group": [
+      "sca",
+      "pin"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/profiles/{profileId}/pin",
+    "operationId": "scaPinDelete",
+    "group": [
+      "sca",
+      "pin"
+    ],
+    "name": "delete",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/pin/verify",
+    "operationId": "scaPinVerify",
+    "group": [
+      "sca",
+      "pin"
+    ],
+    "name": "verify",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/device-fingerprints",
+    "operationId": "scaDeviceFingerprintCreate",
+    "group": [
+      "sca",
+      "deviceFingerprints"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/device-fingerprints/verify",
+    "operationId": "scaDeviceFingerprintVerify",
+    "group": [
+      "sca",
+      "deviceFingerprints"
+    ],
+    "name": "verify",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/profiles/{profileId}/device-fingerprints/{deviceFingerprintId}",
+    "operationId": "scaDeviceFingerprintDelete",
+    "group": [
+      "sca",
+      "deviceFingerprints"
+    ],
+    "name": "delete",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/facemaps",
+    "operationId": "scaFacemapCreate",
+    "group": [
+      "sca",
+      "facemaps"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/profiles/{profileId}/facemaps",
+    "operationId": "scaFacemapDelete",
+    "group": [
+      "sca",
+      "facemaps"
+    ],
+    "name": "delete",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/facemaps/verify",
+    "operationId": "scaFacemapVerify",
+    "group": [
+      "sca",
+      "facemaps"
+    ],
+    "name": "verify",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/sca-sessions/authorise",
+    "operationId": "scaSessionCreate",
+    "group": [
+      "sca",
+      "sessions"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/transfers",
+    "operationId": "transferCreate",
+    "group": "transfers",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers",
+    "operationId": "transferList",
+    "group": "transfers",
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers/{transferId}",
+    "operationId": "transferGet",
+    "group": "transfers",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/transfers/{transferId}/cancel",
+    "operationId": "transferCancel",
+    "group": "transfers",
+    "name": "cancel",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/transfer-requirements",
+    "operationId": "transferRequirementsValidate",
+    "group": "transfers",
+    "name": "validateRequirements",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/third-party-transfers",
+    "operationId": "createThirdPartyTransfer",
+    "group": [
+      "transfers",
+      "thirdParty"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/third-party-transfers/{transferId}",
+    "operationId": "getThirdPartyTransfer",
+    "group": [
+      "transfers",
+      "thirdParty"
+    ],
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/transfers/{transferId}/payments",
+    "operationId": "transferFund",
+    "group": "transfers",
+    "name": "fund",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers/{transferId}/payments",
+    "operationId": "transferPaymentsList",
+    "group": "transfers",
+    "name": "listPayments",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers/{transferId}/invoices/bankingpartner",
+    "operationId": "transferPayoutInfoGet",
+    "group": "transfers",
+    "name": "getPayoutInfo",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers/{transferId}/receipt.pdf",
+    "operationId": "transferReceiptGet",
+    "group": "transfers",
+    "name": "getReceipt",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers/{transferId}/us-combined-receipt.pdf",
+    "operationId": "transferUsCombinedReceiptGet",
+    "group": "transfers",
+    "name": "getUsCombinedReceipt",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/transfers/{transferId}/documents/noc",
+    "operationId": "transferNocGet",
+    "group": "transfers",
+    "name": "getNoticeOfChange",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/incoming-transfers/{incomingTransferId}",
+    "operationId": "GetIncomingTransfer",
+    "group": "incomingTransfers",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      },
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/gpi-tracking",
+    "operationId": "LookupGpiTracking",
+    "group": "gpiTracking",
+    "name": "lookup",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/me",
+    "operationId": "userGetByToken",
+    "group": "users",
+    "name": "getCurrent",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/users/{userId}",
+    "operationId": "userGetById",
+    "group": "users",
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      },
+      {
+        "PersonalToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/user/signup/registration_code",
+    "operationId": "userCreate",
+    "group": "users",
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/users/exists",
+    "operationId": "userCheckExists",
+    "group": "users",
+    "name": "checkExists",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "PUT",
+    "path": "/users/{userId}/contact-email",
+    "operationId": "userContactEmailSet",
+    "group": "users",
+    "name": "setContactEmail",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/users/{userId}/contact-email",
+    "operationId": "userContactEmailGet",
+    "group": "users",
+    "name": "getContactEmail",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/applications/{clientKey}/subscriptions",
+    "operationId": "webhookApplicationSubscriptionCreate",
+    "group": [
+      "webhooks",
+      "applications"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/applications/{clientKey}/subscriptions",
+    "operationId": "webhookApplicationSubscriptionList",
+    "group": [
+      "webhooks",
+      "applications"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/applications/{clientKey}/subscriptions/{subscriptionId}",
+    "operationId": "webhookApplicationSubscriptionGet",
+    "group": [
+      "webhooks",
+      "applications"
+    ],
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/applications/{clientKey}/subscriptions/{subscriptionId}",
+    "operationId": "webhookApplicationSubscriptionDelete",
+    "group": [
+      "webhooks",
+      "applications"
+    ],
+    "name": "delete",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/applications/{clientKey}/subscriptions/{subscriptionId}/test-notifications",
+    "operationId": "webhookApplicationSubscriptionTest",
+    "group": [
+      "webhooks",
+      "applications"
+    ],
+    "name": "test",
+    "server": "api",
+    "security": [
+      {
+        "ClientCredentialsToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/profiles/{profileId}/subscriptions",
+    "operationId": "webhookProfileSubscriptionCreate",
+    "group": [
+      "webhooks",
+      "profiles"
+    ],
+    "name": "create",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/subscriptions",
+    "operationId": "webhookProfileSubscriptionList",
+    "group": [
+      "webhooks",
+      "profiles"
+    ],
+    "name": "list",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/{profileId}/subscriptions/{subscriptionId}",
+    "operationId": "webhookProfileSubscriptionGet",
+    "group": [
+      "webhooks",
+      "profiles"
+    ],
+    "name": "get",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "DELETE",
+    "path": "/profiles/{profileId}/subscriptions/{subscriptionId}",
+    "operationId": "webhookProfileSubscriptionDelete",
+    "group": [
+      "webhooks",
+      "profiles"
+    ],
+    "name": "delete",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  }
+]
