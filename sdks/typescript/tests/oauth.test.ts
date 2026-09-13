@@ -72,3 +72,34 @@ test("token refresh receives the last stored refresh token", async () => {
     } });
   assert.equal(await manager.getAccessToken(), "new");
 });
+
+test("OAuth rejects unknown authorization environments for JavaScript callers", () => {
+  const oauth = new WiseOAuth({ clientId: "client", clientSecret: "secret",
+    authorizationEnvironment: "sandbx" as "sandbox",
+  });
+  assert.throws(() => oauth.authorizationUrl({ redirectUri: "https://app.test/callback", state: "state" }), OAuthError);
+});
+
+test("OAuth validates expiry metadata and keeps the earliest refresh expiry", async () => {
+  let metadata: Record<string, unknown> = {};
+  const oauth = new WiseOAuth({ clientId: "client", clientSecret: "secret", fetch: async () =>
+    Response.json({ access_token: "access", token_type: "bearer", expires_in: 3600, ...metadata }),
+  });
+  for (const invalid of [
+    { refresh_token_expires_in: -1 }, { refresh_token_expires_in: 1e308 },
+    { refresh_token_expires_at: "not-a-date" }, { refresh_token_expires_at: "" },
+    { refresh_token_expires_at: "2099-01-01T00:00:00" }, { expires_at: "2099-01-01T00:00:00" },
+  ]) {
+    metadata = invalid;
+    await assert.rejects(oauth.createClientToken(), OAuthError);
+  }
+  const before = Date.now();
+  metadata = { refresh_token_expires_in: 0, refresh_token_expires_at: "2099-01-01T00:00:00Z" };
+  const tokens = await oauth.createClientToken();
+  assert(tokens.refreshTokenExpiresAt! >= before && tokens.refreshTokenExpiresAt! <= Date.now());
+  const earlier = new Date(Date.now() + 300000).toISOString();
+  metadata = { refresh_token_expires_in: 3600, refresh_token_expires_at: earlier };
+  assert.equal((await oauth.createClientToken()).refreshTokenExpiresAt, Date.parse(earlier));
+  metadata = {};
+  assert.equal((await oauth.createClientToken()).refreshTokenExpiresAt, undefined);
+});

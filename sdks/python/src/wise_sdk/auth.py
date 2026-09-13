@@ -58,18 +58,29 @@ def _timestamp(value: str) -> float:
         raise OAuthError("OAuth returned an invalid expiry") from None
 
 
+def _token_expiry(relative, absolute, requested_at):
+    expiry = None
+    if relative is not None:
+        if not math.isfinite(relative) or relative < 0:
+            raise OAuthError("OAuth returned an invalid expiry")
+        expiry = requested_at + relative
+        if not math.isfinite(expiry):
+            raise OAuthError("OAuth returned an invalid expiry")
+    if absolute is not None:
+        explicit = _timestamp(absolute)
+        expiry = explicit if expiry is None else min(expiry, explicit)
+    return expiry
+
+
 def _normalize(response, requested_at):
     if not isinstance(response.access_token, str) or not response.access_token or any(c.isspace() or c in ";," for c in response.access_token):
         raise OAuthError("OAuth returned an invalid access token")
     if response.expires_in is None or not math.isfinite(response.expires_in) or response.expires_in <= 0 or (response.token_type or "").lower() != "bearer":
         raise OAuthError("OAuth returned invalid token metadata")
-    expires_at = requested_at + response.expires_in
-    if response.expires_at:
-        expires_at = min(expires_at, _timestamp(response.expires_at))
+    expires_at = _token_expiry(response.expires_in, response.expires_at, requested_at)
     if not math.isfinite(expires_at) or expires_at <= time.time():
         raise OAuthError("OAuth returned an expired token")
-    refresh_expiry = _timestamp(response.refresh_token_expires_at) if response.refresh_token_expires_at else (
-        requested_at + response.refresh_token_expires_in if response.refresh_token_expires_in else None)
+    refresh_expiry = _token_expiry(response.refresh_token_expires_in, response.refresh_token_expires_at, requested_at)
     return OAuthTokens(response.access_token, expires_at, refresh_token=response.refresh_token,
                        refresh_token_expires_at=refresh_expiry, scope=response.scope)
 
@@ -195,7 +206,10 @@ class AsyncWiseOAuth:
 
 
 def _validate_tokens(tokens):
-    if not isinstance(tokens, OAuthTokens) or not tokens.access_token or not math.isfinite(tokens.expires_at) or tokens.expires_at <= time.time():
+    if (not isinstance(tokens, OAuthTokens) or not isinstance(tokens.access_token, str) or not tokens.access_token
+            or any(c.isspace() or c in ";," for c in tokens.access_token)
+            or not isinstance(tokens.expires_at, (int, float)) or not math.isfinite(tokens.expires_at)
+            or tokens.expires_at <= time.time()):
         raise OAuthError("Token acquisition returned invalid or expired tokens")
 
 

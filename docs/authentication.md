@@ -129,6 +129,9 @@ mTLS origins. Card endpoints retain their separate `twcard` host.
 OAuth helpers return typed token sets. `expiresAt` is a Unix timestamp in
 **milliseconds** in TypeScript; `expires_at` uses **seconds** in Python.
 Use the returned expiry. Personal tokens do not use this refresh flow.
+When Wise supplies both a duration and a timestamp, the helpers use the earlier
+expiry for each token. Timestamps must include a timezone; malformed expiry
+metadata raises `OAuthError`.
 
 Wise user-token rotation immediately invalidates the previous access token.
 Refresh tokens may also rotate. Store the newest token set before using it.

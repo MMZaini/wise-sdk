@@ -1,6 +1,7 @@
 import asyncio
 import time
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlsplit
 
 import httpx
@@ -85,3 +86,48 @@ async def test_cancelled_waiter_does_not_cancel_shared_rotation():
     finish.set()
     assert await asyncio.gather(*(manager.get_access_token() for _ in range(20))) == ["new"] * 20
     assert len(acquired) == len(saved) == 1
+
+
+def test_expiry_metadata_is_validated_and_earliest_refresh_expiry_is_used():
+    metadata = {}
+    def respond(request):
+        return httpx.Response(200, json={"access_token": "access", "token_type": "bearer", "expires_in": 3600, **metadata})
+    with httpx.Client(transport=httpx.MockTransport(respond)) as http:
+        with WiseOAuth(client_id="client", client_secret="secret", httpx_client=http) as oauth:
+            for invalid in [
+                {"refresh_token_expires_in": -1}, {"refresh_token_expires_at": "not-a-date"},
+                {"refresh_token_expires_at": ""}, {"refresh_token_expires_at": "2099-01-01T00:00:00"},
+                {"expires_at": "2099-01-01T00:00:00"},
+            ]:
+                metadata = invalid
+                with pytest.raises(OAuthError):
+                    oauth.create_client_token()
+            before = time.time()
+            metadata = {"refresh_token_expires_in": 0, "refresh_token_expires_at": "2099-01-01T00:00:00Z"}
+            assert before <= oauth.create_client_token().refresh_token_expires_at <= time.time()
+            earlier = datetime.fromtimestamp(time.time() + 300, timezone.utc)
+            metadata = {"refresh_token_expires_in": 3600, "refresh_token_expires_at": earlier.isoformat()}
+            assert oauth.create_client_token().refresh_token_expires_at == earlier.timestamp()
+            metadata = {}
+            assert oauth.create_client_token().refresh_token_expires_at is None
+
+
+@pytest.mark.parametrize("access_token", ["", "two tokens", "first,second", 123])
+def test_invalid_acquired_tokens_are_not_persisted(access_token):
+    saved = []
+    manager = TokenManager(acquire=lambda previous: OAuthTokens(access_token, time.time() + 3600), on_tokens=saved.append)
+    with pytest.raises(OAuthError):
+        manager.get_access_token()
+    assert not saved
+
+
+async def test_invalid_async_acquired_tokens_are_not_persisted():
+    saved = []
+    async def acquire(previous):
+        return OAuthTokens("two tokens", time.time() + 3600)
+    async def persist(tokens):
+        saved.append(tokens)
+    manager = AsyncTokenManager(acquire=acquire, on_tokens=persist)
+    with pytest.raises(OAuthError):
+        await manager.get_access_token()
+    assert not saved

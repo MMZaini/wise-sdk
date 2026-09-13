@@ -39,21 +39,32 @@ export function validateOAuthState(received: string | null | undefined, expected
       !timingSafeEqual(actual, stored)) throw new OAuthError("Invalid OAuth state");
 }
 
+function tokenExpiry(relative: number | undefined, absolute: string | undefined, requestedAt: number): number | undefined {
+  let expiry: number | undefined;
+  if (relative != null) {
+    if (!Number.isFinite(relative) || relative < 0) throw new OAuthError("OAuth returned an invalid expiry");
+    expiry = requestedAt + relative * 1000;
+    if (!Number.isFinite(expiry)) throw new OAuthError("OAuth returned an invalid expiry");
+  }
+  if (absolute != null) {
+    const explicit = Date.parse(absolute);
+    if (!/(?:Z|[+-]\d{2}:?\d{2})$/i.test(absolute) || !Number.isFinite(explicit)) {
+      throw new OAuthError("OAuth returned an invalid expiry");
+    }
+    expiry = expiry === undefined ? explicit : Math.min(expiry, explicit);
+  }
+  return expiry;
+}
+
 function normalizeTokens(response: TokenResponse, requestedAt: number): OAuthTokens {
   try { validateToken(response.access_token); } catch { throw new OAuthError("OAuth returned an invalid access token"); }
   if (!Number.isFinite(response.expires_in) || response.expires_in! <= 0 ||
       response.token_type?.toLowerCase() !== "bearer") throw new OAuthError("OAuth returned invalid token metadata");
-  let expiresAt = requestedAt + response.expires_in! * 1000;
-  if (response.expires_at) {
-    const explicit = Date.parse(response.expires_at);
-    if (!Number.isFinite(explicit)) throw new OAuthError("OAuth returned an invalid expiry");
-    expiresAt = Math.min(expiresAt, explicit);
-  }
+  const expiresAt = tokenExpiry(response.expires_in, response.expires_at, requestedAt)!;
   if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) throw new OAuthError("OAuth returned an expired token");
   return { accessToken: response.access_token, tokenType: "bearer", expiresAt,
     refreshToken: response.refresh_token, scope: response.scope,
-    refreshTokenExpiresAt: response.refresh_token_expires_at ? Date.parse(response.refresh_token_expires_at) :
-      response.refresh_token_expires_in ? requestedAt + response.refresh_token_expires_in * 1000 : undefined };
+    refreshTokenExpiresAt: tokenExpiry(response.refresh_token_expires_in, response.refresh_token_expires_at, requestedAt) };
 }
 
 /** Explicit OAuth grants. Token exchanges are never retried automatically. */
@@ -80,6 +91,7 @@ export class WiseOAuth {
       ["api.wise.com", "api-mtls.transferwise.com"].includes(hostname) ? "production" : undefined;
     const selected = this.authorizationEnvironment ?? detected;
     if (!selected) throw new OAuthError("Set authorizationEnvironment when using a proxy");
+    if (selected !== "sandbox" && selected !== "production") throw new OAuthError("Invalid authorizationEnvironment");
     const sandbox = selected === "sandbox";
     const url = new URL(sandbox ? "https://wise-sandbox.com/oauth/authorize/" : "https://wise.com/oauth/authorize/");
     url.search = new URLSearchParams({ client_id: this.clientId, redirect_uri: redirectUri, state, response_type: "code" }).toString();
