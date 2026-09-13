@@ -77,7 +77,7 @@ export class WiseClient extends GeneratedClient {
       }
       return requestWithDeadline({ ...args, headers, fetchFn: guardedFetch });
     };
-    super({ environment, auth: false, headers: { "User-Agent": "wise-sdk/0.1.0", ...options.headers },
+    super({ environment, auth: false, headers: { "User-Agent": "wise-sdk", ...options.headers },
       externalCorrelationId: options.externalCorrelationId, timeoutInSeconds: options.timeoutInSeconds,
       maxRetries: options.maxRetries, logging: options.logging, fetch: guardedFetch, fetcher: guardedFetcher });
     this.environment = environment;

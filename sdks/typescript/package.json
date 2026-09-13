@@ -60,5 +60,8 @@
   },
   "overrides": {
     "esbuild": "^0.28.2"
+  },
+  "dependencies": {
+    "undici": "7.29.1"
   }
 }

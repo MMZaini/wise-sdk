@@ -126,7 +126,7 @@ class WiseClient(GeneratedClient):
         self._http = httpx_client if httpx_client is not None else httpx.Client(timeout=default_timeout, follow_redirects=False)
         http = _SyncHttp(self._http, _RequestGuard(environment, access_token, client_id, client_secret))
         super().__init__(environment=environment, access_token=None,
-                         headers={"User-Agent": "wise-sdk/0.1.0", **(headers or {})},
+                         headers={"User-Agent": "wise-sdk", **(headers or {})},
                          external_correlation_id=external_correlation_id, timeout=default_timeout,
                          max_retries=max_retries, follow_redirects=False, httpx_client=cast(httpx.Client, http), logging=logging)
 
@@ -155,7 +155,7 @@ class AsyncWiseClient(GeneratedAsyncClient):
         self._http = httpx_client if httpx_client is not None else httpx.AsyncClient(timeout=default_timeout, follow_redirects=False)
         http = _AsyncHttp(self._http, _RequestGuard(environment, access_token, client_id, client_secret))
         super().__init__(environment=environment, access_token=None,
-                         headers={"User-Agent": "wise-sdk/0.1.0", **(headers or {})},
+                         headers={"User-Agent": "wise-sdk", **(headers or {})},
                          external_correlation_id=external_correlation_id, timeout=default_timeout,
                          max_retries=max_retries, follow_redirects=False, httpx_client=cast(httpx.AsyncClient, http), logging=logging)
 
