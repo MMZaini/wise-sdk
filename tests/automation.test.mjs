@@ -59,6 +59,28 @@ test("quarter rollovers, card hosts and webhook contracts require review", () =>
   }
 });
 
+test("referenced webhook and callback payload additions require review", () => {
+  const event = { post: { requestBody: { content: { "application/json": { schema: { $ref: "#/components/schemas/Account" } } } } } };
+  for (const attach of [
+    (spec) => { spec.webhooks = { event }; },
+    (spec) => { spec.paths["/accounts"].get.callbacks = { event: { "{$request.query.callbackUrl}": event } }; },
+    (spec) => {
+      spec.components.pathItems = { Event: event };
+      spec.webhooks = { event: { $ref: "#/components/pathItems/Event" } };
+    },
+    (spec) => {
+      spec.components.callbacks = { Event: { "{$request.query.callbackUrl}": event } };
+      spec.paths["/accounts"].get.callbacks = { event: { $ref: "#/components/callbacks/Event" } };
+    },
+  ]) {
+    const before = structuredClone(original);
+    attach(before);
+    const after = structuredClone(before);
+    after.components.schemas.Account.properties.nickname = { type: "string" };
+    assert.equal(compareSpecs(before, after).compatible, false);
+  }
+});
+
 test("version increments distinguish patches from additive releases", () => {
   assert.equal(nextVersion("0.1.9", "patch"), "0.1.10");
   assert.equal(nextVersion("1.9.3", "minor"), "1.10.0");

@@ -32,7 +32,8 @@ their own URLs and must stay separate.
 | Generation or checked postprocessing failure | Draft PR for review |
 
 Compatibility classification is deliberately conservative. A schema used in a
-request requires review even when its new property is optional. The full CI matrix
+request, webhook or callback requires review even when its new property is optional.
+Reusable path-item schemas also require review. The full CI matrix
 runs against the exact proposed commit. The merge step rechecks the commit, source
 checksum, classification, allowed files and version changes; it stops if main or
 the PR changes during CI.

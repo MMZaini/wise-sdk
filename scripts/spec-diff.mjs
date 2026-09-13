@@ -39,10 +39,16 @@ function inputSchemas(spec) {
     for (const operation of Object.values(path)) {
       scan(operation?.parameters);
       scan(operation?.requestBody);
+      scan(operation?.callbacks);
     }
   }
   scan(spec.components?.parameters);
   scan(spec.components?.requestBodies);
+  // Event payloads and reusable path items must not be treated as response-only
+  // models simply because their references live outside ordinary REST operations.
+  scan(spec.webhooks);
+  scan(spec.components?.callbacks);
+  scan(spec.components?.pathItems);
   return names;
 }
 
