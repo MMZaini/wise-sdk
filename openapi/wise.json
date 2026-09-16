@@ -25531,7 +25531,7 @@
       "get": {
         "operationId": "transferPayoutInfoGet",
         "summary": "Get payout information",
-        "description": "Fetch banking reference information for transfers that are in `outgoing_payment_sent` status, enabling you to track transfers with the transfer recipient's bank.\n\nIt may take up to 3 days to get the correct information through this endpoint, as some partners don't share the information until 3 days later.\n",
+        "description": "Fetch banking reference information for transfers that are in `outgoing_payment_sent` status. Enables you to track transfers with the transfer recipient's bank.\n\n{% admonition type=\"warning\" %}\nQuerying this endpoint too soon after transfer creation may result in a `404` error.\n\nWe recommend relying on the [transfer state change webhook](/api-reference/webhook-event/eventtransfersstatechange) to inform you when the transfer state has changed to `outgoing_payment_sent`. In most cases this takes only a few seconds. However, some regions and banking partners can take longer. \n{% /admonition %}\n",
         "tags": [
           "transfer"
         ],
@@ -25614,7 +25614,7 @@
             }
           },
           "404": {
-            "description": "Transfer not found.",
+            "description": "Transfer not found (this error can also occur if querying the endpoint before the transfer has finished processing).",
             "headers": {
               "X-External-Correlation-Id": {
                 "$ref": "#/components/headers/X-External-Correlation-Id"
@@ -37061,7 +37061,7 @@
               },
               "reference": {
                 "type": "string",
-                "description": "Unique customer ID in your system. This allows Wise to uniquely identify each originator. Must be the same ID across all transfers sent by the originator.",
+                "description": "Unique customer ID in your system. This allows Wise to identify each originator for compliance purposes. All transfers sent by the same originator must use the same `originator.reference` value.",
                 "example": "CST-2991992"
               },
               "name": {

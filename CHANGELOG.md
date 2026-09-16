@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Regenerate clients from Wise's updated API documentation.
+
 ## 0.1.1
 
 - Apply TypeScript request deadlines and cancellation while waiting for tokens or headers, without interrupting shared token rotation.
