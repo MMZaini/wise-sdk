@@ -53,15 +53,15 @@
     "prepublishOnly": "npm run typecheck && npm run build"
   },
   "devDependencies": {
-    "@types/node": "22.20.2",
+    "@types/node": "26.5.1",
     "tsup": "8.5.1",
     "tsx": "4.23.13",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "overrides": {
     "esbuild": "^0.28.2"
   },
   "dependencies": {
-    "undici": "7.29.1"
+    "undici": "8.10.2"
   }
 }
