@@ -1709,4 +1709,116 @@ export class SimulationsClient {
             "/simulation/profiles/{profileId}/swift-in",
         );
     }
+
+    /**
+     * Simulates the creation or closure of a sanction case for testing partner integrations.
+     *
+     * When `status` is `OPEN`, a new sanction case is created with the specified type and subtype.
+     * When `status` is `CLOSE`, an existing case (identified by `caseId`) is closed with the specified reason.
+     *
+     * This endpoint is only available in sandbox environments.
+     *
+     * @param {Wise.ChangeSanctionCaseStateSimulationsRequest} request
+     * @param {SimulationsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Wise.BadRequestError}
+     * @throws {@link Wise.TooManyRequestsError}
+     * @throws {@link errors.WiseError}
+     * @throws {@link errors.WiseTimeoutError}
+     *
+     * @example
+     *     await client.simulations.changeSanctionCaseState({
+     *         transferId: BigInt("12345678"),
+     *         profileId: BigInt("98765432"),
+     *         sanctionType: "SANCTION",
+     *         simulationSanctionSubType: "REFERENCE_SANCTION_HIT",
+     *         status: "OPEN"
+     *     })
+     *
+     * @example
+     *     await client.simulations.changeSanctionCaseState({
+     *         transferId: BigInt("12345678"),
+     *         profileId: BigInt("98765432"),
+     *         sanctionType: "SANCTION",
+     *         simulationSanctionSubType: "RECIPIENT_LOCATION_HIT",
+     *         status: "OPEN"
+     *     })
+     *
+     * @example
+     *     await client.simulations.changeSanctionCaseState({
+     *         transferId: BigInt("12345678"),
+     *         profileId: BigInt("98765432"),
+     *         sanctionType: "SANCTION",
+     *         simulationSanctionSubType: "REFERENCE_SANCTION_HIT",
+     *         status: "CLOSE",
+     *         caseId: BigInt("999"),
+     *         closingReason: "COMPLETED"
+     *     })
+     */
+    public changeSanctionCaseState(
+        request: Wise.ChangeSanctionCaseStateSimulationsRequest,
+        requestOptions?: SimulationsClient.RequestOptions,
+    ): core.HttpResponsePromise<Wise.ChangeSanctionCaseStateSimulationsResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__changeSanctionCaseState(request, requestOptions));
+    }
+
+    private async __changeSanctionCaseState(
+        request: Wise.ChangeSanctionCaseStateSimulationsRequest,
+        requestOptions?: SimulationsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Wise.ChangeSanctionCaseStateSimulationsResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "X-External-Correlation-Id":
+                    requestOptions?.externalCorrelationId ?? this._options?.externalCorrelationId,
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await (this._options.fetcher ?? core.fetcher)({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)).api,
+                "simulation/sanction-cases",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: 0,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: _response.body as Wise.ChangeSanctionCaseStateSimulationsResponse,
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wise.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Wise.TooManyRequestsError(
+                        _response.error.body as Record<string, unknown>,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.WiseError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/simulation/sanction-cases");
+    }
 }

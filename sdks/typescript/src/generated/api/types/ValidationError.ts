@@ -5,12 +5,20 @@
  */
 export interface ValidationError {
     /**
-     * The field path that caused the validation error.
-     * Uses dot notation for nested fields (e.g., `submissionData.individual.name`).
+     * Machine-readable validation error code.
+     *
+     * Values:
+     * - `parameter_missing` - A required field is null, empty, or blank
+     * - `parameter_invalid` - A field value is present but not acceptable
+     * - `invalid_value` - A field value fails a business validation rule
+     * - `invalid_request` - The request structure is malformed or invalid
      */
-    field: string;
-    /** Description of what validation rule was violated. */
-    message: string;
-    /** The value that was rejected (if applicable). */
-    rejectedValue?: unknown | undefined;
+    code: string;
+    /**
+     * The field that caused the validation error.
+     * For nested fields, only the leaf property name is used (e.g., `name` not `submissionData.individual.name`).
+     */
+    ref: string;
+    /** Human-readable description of the validation error. May be null. */
+    detail?: (string | null) | undefined;
 }

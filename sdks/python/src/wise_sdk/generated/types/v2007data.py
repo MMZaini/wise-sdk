@@ -16,7 +16,7 @@ class V2007Data(UniversalBaseModel):
     - `ACTIVE` - Card is active and can be used.
     - `INACTIVE` - Card is inactive and all transactions will be declined.
     - `BLOCKED` - Card is blocked and cannot be reversed back to any state.
-    - `FROZEN` - Card is "blocked", but temporarily.
+    - `FROZEN` - Card is temporarily frozen; all authorization requests will be declined.
     - `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily due to, for example, fraud reasons.
     - `EXPIRED` - Card is expired.
     - `PURGED` - The cardholder data (ex: PAN, PIN) have been purged after exceeds the retention period (555 days after the card's expiry date).

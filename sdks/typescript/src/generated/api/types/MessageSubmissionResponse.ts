@@ -17,6 +17,7 @@ export interface MessageSubmissionResponse {
      * The content of the created message.
      * - For FREEFORM: contains `text.freeText`
      * - For SUBMISSION types: contains `submissionData`
+     * - For FILE_SUBMISSION: contains `submissionData` with `profileId` and `fileIds`
      */
     content: Record<string, unknown>;
     /** The type of the created message. */
@@ -34,6 +35,7 @@ export namespace MessageSubmissionResponse {
         RecipientSanctionHitSubmission: "RECIPIENT_SANCTION_HIT_SUBMISSION",
         ReferenceLocationHitSubmission: "REFERENCE_LOCATION_HIT_SUBMISSION",
         RecipientLocationHitSubmission: "RECIPIENT_LOCATION_HIT_SUBMISSION",
+        FileSubmission: "FILE_SUBMISSION",
     } as const;
     export type Type = (typeof Type)[keyof typeof Type];
     /** The author of the message (always PARTNER for submitted messages). */

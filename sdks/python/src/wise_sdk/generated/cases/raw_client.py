@@ -12,11 +12,11 @@ from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
 from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.bad_request_error import BadRequestError
+from ..errors.conflict_error import ConflictError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
 from ..errors.too_many_requests_error import TooManyRequestsError
 from ..errors.unauthorized_error import UnauthorizedError
-from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..types.case import Case
 from ..types.case2 import Case2
 from ..types.message_submission_response import MessageSubmissionResponse
@@ -139,7 +139,7 @@ class RawCasesClient:
         - Profile and external reference information
         - All public messages associated with the case
 
-        Messages in the response can have three different content structures:
+        Messages in the response can have four different content structures:
 
         1. Attributes Content (REQUEST messages)
         Present in messages like `DEPOSIT_SANCTION_HIT_REQUEST`, `REFERENCE_SANCTION_HIT_REQUEST`, etc.
@@ -151,6 +151,9 @@ class RawCasesClient:
 
         3. Text Content (FREEFORM messages)
         Present in `FREEFORM` messages. Contains free text conversation between partners and Wise.
+
+        4. File Submission Content (FILE_SUBMISSION messages)
+        Present in `FILE_SUBMISSION` messages. Contains file references (`profileId` and `fileIds`) for files attached to the case by the partner.
 
         Parameters
         ----------
@@ -181,17 +184,6 @@ class RawCasesClient:
                     ),
                 )
                 return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -254,10 +246,7 @@ class RawCasesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[MessageSubmissionResponse]:
         """
-        Submits a new message to an existing support case. The message type determines
-        the expected structure of the submission data.
-
-        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example..
+        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example.
 
         Parameters
         ----------
@@ -350,8 +339,8 @@ class RawCasesClient:
                         ),
                     ),
                 )
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(
+            if _response.status_code == 409:
+                raise ConflictError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -494,7 +483,7 @@ class AsyncRawCasesClient:
         - Profile and external reference information
         - All public messages associated with the case
 
-        Messages in the response can have three different content structures:
+        Messages in the response can have four different content structures:
 
         1. Attributes Content (REQUEST messages)
         Present in messages like `DEPOSIT_SANCTION_HIT_REQUEST`, `REFERENCE_SANCTION_HIT_REQUEST`, etc.
@@ -506,6 +495,9 @@ class AsyncRawCasesClient:
 
         3. Text Content (FREEFORM messages)
         Present in `FREEFORM` messages. Contains free text conversation between partners and Wise.
+
+        4. File Submission Content (FILE_SUBMISSION messages)
+        Present in `FILE_SUBMISSION` messages. Contains file references (`profileId` and `fileIds`) for files attached to the case by the partner.
 
         Parameters
         ----------
@@ -536,17 +528,6 @@ class AsyncRawCasesClient:
                     ),
                 )
                 return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
             if _response.status_code == 401:
                 raise UnauthorizedError(
                     headers=dict(_response.headers),
@@ -609,10 +590,7 @@ class AsyncRawCasesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[MessageSubmissionResponse]:
         """
-        Submits a new message to an existing support case. The message type determines
-        the expected structure of the submission data.
-
-        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example..
+        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example.
 
         Parameters
         ----------
@@ -705,8 +683,8 @@ class AsyncRawCasesClient:
                         ),
                     ),
                 )
-            if _response.status_code == 422:
-                raise UnprocessableEntityError(
+            if _response.status_code == 409:
+                raise ConflictError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

@@ -75,6 +75,18 @@ class BatchGroup(UniversalBaseModel):
     Currently supported types: `bank_transfer`.
     """
 
+    payin_session_id: typing_extensions.Annotated[
+        typing.Optional[str],
+        FieldMetadata(alias="payinSessionId"),
+        pydantic.Field(
+            alias="payinSessionId",
+            description="Optional ID of the payin session. Required if batch group funding is done using [Payin Funding API](/guides/product/send-money/funding/direct-debit/create-payin#create-payin).",
+        ),
+    ] = None
+    """
+    Optional ID of the payin session. Required if batch group funding is done using [Payin Funding API](/guides/product/send-money/funding/direct-debit/create-payin#create-payin).
+    """
+
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
     else:

@@ -2,29 +2,4 @@
 
 import type * as Wise from "../index.js";
 
-export interface Error404NotFound {
-    /**
-     * Machine-readable error code indicating the type of error.
-     *
-     * Common codes:
-     * - `BAD_REQUEST` - Invalid request format or parameters
-     * - `VALIDATION_ERROR` - Request body validation failed
-     * - `RESOURCE_NOT_FOUND` - Requested resource does not exist
-     * - `UNAUTHORIZED` - Authentication required or failed
-     * - `FORBIDDEN` - Insufficient permissions
-     * - `CONFLICT` - Operation conflicts with current state
-     * - `INTERNAL_SERVER_ERROR` - Unexpected server error
-     */
-    error?: string | undefined;
-    /** Human-readable error message describing what went wrong. */
-    message?: string | undefined;
-    /** ISO 8601 timestamp when the error occurred. */
-    timestamp?: string | undefined;
-    /** The request path that caused the error. */
-    path?: string | undefined;
-    /**
-     * List of field-level validation errors.
-     * Only present for validation errors (HTTP 400).
-     */
-    errors?: Wise.ValidationError[] | undefined;
-}
+export interface Error404NotFound extends Wise.ErrorResponse {}

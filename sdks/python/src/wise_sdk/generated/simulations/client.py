@@ -16,6 +16,17 @@ from .types.authorize_card_transaction_simulations_request_amount import (
     AuthorizeCardTransactionSimulationsRequestAmount,
 )
 from .types.authorize_card_transaction_simulations_response import AuthorizeCardTransactionSimulationsResponse
+from .types.change_sanction_case_state_simulations_request_closing_reason import (
+    ChangeSanctionCaseStateSimulationsRequestClosingReason,
+)
+from .types.change_sanction_case_state_simulations_request_sanction_type import (
+    ChangeSanctionCaseStateSimulationsRequestSanctionType,
+)
+from .types.change_sanction_case_state_simulations_request_simulation_sanction_sub_type import (
+    ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType,
+)
+from .types.change_sanction_case_state_simulations_request_status import ChangeSanctionCaseStateSimulationsRequestStatus
+from .types.change_sanction_case_state_simulations_response import ChangeSanctionCaseStateSimulationsResponse
 from .types.change_transfer_state_simulations_request_status import ChangeTransferStateSimulationsRequestStatus
 from .types.clear_card_transaction_simulations_request_amount import ClearCardTransactionSimulationsRequestAmount
 from .types.clear_card_transaction_simulations_response import ClearCardTransactionSimulationsResponse
@@ -1234,6 +1245,104 @@ class SimulationsClient:
             payment_reference=payment_reference,
             charges=charges,
             previous_instructing_agents=previous_instructing_agents,
+            request_options=request_options,
+        )
+        return _response.data
+
+    def change_sanction_case_state(
+        self,
+        *,
+        transfer_id: int,
+        profile_id: int,
+        sanction_type: ChangeSanctionCaseStateSimulationsRequestSanctionType,
+        status: ChangeSanctionCaseStateSimulationsRequestStatus,
+        simulation_sanction_sub_type: typing.Optional[
+            ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType
+        ] = OMIT,
+        case_id: typing.Optional[int] = OMIT,
+        closing_reason: typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> ChangeSanctionCaseStateSimulationsResponse:
+        """
+        Simulates the creation or closure of a sanction case for testing partner integrations.
+
+        When `status` is `OPEN`, a new sanction case is created with the specified type and subtype.
+        When `status` is `CLOSE`, an existing case (identified by `caseId`) is closed with the specified reason.
+
+        This endpoint is only available in sandbox environments.
+
+        Parameters
+        ----------
+        transfer_id : int
+            The ID of the transfer associated with the sanction case.
+
+        profile_id : int
+            The profile ID linked to the transfer.
+
+        sanction_type : ChangeSanctionCaseStateSimulationsRequestSanctionType
+            The type of sanction. Currently only `SANCTION` is supported.
+
+        status : ChangeSanctionCaseStateSimulationsRequestStatus
+            The action to perform.
+            - `OPEN`: Create a new sanction case
+            - `CLOSE`: Close an existing sanction case
+
+        simulation_sanction_sub_type : typing.Optional[ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType]
+            The specific subtype of sanction case to simulate. Required when `sanctionType` is `SANCTION`.
+            - `REFERENCE_SANCTION_HIT`: Sanction hit on the transfer reference/sender
+            - `RECIPIENT_SANCTION_HIT`: Sanction hit on the recipient
+            - `REFERENCE_LOCATION_HIT`: Location-based hit on the reference/sender
+            - `RECIPIENT_LOCATION_HIT`: Location-based hit on the recipient
+            - `DEPOSIT_SANCTION_HIT`: Sanction hit on an incoming deposit
+
+        case_id : typing.Optional[int]
+            The self-service case ID to close. Required when `status` is `CLOSE`.
+            When `status` is `OPEN`, this can optionally be provided to specify the case ID;
+            otherwise, one will be auto-generated.
+
+        closing_reason : typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason]
+            The reason for closing the case. Required when `status` is `CLOSE`.
+            - `EXPIRED`: The case expired without resolution
+            - `INVALIDATED`: The case was determined to be invalid
+            - `ABORTED`: The case was aborted/cancelled
+            - `COMPLETED`: The case was successfully resolved
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        ChangeSanctionCaseStateSimulationsResponse
+            Sanction case successfully closed.
+
+        Examples
+        --------
+        from wise_sdk.generated import WiseClient
+        from wise_sdk.generated.environment import WiseClientEnvironment
+
+        client = WiseClient(
+            external_correlation_id="YOUR_EXTERNAL_CORRELATION_ID",
+            client_id="YOUR_CLIENT_ID",
+            client_secret="YOUR_CLIENT_SECRET",
+            access_token="YOUR_ACCESS_TOKEN",
+            environment=WiseClientEnvironment.SANDBOX,
+        )
+        client.simulations.change_sanction_case_state(
+            transfer_id=12345678,
+            profile_id=98765432,
+            sanction_type="SANCTION",
+            simulation_sanction_sub_type="REFERENCE_SANCTION_HIT",
+            status="OPEN",
+        )
+        """
+        _response = self._raw_client.change_sanction_case_state(
+            transfer_id=transfer_id,
+            profile_id=profile_id,
+            sanction_type=sanction_type,
+            status=status,
+            simulation_sanction_sub_type=simulation_sanction_sub_type,
+            case_id=case_id,
+            closing_reason=closing_reason,
             request_options=request_options,
         )
         return _response.data
@@ -2564,6 +2673,112 @@ class AsyncSimulationsClient:
             payment_reference=payment_reference,
             charges=charges,
             previous_instructing_agents=previous_instructing_agents,
+            request_options=request_options,
+        )
+        return _response.data
+
+    async def change_sanction_case_state(
+        self,
+        *,
+        transfer_id: int,
+        profile_id: int,
+        sanction_type: ChangeSanctionCaseStateSimulationsRequestSanctionType,
+        status: ChangeSanctionCaseStateSimulationsRequestStatus,
+        simulation_sanction_sub_type: typing.Optional[
+            ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType
+        ] = OMIT,
+        case_id: typing.Optional[int] = OMIT,
+        closing_reason: typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> ChangeSanctionCaseStateSimulationsResponse:
+        """
+        Simulates the creation or closure of a sanction case for testing partner integrations.
+
+        When `status` is `OPEN`, a new sanction case is created with the specified type and subtype.
+        When `status` is `CLOSE`, an existing case (identified by `caseId`) is closed with the specified reason.
+
+        This endpoint is only available in sandbox environments.
+
+        Parameters
+        ----------
+        transfer_id : int
+            The ID of the transfer associated with the sanction case.
+
+        profile_id : int
+            The profile ID linked to the transfer.
+
+        sanction_type : ChangeSanctionCaseStateSimulationsRequestSanctionType
+            The type of sanction. Currently only `SANCTION` is supported.
+
+        status : ChangeSanctionCaseStateSimulationsRequestStatus
+            The action to perform.
+            - `OPEN`: Create a new sanction case
+            - `CLOSE`: Close an existing sanction case
+
+        simulation_sanction_sub_type : typing.Optional[ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType]
+            The specific subtype of sanction case to simulate. Required when `sanctionType` is `SANCTION`.
+            - `REFERENCE_SANCTION_HIT`: Sanction hit on the transfer reference/sender
+            - `RECIPIENT_SANCTION_HIT`: Sanction hit on the recipient
+            - `REFERENCE_LOCATION_HIT`: Location-based hit on the reference/sender
+            - `RECIPIENT_LOCATION_HIT`: Location-based hit on the recipient
+            - `DEPOSIT_SANCTION_HIT`: Sanction hit on an incoming deposit
+
+        case_id : typing.Optional[int]
+            The self-service case ID to close. Required when `status` is `CLOSE`.
+            When `status` is `OPEN`, this can optionally be provided to specify the case ID;
+            otherwise, one will be auto-generated.
+
+        closing_reason : typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason]
+            The reason for closing the case. Required when `status` is `CLOSE`.
+            - `EXPIRED`: The case expired without resolution
+            - `INVALIDATED`: The case was determined to be invalid
+            - `ABORTED`: The case was aborted/cancelled
+            - `COMPLETED`: The case was successfully resolved
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        ChangeSanctionCaseStateSimulationsResponse
+            Sanction case successfully closed.
+
+        Examples
+        --------
+        import asyncio
+
+        from wise_sdk.generated import AsyncWiseClient
+        from wise_sdk.generated.environment import WiseClientEnvironment
+
+        client = AsyncWiseClient(
+            external_correlation_id="YOUR_EXTERNAL_CORRELATION_ID",
+            client_id="YOUR_CLIENT_ID",
+            client_secret="YOUR_CLIENT_SECRET",
+            access_token="YOUR_ACCESS_TOKEN",
+            environment=WiseClientEnvironment.SANDBOX,
+        )
+
+
+        async def main() -> None:
+            await client.simulations.change_sanction_case_state(
+                transfer_id=12345678,
+                profile_id=98765432,
+                sanction_type="SANCTION",
+                simulation_sanction_sub_type="REFERENCE_SANCTION_HIT",
+                status="OPEN",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.change_sanction_case_state(
+            transfer_id=transfer_id,
+            profile_id=profile_id,
+            sanction_type=sanction_type,
+            status=status,
+            simulation_sanction_sub_type=simulation_sanction_sub_type,
+            case_id=case_id,
+            closing_reason=closing_reason,
             request_options=request_options,
         )
         return _response.data

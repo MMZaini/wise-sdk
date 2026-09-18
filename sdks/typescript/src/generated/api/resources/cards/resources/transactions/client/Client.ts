@@ -35,6 +35,8 @@ export class TransactionsClient {
      * @param {Wise.cards.GetTransactionsRequest} request
      * @param {TransactionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wise.NotFoundError}
+     * @throws {@link Wise.UnprocessableEntityError}
      * @throws {@link Wise.TooManyRequestsError}
      * @throws {@link errors.WiseError}
      * @throws {@link errors.WiseTimeoutError}
@@ -88,6 +90,10 @@ export class TransactionsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 404:
+                    throw new Wise.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wise.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
                     throw new Wise.TooManyRequestsError(
                         _response.error.body as Record<string, unknown>,
@@ -124,6 +130,8 @@ export class TransactionsClient {
      * @param {Wise.cards.ListTransactionsRequest} request
      * @param {TransactionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wise.BadRequestError}
+     * @throws {@link Wise.UnprocessableEntityError}
      * @throws {@link Wise.TooManyRequestsError}
      * @throws {@link errors.WiseError}
      * @throws {@link errors.WiseTimeoutError}
@@ -189,6 +197,10 @@ export class TransactionsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wise.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wise.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
                     throw new Wise.TooManyRequestsError(
                         _response.error.body as Record<string, unknown>,

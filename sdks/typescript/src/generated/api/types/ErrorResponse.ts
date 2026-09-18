@@ -3,34 +3,43 @@
 import type * as Wise from "../index.js";
 
 /**
- * Standard error response structure returned by the API.
+ * Standard error response structure returned by the API based on RFC 9457 Problem Details.
  *
- * All error responses follow this consistent format with an error code,
- * human-readable message, and optional validation errors array.
+ * All error responses follow this consistent format with a type URI,
+ * human-readable title and detail, and optional field-level validation errors array.
  */
 export interface ErrorResponse {
     /**
-     * Machine-readable error code indicating the type of error.
+     * URI reference identifying the error category.
+     *
+     * Values:
+     * - `/errors/types/validation` - Request validation failed
+     * - `/errors/types/domain` - Business rule violation
+     * - `/errors/types/access` - Authentication or authorization failure
+     * - `/errors/types/internal` - Unexpected server error
+     */
+    type: string;
+    /** Short human-readable summary of the error category. */
+    title: string;
+    /** HTTP status code. */
+    status: number;
+    /** Human-readable explanation of this specific error occurrence. */
+    detail?: string | undefined;
+    /** The request path that caused the error. */
+    instance?: string | undefined;
+    /**
+     * Machine-readable error code. Present on domain and access errors.
      *
      * Common codes:
-     * - `BAD_REQUEST` - Invalid request format or parameters
-     * - `VALIDATION_ERROR` - Request body validation failed
-     * - `RESOURCE_NOT_FOUND` - Requested resource does not exist
-     * - `UNAUTHORIZED` - Authentication required or failed
-     * - `FORBIDDEN` - Insufficient permissions
-     * - `CONFLICT` - Operation conflicts with current state
-     * - `INTERNAL_SERVER_ERROR` - Unexpected server error
+     * - `operation_not_supported` - Business rule prevents this action
+     * - `resource_not_found` - Requested resource does not exist
+     * - `forbidden` - Insufficient permissions
+     * - `rate_limit_exceeded` - Too many requests
      */
-    error: string;
-    /** Human-readable error message describing what went wrong. */
-    message: string;
-    /** ISO 8601 timestamp when the error occurred. */
-    timestamp?: string | undefined;
-    /** The request path that caused the error. */
-    path?: string | undefined;
+    code?: string | undefined;
     /**
      * List of field-level validation errors.
-     * Only present for validation errors (HTTP 400).
+     * Only present for validation errors (type `/errors/types/validation`).
      */
     errors?: Wise.ValidationError[] | undefined;
 }

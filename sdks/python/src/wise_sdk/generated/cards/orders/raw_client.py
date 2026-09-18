@@ -124,7 +124,7 @@ class RawOrdersClient:
         This request requires an extra field in the header, `X-idempotence-uuid`. This should be generated and used for any subsequent retries in the event that the initial request fails.
         {% /admonition %}
 
-        When you issue a card under a business profile, the cardholder will automatically default to the [business representative](/api-reference/profile/profilebusinesscreatev5).
+        When you issue a card under a business profile, the cardholder will automatically default to the [business representative](/api-reference/profile/profilebusinesscreatev3).
 
         If the cardholder is not the business representative, create a cardholder [personal profile](/api-reference/profile/profilepersonalcreate) and add the profileId of the cardholder profile to the `cardHolderProfileId` field on the card order request.
 
@@ -708,7 +708,7 @@ class AsyncRawOrdersClient:
         This request requires an extra field in the header, `X-idempotence-uuid`. This should be generated and used for any subsequent retries in the event that the initial request fails.
         {% /admonition %}
 
-        When you issue a card under a business profile, the cardholder will automatically default to the [business representative](/api-reference/profile/profilebusinesscreatev5).
+        When you issue a card under a business profile, the cardholder will automatically default to the [business representative](/api-reference/profile/profilebusinesscreatev3).
 
         If the cardholder is not the business representative, create a cardholder [personal profile](/api-reference/profile/profilepersonalcreate) and add the profileId of the cardholder profile to the `cardHolderProfileId` field on the card order request.
 

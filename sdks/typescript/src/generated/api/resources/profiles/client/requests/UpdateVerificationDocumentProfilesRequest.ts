@@ -42,7 +42,11 @@ export interface UpdateVerificationDocumentProfilesRequest {
     lastName?: string;
     /** Document type. */
     type: UpdateVerificationDocumentProfilesRequest.Type;
-    /** Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR. */
+    /**
+     * Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+     *
+     * When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
+     */
     uniqueIdentifier?: string;
     /** Document issue date. */
     issueDate?: string;

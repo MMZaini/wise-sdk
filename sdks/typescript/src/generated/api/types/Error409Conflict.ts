@@ -2,4 +2,4 @@
 
 import type * as Wise from "../index.js";
 
-export interface Error403Forbidden extends Wise.ErrorResponse {}
+export interface Error409Conflict extends Wise.ErrorResponse {}

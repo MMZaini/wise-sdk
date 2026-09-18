@@ -7,7 +7,7 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..profile.types.profile import Profile
-from ..types.business_profile_industry_categories import BusinessProfileIndustryCategories
+from ..types.business_profile import BusinessProfile
 from .raw_client import AsyncRawProfilesClient, RawProfilesClient
 from .types.check_verification_status_profiles_response import CheckVerificationStatusProfilesResponse
 from .types.create_business_profiles_request_address import CreateBusinessProfilesRequestAddress
@@ -241,13 +241,15 @@ class ProfilesClient:
         external_customer_id: typing.Optional[str] = OMIT,
         actor_email: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         business_representative: typing.Optional[CreateBusinessProfilesRequestBusinessRepresentative] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> BusinessProfileIndustryCategories:
+    ) -> BusinessProfile:
         """
         Creates the business profile and its authorized representative in a single request.
 
@@ -255,7 +257,7 @@ class ProfilesClient:
         This request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.
         {% /admonition %}
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair - supplying both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -301,6 +303,12 @@ class ProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -316,7 +324,7 @@ class ProfilesClient:
 
         Returns
         -------
-        BusinessProfileIndustryCategories
+        BusinessProfile
             Created business profile.
 
         Examples
@@ -401,6 +409,8 @@ class ProfilesClient:
             external_customer_id=external_customer_id,
             actor_email=actor_email,
             industry_categories=industry_categories,
+            first_level_category=first_level_category,
+            second_level_category=second_level_category,
             operational_addresses=operational_addresses,
             webpage=webpage,
             business_representative=business_representative,
@@ -560,12 +570,14 @@ class ProfilesClient:
         company_role: typing.Optional[UpdateBusinessProfilesRequestCompanyRole] = OMIT,
         external_customer_id: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> BusinessProfileIndustryCategories:
+    ) -> BusinessProfile:
         """
         Update user profile information for a business profile.
 
@@ -575,7 +587,7 @@ class ProfilesClient:
 
         Where permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair, changing both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -620,6 +632,12 @@ class ProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -632,7 +650,7 @@ class ProfilesClient:
 
         Returns
         -------
-        BusinessProfileIndustryCategories
+        BusinessProfile
             Updated business profile.
 
         Examples
@@ -666,6 +684,8 @@ class ProfilesClient:
             company_role=company_role,
             external_customer_id=external_customer_id,
             industry_categories=industry_categories,
+            first_level_category=first_level_category,
+            second_level_category=second_level_category,
             operational_addresses=operational_addresses,
             webpage=webpage,
             request_options=request_options,
@@ -850,7 +870,9 @@ class ProfilesClient:
             Document type.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.
@@ -868,13 +890,13 @@ class ProfilesClient:
             2 characters ISO country code.
 
         employer_name : typing.Optional[str]
-            The name of the employer. Type must be EMIRATES_EMPLOYER.
+            The name of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_city : typing.Optional[str]
-            The city of the employer. Type must be EMIRATES_EMPLOYER.
+            The city of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_country : typing.Optional[str]
-            2 characters ISO country code. Type must be EMIRATES_EMPLOYER.
+            2 characters ISO country code. Type must be `EMIRATES_EMPLOYER`.
 
         birth_city : typing.Optional[str]
             The city of birth of the customer.
@@ -981,7 +1003,9 @@ class ProfilesClient:
             Person last name in document.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.
@@ -1393,13 +1417,15 @@ class AsyncProfilesClient:
         external_customer_id: typing.Optional[str] = OMIT,
         actor_email: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         business_representative: typing.Optional[CreateBusinessProfilesRequestBusinessRepresentative] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> BusinessProfileIndustryCategories:
+    ) -> BusinessProfile:
         """
         Creates the business profile and its authorized representative in a single request.
 
@@ -1407,7 +1433,7 @@ class AsyncProfilesClient:
         This request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.
         {% /admonition %}
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair - supplying both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -1453,6 +1479,12 @@ class AsyncProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -1468,7 +1500,7 @@ class AsyncProfilesClient:
 
         Returns
         -------
-        BusinessProfileIndustryCategories
+        BusinessProfile
             Created business profile.
 
         Examples
@@ -1561,6 +1593,8 @@ class AsyncProfilesClient:
             external_customer_id=external_customer_id,
             actor_email=actor_email,
             industry_categories=industry_categories,
+            first_level_category=first_level_category,
+            second_level_category=second_level_category,
             operational_addresses=operational_addresses,
             webpage=webpage,
             business_representative=business_representative,
@@ -1736,12 +1770,14 @@ class AsyncProfilesClient:
         company_role: typing.Optional[UpdateBusinessProfilesRequestCompanyRole] = OMIT,
         external_customer_id: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> BusinessProfileIndustryCategories:
+    ) -> BusinessProfile:
         """
         Update user profile information for a business profile.
 
@@ -1751,7 +1787,7 @@ class AsyncProfilesClient:
 
         Where permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair, changing both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -1796,6 +1832,12 @@ class AsyncProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -1808,7 +1850,7 @@ class AsyncProfilesClient:
 
         Returns
         -------
-        BusinessProfileIndustryCategories
+        BusinessProfile
             Updated business profile.
 
         Examples
@@ -1850,6 +1892,8 @@ class AsyncProfilesClient:
             company_role=company_role,
             external_customer_id=external_customer_id,
             industry_categories=industry_categories,
+            first_level_category=first_level_category,
+            second_level_category=second_level_category,
             operational_addresses=operational_addresses,
             webpage=webpage,
             request_options=request_options,
@@ -2052,7 +2096,9 @@ class AsyncProfilesClient:
             Document type.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.
@@ -2070,13 +2116,13 @@ class AsyncProfilesClient:
             2 characters ISO country code.
 
         employer_name : typing.Optional[str]
-            The name of the employer. Type must be EMIRATES_EMPLOYER.
+            The name of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_city : typing.Optional[str]
-            The city of the employer. Type must be EMIRATES_EMPLOYER.
+            The city of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_country : typing.Optional[str]
-            2 characters ISO country code. Type must be EMIRATES_EMPLOYER.
+            2 characters ISO country code. Type must be `EMIRATES_EMPLOYER`.
 
         birth_city : typing.Optional[str]
             The city of birth of the customer.
@@ -2191,7 +2237,9 @@ class AsyncProfilesClient:
             Person last name in document.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.

@@ -10,10 +10,16 @@ from ..core.serialization import FieldMetadata
 from .business_profile_company_role import BusinessProfileCompanyRole
 from .business_profile_contact_details import BusinessProfileContactDetails
 from .business_profile_current_state import BusinessProfileCurrentState
+from .business_profile_type import BusinessProfileType
 from .profile_address import ProfileAddress
 
 
 class BusinessProfile(UniversalBaseModel):
+    type: BusinessProfileType = pydantic.Field()
+    """
+    Type of profile.
+    """
+
     id: typing.Optional[int] = pydantic.Field(default=None)
     """
     Unique identifier for the profile.
@@ -152,11 +158,13 @@ class BusinessProfile(UniversalBaseModel):
         FieldMetadata(alias="firstLevelCategory"),
         pydantic.Field(
             alias="firstLevelCategory",
-            description="Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).",
+            description="Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n\nPopulated only when the profile was classified with the legacy fields, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats.",
         ),
     ] = None
     """
     Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
+
+    Populated only when the profile was classified with the legacy fields, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats.
     """
 
     second_level_category: typing_extensions.Annotated[
@@ -164,11 +172,13 @@ class BusinessProfile(UniversalBaseModel):
         FieldMetadata(alias="secondLevelCategory"),
         pydantic.Field(
             alias="secondLevelCategory",
-            description="Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).",
+            description="Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n\nPopulated only when the profile was classified with the legacy fields, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats, where it may return `UNMAPPED` if the `industryCategories` combination has no legacy equivalent.",
         ),
     ] = None
     """
     Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
+
+    Populated only when the profile was classified with the legacy fields, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats, where it may return `UNMAPPED` if the `industryCategories` combination has no legacy equivalent.
     """
 
     industry_categories: typing_extensions.Annotated[
@@ -176,11 +186,13 @@ class BusinessProfile(UniversalBaseModel):
         FieldMetadata(alias="industryCategories"),
         pydantic.Field(
             alias="industryCategories",
-            description="One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.",
+            description="One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.\n\nPopulated only when the profile was classified with `industryCategories`, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats.",
         ),
     ] = None
     """
     One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.
+
+    Populated only when the profile was classified with `industryCategories`, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats.
     """
 
     operational_addresses: typing_extensions.Annotated[

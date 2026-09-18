@@ -27,6 +27,17 @@ from .types.authorize_card_transaction_simulations_request_amount import (
     AuthorizeCardTransactionSimulationsRequestAmount,
 )
 from .types.authorize_card_transaction_simulations_response import AuthorizeCardTransactionSimulationsResponse
+from .types.change_sanction_case_state_simulations_request_closing_reason import (
+    ChangeSanctionCaseStateSimulationsRequestClosingReason,
+)
+from .types.change_sanction_case_state_simulations_request_sanction_type import (
+    ChangeSanctionCaseStateSimulationsRequestSanctionType,
+)
+from .types.change_sanction_case_state_simulations_request_simulation_sanction_sub_type import (
+    ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType,
+)
+from .types.change_sanction_case_state_simulations_request_status import ChangeSanctionCaseStateSimulationsRequestStatus
+from .types.change_sanction_case_state_simulations_response import ChangeSanctionCaseStateSimulationsResponse
 from .types.change_transfer_state_simulations_request_status import ChangeTransferStateSimulationsRequestStatus
 from .types.clear_card_transaction_simulations_request_amount import ClearCardTransactionSimulationsRequestAmount
 from .types.clear_card_transaction_simulations_response import ClearCardTransactionSimulationsResponse
@@ -1530,6 +1541,135 @@ class RawSimulationsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
+    def change_sanction_case_state(
+        self,
+        *,
+        transfer_id: int,
+        profile_id: int,
+        sanction_type: ChangeSanctionCaseStateSimulationsRequestSanctionType,
+        status: ChangeSanctionCaseStateSimulationsRequestStatus,
+        simulation_sanction_sub_type: typing.Optional[
+            ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType
+        ] = OMIT,
+        case_id: typing.Optional[int] = OMIT,
+        closing_reason: typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[ChangeSanctionCaseStateSimulationsResponse]:
+        """
+        Simulates the creation or closure of a sanction case for testing partner integrations.
+
+        When `status` is `OPEN`, a new sanction case is created with the specified type and subtype.
+        When `status` is `CLOSE`, an existing case (identified by `caseId`) is closed with the specified reason.
+
+        This endpoint is only available in sandbox environments.
+
+        Parameters
+        ----------
+        transfer_id : int
+            The ID of the transfer associated with the sanction case.
+
+        profile_id : int
+            The profile ID linked to the transfer.
+
+        sanction_type : ChangeSanctionCaseStateSimulationsRequestSanctionType
+            The type of sanction. Currently only `SANCTION` is supported.
+
+        status : ChangeSanctionCaseStateSimulationsRequestStatus
+            The action to perform.
+            - `OPEN`: Create a new sanction case
+            - `CLOSE`: Close an existing sanction case
+
+        simulation_sanction_sub_type : typing.Optional[ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType]
+            The specific subtype of sanction case to simulate. Required when `sanctionType` is `SANCTION`.
+            - `REFERENCE_SANCTION_HIT`: Sanction hit on the transfer reference/sender
+            - `RECIPIENT_SANCTION_HIT`: Sanction hit on the recipient
+            - `REFERENCE_LOCATION_HIT`: Location-based hit on the reference/sender
+            - `RECIPIENT_LOCATION_HIT`: Location-based hit on the recipient
+            - `DEPOSIT_SANCTION_HIT`: Sanction hit on an incoming deposit
+
+        case_id : typing.Optional[int]
+            The self-service case ID to close. Required when `status` is `CLOSE`.
+            When `status` is `OPEN`, this can optionally be provided to specify the case ID;
+            otherwise, one will be auto-generated.
+
+        closing_reason : typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason]
+            The reason for closing the case. Required when `status` is `CLOSE`.
+            - `EXPIRED`: The case expired without resolution
+            - `INVALIDATED`: The case was determined to be invalid
+            - `ABORTED`: The case was aborted/cancelled
+            - `COMPLETED`: The case was successfully resolved
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[ChangeSanctionCaseStateSimulationsResponse]
+            Sanction case successfully closed.
+        """
+        _request_options_with_retries_disabled: typing.Optional[RequestOptions] = (
+            {**request_options, "max_retries": 0} if request_options is not None else {"max_retries": 0}
+        )
+        _response = self._client_wrapper.httpx_client.request(
+            "simulation/sanction-cases",
+            base_url=self._client_wrapper.get_environment().api,
+            method="POST",
+            json={
+                "transferId": transfer_id,
+                "profileId": profile_id,
+                "sanctionType": sanction_type,
+                "simulationSanctionSubType": simulation_sanction_sub_type,
+                "status": status,
+                "caseId": case_id,
+                "closingReason": closing_reason,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=_request_options_with_retries_disabled,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    ChangeSanctionCaseStateSimulationsResponse,
+                    parse_obj_as(
+                        type_=ChangeSanctionCaseStateSimulationsResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Dict[str, typing.Any],
+                        parse_obj_as(
+                            type_=typing.Dict[str, typing.Any],  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
 
 class AsyncRawSimulationsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
@@ -2985,6 +3125,135 @@ class AsyncRawSimulationsClient:
                 )
             if _response.status_code == 422:
                 raise UnprocessableEntityError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Dict[str, typing.Any],
+                        parse_obj_as(
+                            type_=typing.Dict[str, typing.Any],  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def change_sanction_case_state(
+        self,
+        *,
+        transfer_id: int,
+        profile_id: int,
+        sanction_type: ChangeSanctionCaseStateSimulationsRequestSanctionType,
+        status: ChangeSanctionCaseStateSimulationsRequestStatus,
+        simulation_sanction_sub_type: typing.Optional[
+            ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType
+        ] = OMIT,
+        case_id: typing.Optional[int] = OMIT,
+        closing_reason: typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[ChangeSanctionCaseStateSimulationsResponse]:
+        """
+        Simulates the creation or closure of a sanction case for testing partner integrations.
+
+        When `status` is `OPEN`, a new sanction case is created with the specified type and subtype.
+        When `status` is `CLOSE`, an existing case (identified by `caseId`) is closed with the specified reason.
+
+        This endpoint is only available in sandbox environments.
+
+        Parameters
+        ----------
+        transfer_id : int
+            The ID of the transfer associated with the sanction case.
+
+        profile_id : int
+            The profile ID linked to the transfer.
+
+        sanction_type : ChangeSanctionCaseStateSimulationsRequestSanctionType
+            The type of sanction. Currently only `SANCTION` is supported.
+
+        status : ChangeSanctionCaseStateSimulationsRequestStatus
+            The action to perform.
+            - `OPEN`: Create a new sanction case
+            - `CLOSE`: Close an existing sanction case
+
+        simulation_sanction_sub_type : typing.Optional[ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType]
+            The specific subtype of sanction case to simulate. Required when `sanctionType` is `SANCTION`.
+            - `REFERENCE_SANCTION_HIT`: Sanction hit on the transfer reference/sender
+            - `RECIPIENT_SANCTION_HIT`: Sanction hit on the recipient
+            - `REFERENCE_LOCATION_HIT`: Location-based hit on the reference/sender
+            - `RECIPIENT_LOCATION_HIT`: Location-based hit on the recipient
+            - `DEPOSIT_SANCTION_HIT`: Sanction hit on an incoming deposit
+
+        case_id : typing.Optional[int]
+            The self-service case ID to close. Required when `status` is `CLOSE`.
+            When `status` is `OPEN`, this can optionally be provided to specify the case ID;
+            otherwise, one will be auto-generated.
+
+        closing_reason : typing.Optional[ChangeSanctionCaseStateSimulationsRequestClosingReason]
+            The reason for closing the case. Required when `status` is `CLOSE`.
+            - `EXPIRED`: The case expired without resolution
+            - `INVALIDATED`: The case was determined to be invalid
+            - `ABORTED`: The case was aborted/cancelled
+            - `COMPLETED`: The case was successfully resolved
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[ChangeSanctionCaseStateSimulationsResponse]
+            Sanction case successfully closed.
+        """
+        _request_options_with_retries_disabled: typing.Optional[RequestOptions] = (
+            {**request_options, "max_retries": 0} if request_options is not None else {"max_retries": 0}
+        )
+        _response = await self._client_wrapper.httpx_client.request(
+            "simulation/sanction-cases",
+            base_url=self._client_wrapper.get_environment().api,
+            method="POST",
+            json={
+                "transferId": transfer_id,
+                "profileId": profile_id,
+                "sanctionType": sanction_type,
+                "simulationSanctionSubType": simulation_sanction_sub_type,
+                "status": status,
+                "caseId": case_id,
+                "closingReason": closing_reason,
+            },
+            headers={
+                "content-type": "application/json",
+            },
+            request_options=_request_options_with_retries_disabled,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    ChangeSanctionCaseStateSimulationsResponse,
+                    parse_obj_as(
+                        type_=ChangeSanctionCaseStateSimulationsResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

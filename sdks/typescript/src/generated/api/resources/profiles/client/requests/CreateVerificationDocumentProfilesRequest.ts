@@ -37,7 +37,11 @@ export interface CreateVerificationDocumentProfilesRequest {
     lastName?: string;
     /** Document type. */
     type?: CreateVerificationDocumentProfilesRequest.Type;
-    /** Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR. */
+    /**
+     * Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+     *
+     * When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
+     */
     uniqueIdentifier?: string;
     /** Document issue date. */
     issueDate?: string;
@@ -49,11 +53,11 @@ export interface CreateVerificationDocumentProfilesRequest {
     expiryDate?: string;
     /** 2 characters ISO country code. */
     nationality?: string;
-    /** The name of the employer. Type must be EMIRATES_EMPLOYER. */
+    /** The name of the employer. Type must be `EMIRATES_EMPLOYER`. */
     employerName?: string;
-    /** The city of the employer. Type must be EMIRATES_EMPLOYER. */
+    /** The city of the employer. Type must be `EMIRATES_EMPLOYER`. */
     employerCity?: string;
-    /** 2 characters ISO country code. Type must be EMIRATES_EMPLOYER. */
+    /** 2 characters ISO country code. Type must be `EMIRATES_EMPLOYER`. */
     employerCountry?: string;
     /** The city of birth of the customer. */
     birthCity?: string;

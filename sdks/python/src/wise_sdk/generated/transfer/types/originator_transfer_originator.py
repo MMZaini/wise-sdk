@@ -28,7 +28,7 @@ class OriginatorTransferOriginator(UniversalBaseModel):
 
     reference: typing.Optional[str] = pydantic.Field(default=None)
     """
-    Unique customer ID in your system. This allows Wise to uniquely identify each originator. Must be the same ID across all transfers sent by the originator.
+    Unique customer ID in your system. This allows Wise to identify each originator for compliance purposes. All transfers sent by the same originator must use the same `originator.reference` value.
     """
 
     name: typing.Optional[OriginatorTransferOriginatorName] = None

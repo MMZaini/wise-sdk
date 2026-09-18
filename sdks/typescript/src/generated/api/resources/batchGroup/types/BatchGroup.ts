@@ -34,6 +34,8 @@ export interface BatchGroup {
      * Currently supported types: `bank_transfer`.
      */
     payInDetails?: Wise.PayInDetails[] | undefined;
+    /** Optional ID of the payin session. Required if batch group funding is done using [Payin Funding API](/guides/product/send-money/funding/direct-debit/create-payin#create-payin). */
+    payinSessionId?: (string | null) | undefined;
 }
 
 export namespace BatchGroup {

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+- Add `simulations.changeSanctionCaseState` for Wise's new sanction case simulation endpoint.
+- Breaking: Wise moved error responses to RFC 9457 problem details. `ErrorResponse` now carries
+  `type`, `title` and `status` in place of `error`, `message` and `timestamp`, and adds `detail`,
+  `instance` and `code`. `ValidationError` now carries `code`, `ref` and `detail` in place of
+  `field`, `message` and `rejectedValue`.
+- Breaking: `Error422UnprocessableEntity` and `BusinessProfileIndustryCategories` are gone;
+  `Error409Conflict`, `SubmissionDataFile` and `BusinessProfileType` replace them.
+- Add the `FILE_SUBMISSION` case message type and business profile industry category fields.
+
 ## 0.1.1
 
 - Apply TypeScript request deadlines and cancellation while waiting for tokens or headers, without interrupting shared token rotation.
