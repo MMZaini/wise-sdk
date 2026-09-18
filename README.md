@@ -51,7 +51,7 @@ and supply production credentials. Keep tokens and private keys on your server.
 
 ## Coverage
 
-- All 210 REST operations in the official 2026Q3 snapshot, with consistent resource names.
+- Every REST operation in the official 2026Q3 snapshot, with consistent resource names.
 - Personal tokens, partner OAuth grants, token rotation helpers and mTLS transport setup.
 - Lazy recipient, activity and transfer iterators; statement downloads and raw responses.
 - Webhook signature verification and SCA challenge detection.

@@ -234,6 +234,18 @@ test("a proposal someone has edited is never closed automatically", options, asy
   assert(f.git("ls-remote", "--heads", "origin", `refs/heads/${stale}`), "The edited branch must survive");
 });
 
+test("a proposal that cannot be cleaned up does not fail the run", options, async (t) => {
+  const f = await fixture(t);
+  const stale = await seedProposal(f);
+  // Someone deleted the branch by hand, so closing it will fail.
+  f.git("push", "--quiet", "origin", "--delete", stale);
+  const result = spawnSync(process.execPath, [script, "propose"], { cwd: f.checkout, env: f.env, encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /::warning title=Could not close #1::/);
+  const state = JSON.parse(await readFile(f.env.WISE_TEST_STATE, "utf8"));
+  assert.equal(state.prs[1].state, "OPEN", "The new proposal must still be created");
+});
+
 test("a proposal committed by someone else is never closed automatically", options, async (t) => {
   const f = await fixture(t);
   await seedProposal(f, { authorEmail: "contributor@example.com" });

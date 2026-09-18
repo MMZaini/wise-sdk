@@ -74,7 +74,7 @@ passed against a sandbox account for the initial release.
 
 Partner OAuth exchanges and Wise-issued mTLS certificates require separate partner
 onboarding. Grant encoding, rotation and certificate verification are tested locally;
-live partner flows have not been verified for this release. Most of the 210 API
-operations are generated and checked against the specification, not exercised live.
+live partner flows have not been verified for this release. Most API operations
+are generated and checked against the specification, not exercised live.
 Production writes, SCA approval and JOSE/card workflows require application-specific
 validation with Wise.

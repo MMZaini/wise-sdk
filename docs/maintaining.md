@@ -79,7 +79,16 @@ Successful updates create a version tag and dispatch `release.yml` explicitly.
 Package publication is automatic after its checks; no approval environment is
 required. Existing update branches and manual edits are never overwritten.
 
+The workflow pushes the merge commit straight to main. Protecting that branch
+without exempting the workflow's identity would stop automatic updates; leave it
+unprotected or add an explicit exemption.
+
 ## Generator and dependency updates
+
+Dependabot proposes monthly grouped updates for GitHub Actions, npm and pip, so
+pinned action SHAs and runtime dependencies do not drift on their own. It leaves
+`fern-api` alone because the CLI moves together with `fern/fern.config.json` and the
+generator versions below.
 
 Update pinned Fern versions in `fern/fern.config.json` and `fern/generators.yml`
 together with the root CLI dependency when needed. Regenerate, inspect the diff
