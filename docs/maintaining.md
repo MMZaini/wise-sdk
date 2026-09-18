@@ -86,9 +86,14 @@ unprotected or add an explicit exemption.
 ## Generator and dependency updates
 
 Dependabot proposes monthly grouped updates for GitHub Actions, npm and pip, so
-pinned action SHAs and runtime dependencies do not drift on their own. It leaves
-`fern-api` alone because the CLI moves together with `fern/fern.config.json` and the
-generator versions below.
+pinned action SHAs and runtime dependencies do not drift on their own. Minor and
+patch releases are grouped separately from majors, so one incompatible major cannot
+hold back every safe update. It leaves `fern-api` alone because the CLI moves
+together with `fern/fern.config.json` and the generator versions below.
+
+The full CI matrix decides these updates. A generator that has not caught up with a
+major dependency shows as a typecheck failure against generated sources, which is a
+review item for the pinned generator rather than something to merge past.
 
 Update pinned Fern versions in `fern/fern.config.json` and `fern/generators.yml`
 together with the root CLI dependency when needed. Regenerate, inspect the diff

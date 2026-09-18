@@ -1,5 +1,7 @@
 # Nothing else updates the pinned action SHAs or runtime dependencies, so without
 # this the repository only tracks Wise's specification and never its own supply chain.
+# A single incompatible major must not hold back every safe update, so majors are
+# grouped separately from minor and patch releases.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -11,6 +13,10 @@ updates:
     groups:
       actions:
         patterns: ['*']
+        update-types: [minor, patch]
+      actions-major:
+        patterns: ['*']
+        update-types: [major]
 
   - package-ecosystem: npm
     directories:
@@ -25,6 +31,10 @@ updates:
     groups:
       npm:
         patterns: ['*']
+        update-types: [minor, patch]
+      npm-major:
+        patterns: ['*']
+        update-types: [major]
     ignore:
       # The Fern CLI is pinned alongside fern/fern.config.json and the generator
       # versions in fern/generators.yml. Those move together, with a reviewed
@@ -40,3 +50,7 @@ updates:
     groups:
       python:
         patterns: ['*']
+        update-types: [minor, patch]
+      python-major:
+        patterns: ['*']
+        update-types: [major]
