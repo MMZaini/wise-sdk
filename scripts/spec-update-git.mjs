@@ -4,8 +4,12 @@ import { createHash } from "node:crypto";
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { compareSpecs } from "./spec-diff.mjs";
 import { nextVersion, specReleaseSummary } from "./bump-version.mjs";
+import { withRetry } from "./retry.mjs";
 
-const run = (command, args) => execFileSync(command, args, { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"], env: {
+// The committed specification is larger than execFileSync's 1 MiB default buffer,
+// so reading a blob with `git show` needs an explicit limit or the merge dies with ENOBUFS.
+const MAX_OUTPUT = 256 * 1024 * 1024;
+const run = (command, args) => execFileSync(command, args, { encoding: "utf8", maxBuffer: MAX_OUTPUT, stdio: ["ignore", "pipe", "inherit"], env: {
   ...process.env, GIT_AUTHOR_NAME: "MMZaini", GIT_AUTHOR_EMAIL: "mahdizainipro@gmail.com",
   GIT_COMMITTER_NAME: "MMZaini", GIT_COMMITTER_EMAIL: "mahdizainipro@gmail.com",
 } }).trim();
@@ -55,12 +59,50 @@ async function checkVersionChanges(version) {
   assert.equal((await readFile("CHANGELOG.md", "utf8")).trim(), expected.trim());
 }
 
+const COMMIT_MESSAGE = "Update the Wise API specification";
+const IDENTITY = "mahdizainipro@gmail.com";
+const AUTOMATION_BRANCH = /^automation\/spec-[0-9a-f]{12}-[0-9a-f]{7}$/;
+
+/** Only this workflow's own untouched proposal may be closed on its behalf. */
+function isUntouchedProposal(number) {
+  const { commits } = JSON.parse(gh("pr", "view", String(number), "--json", "commits"));
+  return commits.length === 1 && commits[0].messageHeadline === COMMIT_MESSAGE
+    && commits[0].authors.length > 0 && commits[0].authors.every((author) => author.email === IDENTITY);
+}
+
+/**
+ * Every upstream snapshot gets its own branch, so without this each daily run
+ * would leave another proposal behind. A proposal someone has edited is kept.
+ */
+function supersede(open, keep) {
+  for (const pr of open) {
+    if (pr.number === keep.number || pr.baseRefName !== "main" || !AUTOMATION_BRANCH.test(pr.headRefName)) continue;
+    if (!isUntouchedProposal(pr.number)) {
+      console.log(`Leaving #${pr.number} open: it has manual commits.`);
+      continue;
+    }
+    gh("pr", "close", String(pr.number), "--delete-branch",
+      "--comment", `Superseded by #${keep.number}, which proposes a newer Wise specification snapshot.`);
+    console.log(`Closed superseded #${pr.number} and deleted its branch.`);
+  }
+}
+
+/** Report why an update needs review where the reviewer already is: on the PR. */
+async function generationLog() {
+  const log = await readFile("artifacts/spec-update/generate.log", "utf8").catch(() => "");
+  const lines = log.replace(/\x1b\[[0-9;]*m/g, "").trimEnd().split("\n").slice(-40);
+  const text = lines.join("\n").slice(-4000);
+  if (!text.trim()) return "";
+  return ["", "<details><summary>Generation output</summary>", "", "```", text, "```", "", "</details>", ""].join("\n");
+}
+
 if (process.argv[2] === "propose") {
   assert.equal(git("rev-parse", "HEAD"), report.base);
-  const existing = JSON.parse(gh("pr", "list", "--state", "open", "--limit", "100", "--json", "number,headRefName,headRefOid,isDraft,url"));
+  const existing = JSON.parse(gh("pr", "list", "--state", "open", "--limit", "100", "--json", "number,headRefName,headRefOid,isDraft,url,baseRefName"));
   const draft = existing.find((pr) => pr.isDraft && pr.headRefName.startsWith(`automation/spec-${report.specSha.slice(0, 12)}-`));
   if (draft) {
     console.log(`This snapshot already needs review: ${draft.url}`);
+    supersede(existing, draft);
     await output("head", "");
   } else {
     let pr = existing.find((entry) => entry.headRefName === branch);
@@ -84,17 +126,23 @@ if (process.argv[2] === "propose") {
         git("apply", "--index", "artifacts/spec-update/update.patch");
         checkChanges(["--cached"]);
         git("diff", "--cached", "--check");
-        git("commit", "--quiet", "-m", "Update the Wise API specification");
+        git("commit", "--quiet", "-m", COMMIT_MESSAGE);
         head = git("rev-parse", "HEAD");
         git("push", "origin", `HEAD:refs/heads/${branch}`);
       }
       const detail = report.changes.slice(0, 30).map((change) => `- ${change.reason}: ${JSON.stringify(change.path)}`).join("\n");
       const body = `Update the official Wise OpenAPI snapshot and regenerate both clients.\n\n${report.automatic
         ? `Classified as ${report.kind}. The full CI matrix must pass before this workflow merges the update${report.version ? ` and publishes ${report.version}` : ""}.`
-        : "This change requires manual review. Resolve the reported compatibility or generation failures before preparing a release."}\n\n${detail}\n\n[Workflow checks](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})\n`;
+        : `This change requires manual review${report.generated === false ? " because generation failed" : ` because it is classified as ${report.kind}`}. Resolve the reported compatibility or generation failures, then regenerate before preparing a release.`}\n\n${detail}\n${report.automatic ? "" : await generationLog()}\n[Workflow checks](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})\n`;
       await writeFile("artifacts/spec-update/pr-body.md", body);
-      const url = gh("pr", "create", "--base", "main", "--head", branch, "--title", "Update the Wise API specification", "--body-file", "artifacts/spec-update/pr-body.md", ...(report.automatic ? [] : ["--draft"]));
+      const url = gh("pr", "create", "--base", "main", "--head", branch, "--title", COMMIT_MESSAGE, "--body-file", "artifacts/spec-update/pr-body.md", ...(report.automatic ? [] : ["--draft"]));
       pr = JSON.parse(gh("pr", "view", url, "--json", "number,url"));
+    }
+    supersede(existing, pr);
+    if (!report.automatic) {
+      // A review request is not a broken workflow, so the run stays green and
+      // announces the work instead.
+      console.log(`::notice title=Wise specification update needs review::${pr.url}`);
     }
     await output("head", head);
     await output("pull_request", pr.number);
@@ -139,6 +187,23 @@ if (process.argv[2] === "propose") {
     git("diff", "--exit-code", head, "HEAD");
     merge = git("rev-parse", "HEAD");
     git("push", "origin", "HEAD:refs/heads/main");
+  }
+  // Leaving merged branches behind only accumulates refs, but GitHub records the
+  // merge from the push to main: deleting the branch before it does would close
+  // the pull request instead of marking it merged.
+  const recorded = await withRetry(() => {
+    const { state } = JSON.parse(gh("pr", "view", process.env.UPDATE_PR, "--json", "state"));
+    if (state !== "MERGED") throw new Error(`The pull request is still ${state}`);
+    return true;
+  }, { attempts: 5 }).catch(() => false);
+  if (!recorded) console.log("Leaving the update branch: GitHub has not recorded the merge yet.");
+  else {
+    try {
+      git("push", "origin", "--delete", `refs/heads/${branch}`);
+      console.log(`Deleted the merged ${branch} branch.`);
+    } catch {
+      console.log(`The ${branch} branch was already deleted.`);
+    }
   }
   if (report.version) {
     const tag = `v${report.version}`;

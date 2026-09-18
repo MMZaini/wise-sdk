@@ -31,6 +31,38 @@ their own URLs and must stay separate.
 | New/removed endpoint, request model, required field, type, enum, security, server or unknown change | Draft PR for review |
 | Generation or checked postprocessing failure | Draft PR for review |
 
+A run that needs review finishes green and leaves a draft pull request, a run
+annotation and a step summary. A red run therefore means the automation itself is
+broken, not that upstream changed in a way a person has to look at. The full CI
+matrix runs only against a proposal that regenerated cleanly, because one that did
+not cannot pass it.
+
+Each snapshot proposes its own branch. When a newer snapshot arrives, the run
+closes the proposal it supersedes and deletes that branch, so at most one
+automatic proposal is open. A proposal with any commit that is not the workflow's
+own is left alone. Merged branches are deleted.
+
+A draft pull request for a generation failure quotes the end of the generation
+log. A new upstream operation is the common case, and `spec:check` prints every
+unmapped operation with a suggested `fern/overrides.yml` entry, already carrying
+the authentication scheme, server and retry setting the checks require. Choose SDK
+names, add the entries and regenerate.
+
+Transient failures are retried: the specification download survives brief network
+faults, and publication retries the npm registry check. Dependency installation is
+not retried past npm's own attempts, and its failure fails the run rather than
+quietly downgrading a compatible update to a draft.
+
+Pull requests the workflow opens with `GITHUB_TOKEN` never start workflow runs, by
+GitHub's design. The `CI` and `React preview` entries those pull requests show as
+`action_required` stay queued forever and are expected; the update workflow calls
+CI itself against the exact proposed commit instead. Review that run, not the
+queued ones.
+
+GitHub disables scheduled workflows in a repository with no commit activity for 60
+days and emails the owner. Re-enable the schedule from the Actions tab if upstream
+stays unchanged for that long.
+
 Compatibility classification is deliberately conservative. A schema used in a
 request, webhook or callback requires review even when its new property is optional.
 Reusable path-item schemas also require review. The full CI matrix

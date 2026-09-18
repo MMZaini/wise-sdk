@@ -1,14 +1,26 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { PermanentError, retryableStatus, withRetry } from "./retry.mjs";
 
 const url = "https://docs.wise.com/_bundle/api-reference/@latest/index.json?download";
-const response = await fetch(url, {
-  headers: { "User-Agent": "wise-sdk-spec-updater/0.1" },
-  signal: AbortSignal.timeout(60_000),
+// Transport failures, truncated bodies and upstream backpressure are all retried:
+// a scheduled run must not go red because one TLS connection dropped.
+const { bytes, spec } = await withRetry(async () => {
+  const response = await fetch(url, {
+    headers: { "User-Agent": "wise-sdk-spec-updater/0.1" },
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (!response.ok) {
+    const message = `Spec download failed: HTTP ${response.status}`;
+    throw retryableStatus(response.status) ? new Error(message) : new PermanentError(message);
+  }
+  const body = Buffer.from(await response.arrayBuffer());
+  try {
+    return { bytes: body, spec: JSON.parse(body.toString("utf8")) };
+  } catch (error) {
+    throw new Error(`The upstream response is not valid JSON: ${error.message}`);
+  }
 });
-if (!response.ok) throw new Error(`Spec download failed: HTTP ${response.status}`);
-const bytes = Buffer.from(await response.arrayBuffer());
-const spec = JSON.parse(bytes.toString("utf8"));
 if (!spec.openapi?.startsWith("3.") || !spec.paths || !spec.components?.schemas) {
   throw new Error("The upstream response is not a Wise OpenAPI document");
 }
