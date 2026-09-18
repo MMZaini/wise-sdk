@@ -34,6 +34,12 @@ updates:
       # versions in fern/generators.yml. Those move together, with a reviewed
       # regeneration; see docs/maintaining.md.
       - dependency-name: fern-api
+      # Each @types/node major describes a Node major. The packages support
+      # Node >= 22, so typing against a later one would accept APIs that are
+      # missing at runtime on the oldest supported release. It moves when the
+      # supported range does; minor and patch updates still apply.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: pip
     directory: /sdks/python

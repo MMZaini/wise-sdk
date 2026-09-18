@@ -95,6 +95,11 @@ The full CI matrix decides these updates. A generator that has not caught up wit
 major dependency shows as a typecheck failure against generated sources, which is a
 review item for the pinned generator rather than something to merge past.
 
+`@types/node` majors are ignored because each one describes a Node major: the
+packages support Node >= 22, so a later one would accept APIs that are missing at
+runtime on the oldest supported release. Raise it together with the supported Node
+range and the CI matrix.
+
 Update pinned Fern versions in `fern/fern.config.json` and `fern/generators.yml`
 together with the root CLI dependency when needed. Regenerate, inspect the diff
 and remove workarounds only after tests prove they are no longer needed.
