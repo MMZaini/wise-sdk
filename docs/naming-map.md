@@ -1,6 +1,6 @@
 # Endpoint map
 
-Generated from Wise's 2026Q3 specification and the Fern overrides: 210 upstream REST operations and 1 documented format supplement. Account permissions still apply. Original authentication alternatives and supplement sources are recorded in `openapi/operations.json`.
+Generated from Wise's 2026Q3 specification and the Fern overrides: 211 upstream REST operations and 1 documented format supplement. Account permissions still apply. Original authentication alternatives and supplement sources are recorded in `openapi/operations.json`.
 
 | HTTP | Path | TypeScript | Python | Server |
 | --- | --- | --- | --- | --- |
@@ -160,6 +160,7 @@ Generated from Wise's 2026Q3 specification and the Fern overrides: 210 upstream 
 | POST | `/simulation/profiles/{profileId}/kyc-reviews/{kycReviewId}/verify` | `simulations.verifyKycReview` | `simulations.verify_kyc_review` | api |
 | POST | `/simulation/profiles/{profileId}/bank-transactions/import` | `simulations.importBankTransaction` | `simulations.import_bank_transaction` | api |
 | POST | `/simulation/profiles/{profileId}/swift-in` | `simulations.createSwiftIncomingTransfer` | `simulations.create_swift_incoming_transfer` | api |
+| POST | `/simulation/sanction-cases` | `simulations.changeSanctionCaseState` | `simulations.change_sanction_case_state` | api |
 | POST | `/spend/applications/{clientId}/spend-controls/rules` | `spendControls.createRule` | `spend_controls.create_rule` | api |
 | GET | `/spend/applications/{clientId}/spend-controls/rules` | `spendControls.listRules` | `spend_controls.list_rules` | api |
 | POST | `/spend/applications/{clientId}/spend-controls/rules/apply` | `spendControls.applyRule` | `spend_controls.apply_rule` | api |

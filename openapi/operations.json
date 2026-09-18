@@ -1650,7 +1650,7 @@
   {
     "method": "POST",
     "path": "/profiles/business-profile",
-    "operationId": "profileBusinessCreateV5",
+    "operationId": "profileBusinessCreateV3",
     "group": "profiles",
     "name": "createBusiness",
     "server": "api",
@@ -1698,7 +1698,7 @@
   {
     "method": "PUT",
     "path": "/profiles/{profileId}/business-profile",
-    "operationId": "profileBusinessUpdateV3",
+    "operationId": "profileBusinessUpdate",
     "group": "profiles",
     "name": "updateBusiness",
     "server": "api",
@@ -2373,6 +2373,20 @@
     "operationId": "simulationSwiftIn",
     "group": "simulations",
     "name": "createSwiftIncomingTransfer",
+    "server": "api",
+    "security": [
+      {
+        "UserToken": []
+      }
+    ],
+    "generated": true
+  },
+  {
+    "method": "POST",
+    "path": "/simulation/sanction-cases",
+    "operationId": "simulateSanctionCase",
+    "group": "simulations",
+    "name": "changeSanctionCaseState",
     "server": "api",
     "security": [
       {
