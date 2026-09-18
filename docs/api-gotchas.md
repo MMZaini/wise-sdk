@@ -2,7 +2,7 @@
 
 ## Coverage and versions
 
-The [endpoint map](naming-map.md) lists 210 operations from Wise's official
+The [endpoint map](naming-map.md) lists every operation in Wise's official
 2026Q3 specification, plus a generated statement-download method for formats
 documented in the statement endpoint's description. SDK coverage does not imply
 that every account can use every endpoint.

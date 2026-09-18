@@ -1,0 +1,42 @@
+# Nothing else updates the pinned action SHAs or runtime dependencies, so without
+# this the repository only tracks Wise's specification and never its own supply chain.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: Update
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /sdks/typescript
+      - /packages/react
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: Update
+    groups:
+      npm:
+        patterns: ['*']
+    ignore:
+      # The Fern CLI is pinned alongside fern/fern.config.json and the generator
+      # versions in fern/generators.yml. Those move together, with a reviewed
+      # regeneration; see docs/maintaining.md.
+      - dependency-name: fern-api
+
+  - package-ecosystem: pip
+    directory: /sdks/python
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: Update
+    groups:
+      python:
+        patterns: ['*']

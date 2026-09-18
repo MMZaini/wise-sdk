@@ -77,13 +77,18 @@ function isUntouchedProposal(number) {
 function supersede(open, keep) {
   for (const pr of open) {
     if (pr.number === keep.number || pr.baseRefName !== "main" || !AUTOMATION_BRANCH.test(pr.headRefName)) continue;
-    if (!isUntouchedProposal(pr.number)) {
-      console.log(`Leaving #${pr.number} open: it has manual commits.`);
-      continue;
+    // Tidying up is not worth failing a run that has already proposed its update.
+    try {
+      if (!isUntouchedProposal(pr.number)) {
+        console.log(`Leaving #${pr.number} open: it has manual commits.`);
+        continue;
+      }
+      gh("pr", "close", String(pr.number), "--delete-branch",
+        "--comment", `Superseded by #${keep.number}, which proposes a newer Wise specification snapshot.`);
+      console.log(`Closed superseded #${pr.number} and deleted its branch.`);
+    } catch (error) {
+      console.log(`::warning title=Could not close #${pr.number}::${error.message}`);
     }
-    gh("pr", "close", String(pr.number), "--delete-branch",
-      "--comment", `Superseded by #${keep.number}, which proposes a newer Wise specification snapshot.`);
-    console.log(`Closed superseded #${pr.number} and deleted its branch.`);
   }
 }
 

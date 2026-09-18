@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, resolve, sep } from "node:path";
-import { releaseNotes } from "./release-notes.mjs";
+import { pendingReleaseNotes } from "./release-notes.mjs";
 import { checkPublishSource } from "./check-publish-source.mjs";
 
 const manifest = JSON.parse(await readFile("artifacts/manifest.json", "utf8"));
@@ -22,11 +22,14 @@ await mkdir("artifacts/release", { recursive: true });
 const sums = files.map((file) => `${file.sha256}  ${file.name}`).join("\n") + "\n";
 await writeFile("artifacts/release/SHA256SUMS", sums);
 files.push({ path: "artifacts/release/SHA256SUMS", name: "SHA256SUMS", sha256: createHash("sha256").update(sums).digest("hex") });
-await writeFile("artifacts/release/notes.md", releaseNotes(await readFile("CHANGELOG.md", "utf8"), manifest.version));
 // Listing with write access includes drafts; the tag endpoint documents published releases only.
 const endpoint = `repos/${process.env.GITHUB_REPOSITORY}/releases?per_page=100`;
-const findRelease = () => JSON.parse(gh("api", "--paginate", "--slurp", endpoint)).flat().find((entry) => entry.tag_name === tag);
-let release = findRelease();
+const existing = JSON.parse(gh("api", "--paginate", "--slurp", endpoint)).flat();
+// A draft has not published its notes, so its version still counts as pending.
+const published = new Set(existing.filter((entry) => !entry.draft).map((entry) => entry.tag_name));
+const isReleased = (value) => published.has(`v${value}`);
+await writeFile("artifacts/release/notes.md", pendingReleaseNotes(await readFile("CHANGELOG.md", "utf8"), manifest.version, isReleased));
+let release = existing.find((entry) => entry.tag_name === tag);
 if (!release) {
   execFileSync("git", ["ls-remote", "--exit-code", "origin", `refs/tags/${tag}`], { stdio: "pipe" });
   await writeFile("artifacts/release/payload.json", JSON.stringify({

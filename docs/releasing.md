@@ -71,6 +71,12 @@ The tag must match every package version and point to a commit on main. The rele
 workflow repeats the complete CI matrix, publishes npm and PyPI, then creates the
 GitHub release. Version bumps also update Python's runtime `__version__`.
 
+Every changelog heading is a version number; the release reads them to build its
+notes and rejects anything else, including an "Unreleased" heading. A version that
+is prepared but never tagged keeps its notes: the next release covers every version
+still missing a release, newest first, so a deferred decision cannot drop a breaking
+change from the published notes.
+
 ## Retry a release
 
 Rerun the failed workflow jobs, or dispatch `release.yml` on the same version tag.

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { compareSpecs } from "../scripts/spec-diff.mjs";
 import { nextVersion } from "../scripts/bump-version.mjs";
-import { releaseNotes } from "../scripts/release-notes.mjs";
+import { pendingReleaseNotes } from "../scripts/release-notes.mjs";
 
 const original = {
   openapi: "3.0.1", info: { title: "API", version: "1" },
@@ -88,10 +88,30 @@ test("version increments distinguish patches from additive releases", () => {
   assert.throws(() => nextVersion("1.0.0", "major"));
 });
 
+const changelog = "# Changelog\n\n## 0.1.1\n\n- Fixed a bug.\n\n## 0.1.0\n\n- Initial release.\n";
+const releasedUpTo = (highest) => (value) => value <= highest;
+
 test("release notes include only the requested version and require an exact heading", () => {
-  const changelog = "# Changelog\n\n## 0.1.1\n\n- Fixed a bug.\n\n## 0.1.0\n\n- Initial release.\n";
-  assert.equal(releaseNotes(changelog, "0.1.1"), "- Fixed a bug.\n");
-  assert.equal(releaseNotes(changelog, "0.1.0"), "- Initial release.\n");
-  assert.throws(() => releaseNotes(changelog, "0.1.2"));
-  assert.throws(() => releaseNotes(changelog + "\n## 0.1.1\n\n- Duplicate.\n", "0.1.1"));
+  assert.equal(pendingReleaseNotes(changelog, "0.1.1", releasedUpTo("0.1.0")), "- Fixed a bug.\n");
+  assert.equal(pendingReleaseNotes(changelog, "0.1.0", () => false), "- Initial release.\n");
+  assert.throws(() => pendingReleaseNotes(changelog, "0.1.2", () => false), /newest unreleased section must be 0\.1\.2/);
+  assert.throws(() => pendingReleaseNotes(changelog + "\n## 0.1.1\n\n- Duplicate.\n", "0.1.1", () => false), /Duplicate changelog/);
+  assert.throws(() => pendingReleaseNotes("# Changelog\n\n## 0.1.1\n\n", "0.1.1", () => false), /must not be empty/);
+  assert.throws(() => pendingReleaseNotes("# Changelog\n\n## Unreleased\n\n- Pending.\n", "0.1.1", () => false), /Unexpected changelog heading/);
+});
+
+test("a version prepared but never tagged keeps its notes in the next release", () => {
+  // 0.2.0 was prepared and left untagged; an automatic update then released 0.2.1.
+  const deferred = "# Changelog\n\n## 0.2.1\n\n- Regenerated.\n\n## 0.2.0\n\n- Breaking: error responses changed.\n\n## 0.1.1\n\n- Fixed a bug.\n";
+  const notes = pendingReleaseNotes(deferred, "0.2.1", releasedUpTo("0.1.1"));
+  assert.match(notes, /^## 0\.2\.1\n\n- Regenerated\.$/m);
+  assert.match(notes, /^## 0\.2\.0\n\n- Breaking: error responses changed\.$/m);
+  assert(!notes.includes("Fixed a bug"), "Released versions must not be repeated");
+  // Once 0.2.0 has its own release the notes narrow back to a single section.
+  assert.equal(pendingReleaseNotes(deferred, "0.2.1", releasedUpTo("0.2.0")), "- Regenerated.\n");
+});
+
+test("a resumed release reproduces its notes even after it was published", () => {
+  // The run is always its own subject, so re-running never empties the notes.
+  assert.equal(pendingReleaseNotes(changelog, "0.1.1", () => true), "- Fixed a bug.\n");
 });
