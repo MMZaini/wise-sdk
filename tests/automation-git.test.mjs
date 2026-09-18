@@ -31,7 +31,7 @@ async function fixture(t, unexpected = false) {
     GITHUB_REPOSITORY: "MMZaini/wise-sdk", GITHUB_RUN_ID: "fixture", GITHUB_OUTPUT: join(checkout, "artifacts/output"),
     WISE_TEST_STATE: join(directory, "github.json"),
   };
-  const run = (command, args) => execFileSync(command, args, { cwd: checkout, env, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+  const run = (command, args) => execFileSync(command, args, { cwd: checkout, env, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] }).trim();
   const git = (...args) => run("git", args);
   const put = async (path, value) => { const file = join(checkout, path); await mkdir(dirname(file), { recursive: true }); await writeFile(file, value); };
   await writeFile(join(bin, "gh"), `#!/usr/bin/env node
@@ -42,27 +42,53 @@ import { basename } from "node:path";
 const path = process.env.WISE_TEST_STATE;
 const args = process.argv.slice(2);
 const state = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : {};
-const git = (...values) => execFileSync("git", values, { encoding: "utf8" }).trim();
-if (args[0] === "pr" && args[1] === "list") console.log(JSON.stringify(state.pr ? [state.pr] : []));
+state.prs ??= [];
+const git = (...values) => execFileSync("git", values, { encoding: "utf8", maxBuffer: 268435456 }).trim();
+const save = () => writeFileSync(path, JSON.stringify(state));
+const stored = (key) => state.prs.find((pr) => String(pr.number) === String(key) || pr.url === key);
+// GitHub records a merge when the head lands on the base branch, however it got there.
+const find = (key) => {
+  const pr = stored(key);
+  if (!pr || pr.state !== "OPEN") return pr;
+  const remote = git("ls-remote", "origin", "refs/heads/main").split("\t")[0];
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", pr.headRefOid, remote], { stdio: "ignore" });
+    return { ...pr, state: "MERGED", mergeCommit: { oid: remote } };
+  } catch { return pr; }
+};
+if (args[0] === "pr" && args[1] === "list") console.log(JSON.stringify(state.prs.filter((pr) => pr.state === "OPEN")));
 else if (args[0] === "pr" && args[1] === "create") {
-  state.pr = { number: 1, url: "https://github.com/MMZaini/wise-sdk/pull/1", state: "OPEN", baseRefName: "main", isDraft: args.includes("--draft"), headRefName: args[args.indexOf("--head") + 1], headRefOid: git("rev-parse", "HEAD") };
-  writeFileSync(path, JSON.stringify(state));
-  console.log(state.pr.url);
-} else if (args[0] === "pr" && args[1] === "view") console.log(JSON.stringify(state.pr));
-else if (args[0] === "workflow" && args[1] === "run") { state.dispatch = args; writeFileSync(path, JSON.stringify(state)); }
+  const number = state.prs.length + 1;
+  const pr = { number, url: "https://github.com/MMZaini/wise-sdk/pull/" + number, state: "OPEN", baseRefName: "main",
+    isDraft: args.includes("--draft"), headRefName: args[args.indexOf("--head") + 1], headRefOid: git("rev-parse", "HEAD"),
+    commits: [{ messageHeadline: "Update the Wise API specification", authors: [{ email: "mahdizainipro@gmail.com" }] }] };
+  state.prs.push(pr);
+  state.pr = pr;
+  save();
+  console.log(pr.url);
+} else if (args[0] === "pr" && args[1] === "view") console.log(JSON.stringify(find(args[2]) ?? state.pr));
+else if (args[0] === "pr" && args[1] === "close") {
+  const pr = stored(args[2]);
+  if (!pr || pr.state !== "OPEN") { console.error("Cannot close", args[2]); process.exit(1); }
+  pr.state = "CLOSED";
+  pr.closeComment = args[args.indexOf("--comment") + 1];
+  if (args.includes("--delete-branch")) git("push", "origin", "--delete", pr.headRefName);
+  state.closed = [...(state.closed ?? []), pr.number];
+  save();
+} else if (args[0] === "workflow" && args[1] === "run") { state.dispatch = args; save(); }
 else if (args[0] === "api" && args.at(-1).includes("/releases?")) {
-  state.listRequests = (state.listRequests ?? 0) + 1; writeFileSync(path, JSON.stringify(state));
+  state.listRequests = (state.listRequests ?? 0) + 1; save();
   console.log(JSON.stringify([state.release ? [state.release] : []]));
 } else if (args[0] === "api" && args.includes("POST") && args.some((value) => value.endsWith("/releases"))) {
   const payload = JSON.parse(readFileSync(args[args.indexOf("--input") + 1], "utf8"));
-  state.release = { id: 1, tag_name: payload.tag_name, draft: true, assets: [] }; writeFileSync(path, JSON.stringify(state));
+  state.release = { id: 1, tag_name: payload.tag_name, draft: true, assets: [] }; save();
   console.log(JSON.stringify(state.release));
 } else if (args[0] === "api" && args.some((value) => value.startsWith("https://uploads.github.com/"))) {
   const file = args[args.indexOf("--input") + 1];
   state.release.assets.push({ name: basename(file), digest: "sha256:" + createHash("sha256").update(readFileSync(file)).digest("hex") });
-  state.uploads = (state.uploads ?? 0) + 1; writeFileSync(path, JSON.stringify(state));
+  state.uploads = (state.uploads ?? 0) + 1; save();
 } else if (args[0] === "api" && args.includes("PATCH")) {
-  state.release.draft = false; writeFileSync(path, JSON.stringify(state));
+  state.release.draft = false; save();
 }
 else { console.error("Unexpected GitHub command", args); process.exit(1); }
 `);
@@ -70,7 +96,10 @@ else { console.error("Unexpected GitHub command", args); process.exit(1); }
   git("init", "--quiet", "--initial-branch=main");
   git("init", "--bare", "--quiet", join(directory, "remote.git"));
   git("remote", "add", "origin", join(directory, "remote.git"));
-  const before = { openapi: "3.0.1", info: { title: "Fixture", version: "1" }, paths: {}, components: { schemas: {} } };
+  // Larger than execFileSync's 1 MiB default buffer, as Wise's real snapshot is:
+  // reading it back with `git show` used to abort the merge with ENOBUFS.
+  const before = { openapi: "3.0.1", info: { title: "Fixture", version: "1" }, paths: {},
+    components: { schemas: { Padding: { type: "string", description: "x".repeat(1_200_000) } } } };
   await put(".gitignore", "artifacts/\n");
   await put("openapi/wise.json", JSON.stringify(before));
   for (const path of ["sdks/typescript", "packages/react"]) {
@@ -94,7 +123,7 @@ else { console.error("Unexpected GitHub command", args); process.exit(1); }
     specSha: createHash("sha256").update(JSON.stringify(after)).digest("hex") };
   await put("artifacts/spec-update/report.json", JSON.stringify(report));
   // Keep the exact patch newline; run() intentionally trims normal command output.
-  await put("artifacts/spec-update/update.patch", execFileSync("git", ["diff", "--binary"], { cwd: checkout, env }));
+  await put("artifacts/spec-update/update.patch", execFileSync("git", ["diff", "--binary"], { cwd: checkout, env, maxBuffer: 256 * 1024 * 1024 }));
   git("restore", ".");
   return { checkout, env, git, run, put, base };
 }
@@ -118,6 +147,7 @@ test("proposes, tests an exact head, merges as the owner and dispatches the vers
   assert.equal(f.git("show", "-s", "--format=%an|%cn", "origin/main"), "MMZaini|MMZaini");
   const state = JSON.parse(await readFile(f.env.WISE_TEST_STATE, "utf8"));
   assert.deepEqual(state.dispatch, ["workflow", "run", "release.yml", "--ref", "v0.1.1"]);
+  assert(!f.git("ls-remote", "--heads", "origin", `refs/heads/${pr.headRefName}`), "The merged branch must be deleted");
   assert.equal(await readFile(join(f.checkout, "sdks/python/src/wise_sdk/__init__.py"), "utf8"), '__version__ = "0.1.1"\n');
 });
 
@@ -157,6 +187,59 @@ test("refuses generated patches that touch helpers or workflow code", options, a
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /outside its allowed paths/);
   assert.equal(f.git("ls-remote", "--heads", "origin").split("\n").length, 1);
+});
+
+/** An earlier run's proposal, still open against main with only its own commit. */
+async function seedProposal(f, { authorEmail = "mahdizainipro@gmail.com", extraCommit = false } = {}) {
+  const branch = `automation/spec-0123456789ab-${f.base.slice(0, 7)}`;
+  f.git("switch", "--quiet", "-c", branch);
+  await f.put("openapi/source.json", JSON.stringify({ sha256: "0".repeat(64) }));
+  f.git("add", "openapi/source.json");
+  f.git("commit", "--quiet", "-m", "Update the Wise API specification");
+  const commits = [{ messageHeadline: "Update the Wise API specification", authors: [{ email: authorEmail }] }];
+  if (extraCommit) {
+    await f.put("openapi/source.json", JSON.stringify({ sha256: "1".repeat(64) }));
+    f.git("add", "openapi/source.json");
+    f.git("commit", "--quiet", "-m", "Add the missing override");
+    commits.push({ messageHeadline: "Add the missing override", authors: [{ email: "contributor@example.com" }] });
+  }
+  const headRefOid = f.git("rev-parse", "HEAD");
+  f.git("push", "--quiet", "origin", `HEAD:refs/heads/${branch}`);
+  f.git("switch", "--quiet", "main");
+  await writeFile(f.env.WISE_TEST_STATE, JSON.stringify({ prs: [{
+    number: 1, url: "https://github.com/MMZaini/wise-sdk/pull/1", state: "OPEN", baseRefName: "main",
+    isDraft: true, headRefName: branch, headRefOid, commits,
+  }] }));
+  return branch;
+}
+
+test("a newer snapshot closes the proposal it supersedes and deletes its branch", options, async (t) => {
+  const f = await fixture(t);
+  const stale = await seedProposal(f);
+  f.run(process.execPath, [script, "propose"]);
+  const state = JSON.parse(await readFile(f.env.WISE_TEST_STATE, "utf8"));
+  assert.deepEqual(state.closed, [1], "The superseded proposal must be closed");
+  assert.match(state.prs[0].closeComment, /Superseded by #2/);
+  assert.equal(state.prs[1].state, "OPEN");
+  assert(!f.git("ls-remote", "--heads", "origin", `refs/heads/${stale}`), "The superseded branch must be deleted");
+});
+
+test("a proposal someone has edited is never closed automatically", options, async (t) => {
+  const f = await fixture(t);
+  const stale = await seedProposal(f, { extraCommit: true });
+  f.run(process.execPath, [script, "propose"]);
+  const state = JSON.parse(await readFile(f.env.WISE_TEST_STATE, "utf8"));
+  assert.equal(state.closed, undefined, "A reviewed proposal must stay open");
+  assert.equal(state.prs[0].state, "OPEN");
+  assert(f.git("ls-remote", "--heads", "origin", `refs/heads/${stale}`), "The edited branch must survive");
+});
+
+test("a proposal committed by someone else is never closed automatically", options, async (t) => {
+  const f = await fixture(t);
+  await seedProposal(f, { authorEmail: "contributor@example.com" });
+  f.run(process.execPath, [script, "propose"]);
+  const state = JSON.parse(await readFile(f.env.WISE_TEST_STATE, "utf8"));
+  assert.equal(state.closed, undefined);
 });
 
 test("publication rejects stale archives and uncommitted source", options, async (t) => {

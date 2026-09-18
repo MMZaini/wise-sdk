@@ -20,6 +20,7 @@ jobs:
     outputs:
       changed: ${{ steps.compare.outputs.changed }}
       automatic: ${{ steps.patch.outputs.automatic }}
+      generated: ${{ steps.patch.outputs.generated }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -27,8 +28,10 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
-      - run: |
+      - name: Download the upstream specification
+        run: |
           mkdir -p artifacts/spec-update
+          : > artifacts/spec-update/generate.log
           cp openapi/wise.json artifacts/spec-update/before.json
           npm run spec:update
       - id: compare
@@ -41,12 +44,23 @@ jobs:
             echo 'changed=true' >> "$GITHUB_OUTPUT"
             node scripts/spec-diff.mjs artifacts/spec-update/before.json openapi/wise.json artifacts/spec-update/comparison.json
           fi
+      # A dependency install failure is broken automation, not a reviewable update,
+      # so it fails the job instead of quietly downgrading to a draft proposal.
+      - if: steps.compare.outputs.changed == 'true'
+        name: Install generation dependencies
+        run: npm ci
       - if: steps.compare.outputs.changed == 'true'
         id: generate
+        name: Regenerate both clients
         continue-on-error: true
+        shell: bash
+        run: npm run generate 2>&1 | tee artifacts/spec-update/generate.log
+      # Half-generated sources must never reach a proposal; keep only the snapshot.
+      - if: always() && steps.compare.outputs.changed == 'true' && steps.generate.outcome != 'success'
+        name: Discard partial generation output
         run: |
-          npm ci
-          npm run generate
+          git checkout -- sdks docs openapi/operations.json
+          git clean -fdq sdks docs
       - if: always() && steps.compare.outputs.changed == 'true'
         id: patch
         name: Prepare the update and release version
@@ -58,13 +72,14 @@ jobs:
           import { createHash } from 'node:crypto';
           import { bumpVersion, specReleaseSummary } from './scripts/bump-version.mjs';
           const comparison = JSON.parse(await readFile('artifacts/spec-update/comparison.json', 'utf8'));
-          const automatic = comparison.compatible && process.env.GENERATION_OUTCOME === 'success';
+          const generated = process.env.GENERATION_OUTCOME === 'success';
+          const automatic = comparison.compatible && generated;
           const version = automatic && comparison.kind !== 'none'
             ? await bumpVersion(comparison.bump, specReleaseSummary(comparison.kind)) : '';
           const specSha = createHash('sha256').update(await readFile('openapi/wise.json')).digest('hex');
-          await writeFile('artifacts/spec-update/report.json', JSON.stringify({ ...comparison, automatic, version, specSha, base: process.env.GITHUB_SHA }, null, 2) + '\n');
-          await appendFile(process.env.GITHUB_OUTPUT, `automatic=${automatic}\n`);
-          await appendFile(process.env.GITHUB_STEP_SUMMARY, `Update classification: ${comparison.kind}. ${automatic ? 'Eligible for merge after CI.' : 'Manual review required.'}\n`);
+          await writeFile('artifacts/spec-update/report.json', JSON.stringify({ ...comparison, automatic, generated, version, specSha, base: process.env.GITHUB_SHA }, null, 2) + '\n');
+          await appendFile(process.env.GITHUB_OUTPUT, `automatic=${automatic}\ngenerated=${generated}\n`);
+          await appendFile(process.env.GITHUB_STEP_SUMMARY, `Update classification: ${comparison.kind}. Generation ${generated ? 'succeeded' : 'failed'}. ${automatic ? 'Eligible for merge after CI.' : 'A draft pull request records the manual review this needs.'}\n`);
           JS
           git add --intent-to-add openapi sdks docs/naming-map.md packages/react/package.json packages/react/package-lock.json CHANGELOG.md
           git diff --binary -- openapi sdks docs/naming-map.md packages/react/package.json packages/react/package-lock.json CHANGELOG.md > artifacts/spec-update/update.patch
@@ -75,6 +90,7 @@ jobs:
           path: |
             artifacts/spec-update/report.json
             artifacts/spec-update/update.patch
+            artifacts/spec-update/generate.log
           if-no-files-found: error
 
   propose:
@@ -104,9 +120,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/spec-update-git.mjs propose
 
+  # An update that could not be generated cannot pass CI. Running it anyway would
+  # make every run that needs review look like broken automation.
   checks:
     needs: [prepare, propose]
-    if: needs.propose.outputs.head != ''
+    if: needs.propose.outputs.head != '' && needs.prepare.outputs.generated == 'true'
     uses: ./.github/workflows/ci.yml
     with:
       ref: ${{ needs.propose.outputs.head }}
