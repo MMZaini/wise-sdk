@@ -2,10 +2,11 @@
 
 import typing
 
+from ...types.submission_data_file import SubmissionDataFile
 from ...types.submission_data_freeform import SubmissionDataFreeform
 from ...types.submission_data_location_hit import SubmissionDataLocationHit
 from ...types.submission_data_sanction_hit import SubmissionDataSanctionHit
 
 MessageSubmissionRequestSubmissionData = typing.Union[
-    SubmissionDataFreeform, SubmissionDataSanctionHit, SubmissionDataLocationHit
+    SubmissionDataFreeform, SubmissionDataSanctionHit, SubmissionDataLocationHit, SubmissionDataFile
 ]

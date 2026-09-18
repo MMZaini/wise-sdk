@@ -11,6 +11,17 @@ if typing.TYPE_CHECKING:
     )
     from .authorize_card_transaction_simulations_request_amount import AuthorizeCardTransactionSimulationsRequestAmount
     from .authorize_card_transaction_simulations_response import AuthorizeCardTransactionSimulationsResponse
+    from .change_sanction_case_state_simulations_request_closing_reason import (
+        ChangeSanctionCaseStateSimulationsRequestClosingReason,
+    )
+    from .change_sanction_case_state_simulations_request_sanction_type import (
+        ChangeSanctionCaseStateSimulationsRequestSanctionType,
+    )
+    from .change_sanction_case_state_simulations_request_simulation_sanction_sub_type import (
+        ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType,
+    )
+    from .change_sanction_case_state_simulations_request_status import ChangeSanctionCaseStateSimulationsRequestStatus
+    from .change_sanction_case_state_simulations_response import ChangeSanctionCaseStateSimulationsResponse
     from .change_transfer_state_simulations_request_status import ChangeTransferStateSimulationsRequestStatus
     from .clear_card_transaction_simulations_request_amount import ClearCardTransactionSimulationsRequestAmount
     from .clear_card_transaction_simulations_response import ClearCardTransactionSimulationsResponse
@@ -38,6 +49,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AddKycRequirementSimulationsRequestRequestedAction": ".add_kyc_requirement_simulations_request_requested_action",
     "AuthorizeCardTransactionSimulationsRequestAmount": ".authorize_card_transaction_simulations_request_amount",
     "AuthorizeCardTransactionSimulationsResponse": ".authorize_card_transaction_simulations_response",
+    "ChangeSanctionCaseStateSimulationsRequestClosingReason": ".change_sanction_case_state_simulations_request_closing_reason",
+    "ChangeSanctionCaseStateSimulationsRequestSanctionType": ".change_sanction_case_state_simulations_request_sanction_type",
+    "ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType": ".change_sanction_case_state_simulations_request_simulation_sanction_sub_type",
+    "ChangeSanctionCaseStateSimulationsRequestStatus": ".change_sanction_case_state_simulations_request_status",
+    "ChangeSanctionCaseStateSimulationsResponse": ".change_sanction_case_state_simulations_response",
     "ChangeTransferStateSimulationsRequestStatus": ".change_transfer_state_simulations_request_status",
     "ClearCardTransactionSimulationsRequestAmount": ".clear_card_transaction_simulations_request_amount",
     "ClearCardTransactionSimulationsResponse": ".clear_card_transaction_simulations_response",
@@ -83,6 +99,11 @@ __all__ = [
     "AddKycRequirementSimulationsRequestRequestedAction",
     "AuthorizeCardTransactionSimulationsRequestAmount",
     "AuthorizeCardTransactionSimulationsResponse",
+    "ChangeSanctionCaseStateSimulationsRequestClosingReason",
+    "ChangeSanctionCaseStateSimulationsRequestSanctionType",
+    "ChangeSanctionCaseStateSimulationsRequestSimulationSanctionSubType",
+    "ChangeSanctionCaseStateSimulationsRequestStatus",
+    "ChangeSanctionCaseStateSimulationsResponse",
     "ChangeTransferStateSimulationsRequestStatus",
     "ClearCardTransactionSimulationsRequestAmount",
     "ClearCardTransactionSimulationsResponse",

@@ -56,11 +56,7 @@ if typing.TYPE_CHECKING:
     from .business_profile_company_role import BusinessProfileCompanyRole
     from .business_profile_contact_details import BusinessProfileContactDetails
     from .business_profile_current_state import BusinessProfileCurrentState
-    from .business_profile_industry_categories import BusinessProfileIndustryCategories
-    from .business_profile_industry_categories_company_role import BusinessProfileIndustryCategoriesCompanyRole
-    from .business_profile_industry_categories_contact_details import BusinessProfileIndustryCategoriesContactDetails
-    from .business_profile_industry_categories_current_state import BusinessProfileIndustryCategoriesCurrentState
-    from .business_profile_industry_categories_type import BusinessProfileIndustryCategoriesType
+    from .business_profile_type import BusinessProfileType
     from .card_transaction import CardTransaction
     from .card_transaction_billing_amount import CardTransactionBillingAmount
     from .card_transaction_credits_item import CardTransactionCreditsItem
@@ -175,7 +171,7 @@ if typing.TYPE_CHECKING:
     from .error401unauthorized import Error401Unauthorized
     from .error403forbidden import Error403Forbidden
     from .error404not_found import Error404NotFound
-    from .error422unprocessable_entity import Error422UnprocessableEntity
+    from .error409conflict import Error409Conflict
     from .error_response import ErrorResponse
     from .fees import Fees
     from .financial_institution import FinancialInstitution
@@ -272,6 +268,7 @@ if typing.TYPE_CHECKING:
     from .refresh_token_grant import RefreshTokenGrant
     from .registration_code_grant import RegistrationCodeGrant
     from .server_error import ServerError
+    from .submission_data_file import SubmissionDataFile
     from .submission_data_freeform import SubmissionDataFreeform
     from .submission_data_location_hit import SubmissionDataLocationHit
     from .submission_data_sanction_hit import SubmissionDataSanctionHit
@@ -737,11 +734,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BusinessProfileCompanyRole": ".business_profile_company_role",
     "BusinessProfileContactDetails": ".business_profile_contact_details",
     "BusinessProfileCurrentState": ".business_profile_current_state",
-    "BusinessProfileIndustryCategories": ".business_profile_industry_categories",
-    "BusinessProfileIndustryCategoriesCompanyRole": ".business_profile_industry_categories_company_role",
-    "BusinessProfileIndustryCategoriesContactDetails": ".business_profile_industry_categories_contact_details",
-    "BusinessProfileIndustryCategoriesCurrentState": ".business_profile_industry_categories_current_state",
-    "BusinessProfileIndustryCategoriesType": ".business_profile_industry_categories_type",
+    "BusinessProfileType": ".business_profile_type",
     "CardTransaction": ".card_transaction",
     "CardTransactionBillingAmount": ".card_transaction_billing_amount",
     "CardTransactionCreditsItem": ".card_transaction_credits_item",
@@ -840,7 +833,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "Error401Unauthorized": ".error401unauthorized",
     "Error403Forbidden": ".error403forbidden",
     "Error404NotFound": ".error404not_found",
-    "Error422UnprocessableEntity": ".error422unprocessable_entity",
+    "Error409Conflict": ".error409conflict",
     "ErrorResponse": ".error_response",
     "Fees": ".fees",
     "FinancialInstitution": ".financial_institution",
@@ -931,6 +924,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RefreshTokenGrant": ".refresh_token_grant",
     "RegistrationCodeGrant": ".registration_code_grant",
     "ServerError": ".server_error",
+    "SubmissionDataFile": ".submission_data_file",
     "SubmissionDataFreeform": ".submission_data_freeform",
     "SubmissionDataLocationHit": ".submission_data_location_hit",
     "SubmissionDataSanctionHit": ".submission_data_sanction_hit",
@@ -1406,11 +1400,7 @@ __all__ = [
     "BusinessProfileCompanyRole",
     "BusinessProfileContactDetails",
     "BusinessProfileCurrentState",
-    "BusinessProfileIndustryCategories",
-    "BusinessProfileIndustryCategoriesCompanyRole",
-    "BusinessProfileIndustryCategoriesContactDetails",
-    "BusinessProfileIndustryCategoriesCurrentState",
-    "BusinessProfileIndustryCategoriesType",
+    "BusinessProfileType",
     "CardTransaction",
     "CardTransactionBillingAmount",
     "CardTransactionCreditsItem",
@@ -1509,7 +1499,7 @@ __all__ = [
     "Error401Unauthorized",
     "Error403Forbidden",
     "Error404NotFound",
-    "Error422UnprocessableEntity",
+    "Error409Conflict",
     "ErrorResponse",
     "Fees",
     "FinancialInstitution",
@@ -1600,6 +1590,7 @@ __all__ = [
     "RefreshTokenGrant",
     "RegistrationCodeGrant",
     "ServerError",
+    "SubmissionDataFile",
     "SubmissionDataFreeform",
     "SubmissionDataLocationHit",
     "SubmissionDataSanctionHit",

@@ -48,6 +48,7 @@ class MessageSubmissionResponse(UniversalBaseModel):
     The content of the created message.
     - For FREEFORM: contains `text.freeText`
     - For SUBMISSION types: contains `submissionData`
+    - For FILE_SUBMISSION: contains `submissionData` with `profileId` and `fileIds`
     """
 
     type: MessageSubmissionResponseType = pydantic.Field()

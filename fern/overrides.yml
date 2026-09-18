@@ -1222,6 +1222,15 @@ paths:
         - AccessToken: []
       x-fern-retries:
         disabled: true
+  /simulation/sanction-cases:
+    post:
+      x-fern-sdk-group-name: simulations
+      x-fern-sdk-method-name: changeSanctionCaseState
+      x-fern-server-name: api
+      security:
+        - AccessToken: []
+      x-fern-retries:
+        disabled: true
   /spend/applications/{clientId}/spend-controls/rules:
     post:
       x-fern-sdk-group-name: spendControls

@@ -3,9 +3,7 @@
 import typing
 
 import pydantic
-import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from ..core.serialization import FieldMetadata
 
 
 class ValidationError(UniversalBaseModel):
@@ -13,24 +11,26 @@ class ValidationError(UniversalBaseModel):
     Details about a specific field validation error.
     """
 
-    field: str = pydantic.Field()
+    code: str = pydantic.Field()
     """
-    The field path that caused the validation error.
-    Uses dot notation for nested fields (e.g., `submissionData.individual.name`).
+    Machine-readable validation error code.
+
+    Values:
+    - `parameter_missing` - A required field is null, empty, or blank
+    - `parameter_invalid` - A field value is present but not acceptable
+    - `invalid_value` - A field value fails a business validation rule
+    - `invalid_request` - The request structure is malformed or invalid
     """
 
-    message: str = pydantic.Field()
+    ref: str = pydantic.Field()
     """
-    Description of what validation rule was violated.
+    The field that caused the validation error.
+    For nested fields, only the leaf property name is used (e.g., `name` not `submissionData.individual.name`).
     """
 
-    rejected_value: typing_extensions.Annotated[
-        typing.Optional[typing.Any],
-        FieldMetadata(alias="rejectedValue"),
-        pydantic.Field(alias="rejectedValue", description="The value that was rejected (if applicable)."),
-    ] = None
+    detail: typing.Optional[str] = pydantic.Field(default=None)
     """
-    The value that was rejected (if applicable).
+    Human-readable description of the validation error. May be null.
     """
 
     if IS_PYDANTIC_V2:

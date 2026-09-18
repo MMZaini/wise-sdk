@@ -106,6 +106,10 @@ export interface CreateBusinessProfilesRequest {
     actorEmail?: string;
     /** One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values. */
     industryCategories?: string[];
+    /** Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`. */
+    firstLevelCategory?: string;
+    /** Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`. */
+    secondLevelCategory?: string;
     /** List of operational addresses. */
     operationalAddresses?: CreateBusinessProfilesRequest.OperationalAddresses.Item[];
     /**

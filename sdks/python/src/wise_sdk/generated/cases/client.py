@@ -109,7 +109,7 @@ class CasesClient:
         - Profile and external reference information
         - All public messages associated with the case
 
-        Messages in the response can have three different content structures:
+        Messages in the response can have four different content structures:
 
         1. Attributes Content (REQUEST messages)
         Present in messages like `DEPOSIT_SANCTION_HIT_REQUEST`, `REFERENCE_SANCTION_HIT_REQUEST`, etc.
@@ -121,6 +121,9 @@ class CasesClient:
 
         3. Text Content (FREEFORM messages)
         Present in `FREEFORM` messages. Contains free text conversation between partners and Wise.
+
+        4. File Submission Content (FILE_SUBMISSION messages)
+        Present in `FILE_SUBMISSION` messages. Contains file references (`profileId` and `fileIds`) for files attached to the case by the partner.
 
         Parameters
         ----------
@@ -163,10 +166,7 @@ class CasesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> MessageSubmissionResponse:
         """
-        Submits a new message to an existing support case. The message type determines
-        the expected structure of the submission data.
-
-        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example..
+        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example.
 
         Parameters
         ----------
@@ -313,7 +313,7 @@ class AsyncCasesClient:
         - Profile and external reference information
         - All public messages associated with the case
 
-        Messages in the response can have three different content structures:
+        Messages in the response can have four different content structures:
 
         1. Attributes Content (REQUEST messages)
         Present in messages like `DEPOSIT_SANCTION_HIT_REQUEST`, `REFERENCE_SANCTION_HIT_REQUEST`, etc.
@@ -325,6 +325,9 @@ class AsyncCasesClient:
 
         3. Text Content (FREEFORM messages)
         Present in `FREEFORM` messages. Contains free text conversation between partners and Wise.
+
+        4. File Submission Content (FILE_SUBMISSION messages)
+        Present in `FILE_SUBMISSION` messages. Contains file references (`profileId` and `fileIds`) for files attached to the case by the partner.
 
         Parameters
         ----------
@@ -375,10 +378,7 @@ class AsyncCasesClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> MessageSubmissionResponse:
         """
-        Submits a new message to an existing support case. The message type determines
-        the expected structure of the submission data.
-
-        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example..
+        See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example.
 
         Parameters
         ----------

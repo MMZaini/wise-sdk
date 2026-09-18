@@ -18,7 +18,7 @@ class CardStatus(UniversalBaseModel):
     - `ACTIVE` - Card is active and can be used
     - `INACTIVE` - Card is inactive and all transactions will be declined
     - `BLOCKED` - Card is blocked and cannot be reversed back to any state
-    - `FROZEN` - Card is temporarily blocked
+    - `FROZEN` - Card is temporarily frozen; all authorization requests will be declined
     - `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily (do not display to end customers)
     - `EXPIRED` - Card is expired
     - `PURGED` - Cardholder data (e.g. PAN, PIN) has been purged after the retention period (555 days after the card's expiry date)

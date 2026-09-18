@@ -13,7 +13,7 @@ from .mtls import create_mtls_context
 from .webhooks import verify_webhook_signature, get_sca_challenge
 from .pagination import PaginationError, iter_recipients, async_iter_recipients, iter_activities, async_iter_activities, iter_transfers, async_iter_transfers
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 __all__ = list(dict.fromkeys([*_generated.__all__, "WiseClient", "AsyncWiseClient", "WiseEnvironment", "ApiError",
     "WiseOAuth", "AsyncWiseOAuth", "OAuthTokens", "OAuthError", "TokenManager", "AsyncTokenManager",

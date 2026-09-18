@@ -8,5 +8,6 @@ export const MessageSubmissionType = {
     RecipientSanctionHitSubmission: "RECIPIENT_SANCTION_HIT_SUBMISSION",
     ReferenceLocationHitSubmission: "REFERENCE_LOCATION_HIT_SUBMISSION",
     RecipientLocationHitSubmission: "RECIPIENT_LOCATION_HIT_SUBMISSION",
+    FileSubmission: "FILE_SUBMISSION",
 } as const;
 export type MessageSubmissionType = (typeof MessageSubmissionType)[keyof typeof MessageSubmissionType];

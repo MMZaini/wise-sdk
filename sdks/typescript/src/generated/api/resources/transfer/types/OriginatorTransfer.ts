@@ -57,7 +57,7 @@ export namespace OriginatorTransfer {
     export interface Originator {
         /** Payment originator legal type. */
         legalEntityType?: Originator.LegalEntityType | undefined;
-        /** Unique customer ID in your system. This allows Wise to uniquely identify each originator. Must be the same ID across all transfers sent by the originator. */
+        /** Unique customer ID in your system. This allows Wise to identify each originator for compliance purposes. All transfers sent by the same originator must use the same `originator.reference` value. */
         reference?: string | undefined;
         name?: Originator.Name | undefined;
         /** Payment originator date of birth */

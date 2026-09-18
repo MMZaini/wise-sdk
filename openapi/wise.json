@@ -4262,7 +4262,8 @@
                   "sourceCurrency": "GBP",
                   "status": "NEW",
                   "transferIds": [],
-                  "payInDetails": []
+                  "payInDetails": [],
+                  "payinSessionId": null
                 }
               }
             },
@@ -6138,7 +6139,7 @@
         ],
         "summary": "Create a card order",
         "operationId": "cardOrderCreate",
-        "description": "Creates a new card order. The `program` field value is retrieved from the [retrieve all card programs](/api-reference/card-order/cardorderprogramsget) endpoint.\n\n{% admonition type=\"warning\" %}\nThis request requires an extra field in the header, `X-idempotence-uuid`. This should be generated and used for any subsequent retries in the event that the initial request fails.\n{% /admonition %}\n\nWhen you issue a card under a business profile, the cardholder will automatically default to the [business representative](/api-reference/profile/profilebusinesscreatev5).\n\nIf the cardholder is not the business representative, create a cardholder [personal profile](/api-reference/profile/profilepersonalcreate) and add the profileId of the cardholder profile to the `cardHolderProfileId` field on the card order request.\n\nFor country-specific address fields and validation rules, see the [card address validation guide](/guides/developer/api-guides/card-address-validation).\n",
+        "description": "Creates a new card order. The `program` field value is retrieved from the [retrieve all card programs](/api-reference/card-order/cardorderprogramsget) endpoint.\n\n{% admonition type=\"warning\" %}\nThis request requires an extra field in the header, `X-idempotence-uuid`. This should be generated and used for any subsequent retries in the event that the initial request fails.\n{% /admonition %}\n\nWhen you issue a card under a business profile, the cardholder will automatically default to the [business representative](/api-reference/profile/profilebusinesscreatev3).\n\nIf the cardholder is not the business representative, create a cardholder [personal profile](/api-reference/profile/profilepersonalcreate) and add the profileId of the cardholder profile to the `cardHolderProfileId` field on the card order request.\n\nFor country-specific address fields and validation rules, see the [card address validation guide](/guides/developer/api-guides/card-address-validation).\n",
         "security": [
           {
             "UserToken": []
@@ -7046,6 +7047,134 @@
               }
             }
           },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "A domain type exception",
+                      "examples": [
+                        "/errors/types/domain"
+                      ]
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the exception",
+                      "examples": [
+                        "Not found"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "The HTTP status error code",
+                      "examples": [
+                        404
+                      ]
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A detailed description of the failure",
+                      "examples": [
+                        "Transaction does not exist"
+                      ]
+                    },
+                    "instance": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "The URI that triggered the error",
+                      "examples": [
+                        "/public/v4/spend/profiles/2/cards/transactions/121212"
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "Specific application-level error code",
+                      "examples": [
+                        "resource_not_found"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable request.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "A domain type exception (must be /errors/types/domain for this error type)",
+                      "examples": [
+                        "/errors/types/domain"
+                      ]
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the error",
+                      "examples": [
+                        "Unprocessable Entity"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "The HTTP status error code",
+                      "examples": [
+                        422
+                      ]
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A detailed description of the failure",
+                      "examples": [
+                        "Access to transactions is limited to the last 90 days. Queries outside this date range are not supported."
+                      ]
+                    },
+                    "instance": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "The URI that triggered the error",
+                      "examples": [
+                        "/public/v4/spend/profiles/2/cards/transactions/121212"
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "Error code of the request",
+                      "examples": [
+                        "operation_not_supported"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -7174,7 +7303,7 @@
                         {
                           "amount": 0.1,
                           "currency": "SGD",
-                          "fee_type": "ATM_ACQUIRER"
+                          "fee_type": "ATM_MACHINE"
                         }
                       ],
                       "transactionAmountWithFees": {
@@ -7207,6 +7336,147 @@
                       "balanceChannelReferenceId": "6e71018d-2f4d-4fc3-6711-f517f4664712"
                     }
                   ]
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "The type of validation error (must be /errors/types/validation for this error type)",
+                      "examples": [
+                        "/errors/types/validation"
+                      ]
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the error",
+                      "examples": [
+                        "Validation Error"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "The HTTP status error code",
+                      "examples": [
+                        400
+                      ]
+                    },
+                    "instance": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "The URI that triggered the validation error",
+                      "examples": [
+                        "/public/v4/spend/profiles/2/cards/f47da127-7b8c-4312-8f10-dd2d70e6912b/transactions"
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "description": "A list of specific validation failures.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the validation failure.",
+                            "examples": [
+                              "Invalid date format. Expected ISO-8601 format YYYY-MM-DDTHH:mm:ssZ."
+                            ]
+                          },
+                          "code": {
+                            "type": "string",
+                            "description": "A specific code for the validation failure type.",
+                            "examples": [
+                              "parameter_invalid_format"
+                            ]
+                          },
+                          "ref": {
+                            "type": "string",
+                            "description": "A reference to the field that failed validation."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable request.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "A domain type exception (must be /errors/types/domain for this error type)",
+                      "examples": [
+                        "/errors/types/domain"
+                      ]
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the error",
+                      "examples": [
+                        "Unprocessable Entity"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "The HTTP status error code",
+                      "examples": [
+                        422
+                      ]
+                    },
+                    "detail": {
+                      "type": "string",
+                      "description": "A detailed description of the failure",
+                      "examples": [
+                        "Access to transactions is limited to the last 90 days. Queries outside this date range are not supported."
+                      ]
+                    },
+                    "instance": {
+                      "type": "string",
+                      "format": "uri-reference",
+                      "description": "The URI that triggered the error",
+                      "examples": [
+                        "/public/v4/spend/profiles/2/cards/f47da127-7b8c-4312-8f10-dd2d70e6912b/transactions"
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "Error code of the request",
+                      "examples": [
+                        "operation_not_supported"
+                      ]
+                    }
+                  }
                 }
               }
             },
@@ -12871,7 +13141,7 @@
       "get": {
         "operationId": "caseGet",
         "summary": "Retrieve a case by ID",
-        "description": "Retrieves the complete details of a support case including all public messages\nand reference information.\n\n#### Response\n\nReturns the full case object with:\n- Case metadata (id, type, subType, status, timestamps)\n- Profile and external reference information\n- All public messages associated with the case\n\nMessages in the response can have three different content structures:\n\n1. Attributes Content (REQUEST messages)\nPresent in messages like `DEPOSIT_SANCTION_HIT_REQUEST`, `REFERENCE_SANCTION_HIT_REQUEST`, etc.\nContains dynamic attributes that define what information is required.\n\n2. Submission Data Content (SUBMISSION messages)\nPresent in messages like `DEPOSIT_SANCTION_HIT_SUBMISSION`, `REFERENCE_LOCATION_HIT_SUBMISSION`, etc.\nContains the data submitted by the partner in response to a request.\n\n3. Text Content (FREEFORM messages)\nPresent in `FREEFORM` messages. Contains free text conversation between partners and Wise.\n",
+        "description": "Retrieves the complete details of a support case including all public messages\nand reference information.\n\n#### Response\n\nReturns the full case object with:\n- Case metadata (id, type, subType, status, timestamps)\n- Profile and external reference information\n- All public messages associated with the case\n\nMessages in the response can have four different content structures:\n\n1. Attributes Content (REQUEST messages)\nPresent in messages like `DEPOSIT_SANCTION_HIT_REQUEST`, `REFERENCE_SANCTION_HIT_REQUEST`, etc.\nContains dynamic attributes that define what information is required.\n\n2. Submission Data Content (SUBMISSION messages)\nPresent in messages like `DEPOSIT_SANCTION_HIT_SUBMISSION`, `REFERENCE_LOCATION_HIT_SUBMISSION`, etc.\nContains the data submitted by the partner in response to a request.\n\n3. Text Content (FREEFORM messages)\nPresent in `FREEFORM` messages. Contains free text conversation between partners and Wise.\n\n4. File Submission Content (FILE_SUBMISSION messages)\nPresent in `FILE_SUBMISSION` messages. Contains file references (`profileId` and `fileIds`) for files attached to the case by the partner.\n",
         "tags": [
           "case"
         ],
@@ -12884,7 +13154,7 @@
           {
             "lang": "bash",
             "label": "cURL",
-            "source": "curl -X GET \\\n  'https://api.sandbox.wise.com/2026Q3/cases/{caseId}' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer <token>'\n"
+            "source": "curl -X GET \\\n  'https://api.sandbox.wise.com/2026Q4/cases/{caseId}' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer <token>'\n"
           }
         ],
         "parameters": [
@@ -13484,35 +13754,109 @@
                         }
                       ]
                     }
-                  }
-                }
-              }
-            },
-            "headers": {
-              "X-External-Correlation-Id": {
-                "$ref": "#/components/headers/X-External-Correlation-Id"
-              },
-              "x-trace-id": {
-                "$ref": "#/components/headers/x-trace-id"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - invalid input parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error-400-bad-request"
-                },
-                "example": {
-                  "error": "BAD_REQUEST",
-                  "message": "Invalid request body",
-                  "errors": [
-                    {
-                      "field": "type",
-                      "message": "must not be null"
+                  },
+                  "fileSubmissionJourney": {
+                    "summary": "FILE_SUBMISSION - File attachment journey",
+                    "description": "Shows a case where the partner attaches files and follows up with freeform",
+                    "value": {
+                      "id": 12345006,
+                      "profileId": 14556049,
+                      "type": "SANCTIONS",
+                      "subType": "DEPOSIT_SANCTION_HIT",
+                      "status": "IN_REVIEW",
+                      "externalId": "PARTNER-FILE-001",
+                      "createdAt": "2026-07-28T08:00:00.000",
+                      "updatedAt": "2026-07-29T11:00:00.000",
+                      "reference": {
+                        "type": "TRANSFER",
+                        "referenceId": "666777888"
+                      },
+                      "messages": [
+                        {
+                          "id": "aabb1111-2222-3333-4444-555566667777",
+                          "caseId": 12345006,
+                          "createdAt": "2026-07-28T08:00:00.000",
+                          "content": {
+                            "attributes": {
+                              "individual": {
+                                "name": {
+                                  "type": "String",
+                                  "required": true
+                                },
+                                "dob": {
+                                  "type": "LocalDate",
+                                  "required": false
+                                }
+                              },
+                              "business": {
+                                "name": {
+                                  "type": "String",
+                                  "required": true
+                                },
+                                "address": {
+                                  "type": "Address",
+                                  "required": true
+                                },
+                                "natureOfBusiness": {
+                                  "type": "String",
+                                  "required": false
+                                },
+                                "website": {
+                                  "type": "String",
+                                  "required": false
+                                }
+                              }
+                            }
+                          },
+                          "type": "DEPOSIT_SANCTION_HIT_REQUEST",
+                          "author": "WISE_SYSTEM"
+                        },
+                        {
+                          "id": "aabb2222-3333-4444-5555-666677778888",
+                          "caseId": 12345006,
+                          "createdAt": "2026-07-28T12:00:00.000",
+                          "content": {
+                            "submissionData": {
+                              "individual": {
+                                "name": "Alice Johnson",
+                                "dob": "1988-11-02"
+                              }
+                            }
+                          },
+                          "type": "DEPOSIT_SANCTION_HIT_SUBMISSION",
+                          "author": "PARTNER"
+                        },
+                        {
+                          "id": "aabb3333-4444-5555-6666-777788889999",
+                          "caseId": 12345006,
+                          "createdAt": "2026-07-29T09:00:00.000",
+                          "content": {
+                            "submissionData": {
+                              "profileId": 14556049,
+                              "fileIds": [
+                                "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                                "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+                              ]
+                            }
+                          },
+                          "type": "FILE_SUBMISSION",
+                          "author": "PARTNER"
+                        },
+                        {
+                          "id": "aabb4444-5555-6666-7777-888899990000",
+                          "caseId": 12345006,
+                          "createdAt": "2026-07-29T09:05:00.000",
+                          "content": {
+                            "text": {
+                              "freeText": "We have uploaded the supporting identity documents for Alice Johnson as requested."
+                            }
+                          },
+                          "type": "FREEFORM",
+                          "author": "PARTNER"
+                        }
+                      ]
                     }
-                  ]
+                  }
                 }
               }
             },
@@ -13533,8 +13877,10 @@
                   "$ref": "#/components/schemas/error-401-unauthorized"
                 },
                 "example": {
-                  "error": "UNAUTHORIZED",
-                  "message": "Authentication required"
+                  "type": "/errors/types/access",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Authentication required"
                 }
               }
             },
@@ -13555,8 +13901,11 @@
                   "$ref": "#/components/schemas/error-403-forbidden"
                 },
                 "example": {
-                  "error": "FORBIDDEN",
-                  "message": "Insufficient permissions to access this resource"
+                  "type": "/errors/types/access",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Unauthorized",
+                  "code": "forbidden"
                 }
               }
             },
@@ -13570,15 +13919,19 @@
             }
           },
           "404": {
-            "description": "Not found - the requested resource does not exist",
+            "description": "Not found - case does not exist",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-404-not-found"
                 },
                 "example": {
-                  "error": "NOT_FOUND",
-                  "message": "Case not found"
+                  "type": "/errors/types/domain",
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "case not found: 12345678",
+                  "instance": "/public/v2/cases/12345678",
+                  "code": "resource_not_found"
                 }
               }
             },
@@ -13601,20 +13954,13 @@
       "post": {
         "operationId": "caseSubmitMessage",
         "summary": "Submit a message to a case",
-        "description": "Submits a new message to an existing support case. The message type determines\nthe expected structure of the submission data.\n\nSee the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example..\n",
+        "description": "See the [Case submission type](/guides/product/partner/submission-types.md) guide for details on each submission type along with an example.\n",
         "tags": [
           "case"
         ],
         "security": [
           {
             "ClientCredentialsToken": []
-          }
-        ],
-        "x-codeSamples": [
-          {
-            "lang": "bash",
-            "label": "cURL",
-            "source": "curl -X POST \"https://api.wise.com/2026Q3/cases/12345678/messages\" \\\n  -H \"Authorization: Bearer YOUR_API_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"type\": \"FREEFORM\",\n    \"submissionData\": {\n      \"freeText\": \"Following up on the requested documentation. We have verified the recipient identity through our internal KYC process. The beneficial owner structure has been confirmed with no exposure to sanctioned entities. Please find attached (via secure upload) the supporting documentation including: 1) Company registration certificate, 2) Director identification, 3) Source of funds declaration.\"\n    }\n  }'\n"
           }
         ],
         "parameters": [
@@ -13648,6 +13994,183 @@
                     "type": "FREEFORM",
                     "submissionData": {
                       "freeText": "The transfer has been verified and approved by our compliance team."
+                    }
+                  }
+                },
+                "fileSubmission": {
+                  "summary": "FILE_SUBMISSION",
+                  "description": "File submission - attach previously uploaded files to a case.\nFiles must be uploaded via the file upload endpoint before submitting.\n",
+                  "value": {
+                    "type": "FILE_SUBMISSION",
+                    "submissionData": {
+                      "profileId": 14556049,
+                      "fileIds": [
+                        "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                        "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+                      ]
+                    }
+                  }
+                },
+                "depositSanctionHitIndividual": {
+                  "summary": "DEPOSIT_SANCTION_HIT_SUBMISSION (individual)",
+                  "description": "Submit individual depositor information for a deposit sanction hit case.",
+                  "value": {
+                    "type": "DEPOSIT_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "individual": {
+                        "name": "Maria Garcia Rodriguez",
+                        "dob": "12/05/1988",
+                        "nationality": "Spanish"
+                      }
+                    }
+                  }
+                },
+                "depositSanctionHitOrganisation": {
+                  "summary": "DEPOSIT_SANCTION_HIT_SUBMISSION (organisation)",
+                  "description": "Submit organisation depositor information for a deposit sanction hit case.",
+                  "value": {
+                    "type": "DEPOSIT_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "organisation": {
+                        "name": "Tech Solutions Europe S.A.",
+                        "streetAddress": "Av. de la Liberté 25",
+                        "city": "Luxembourg",
+                        "postCode": "1931",
+                        "countryIso3": "LUX",
+                        "natureOfBusiness": "Software Development",
+                        "website": "https://www.techsolutions-eu.com"
+                      }
+                    }
+                  }
+                },
+                "recipientSanctionHitIndividual": {
+                  "summary": "RECIPIENT_SANCTION_HIT_SUBMISSION (individual)",
+                  "description": "Submit individual recipient information for a recipient sanction hit case.",
+                  "value": {
+                    "type": "RECIPIENT_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "individual": {
+                        "name": "Li Wei Chen",
+                        "countryOfResidenceIso3": "SGP",
+                        "dob": "03/11/1982",
+                        "nationality": "Singaporean"
+                      }
+                    }
+                  }
+                },
+                "recipientSanctionHitOrganisation": {
+                  "summary": "RECIPIENT_SANCTION_HIT_SUBMISSION (organisation)",
+                  "description": "Submit organisation recipient information for a recipient sanction hit case.",
+                  "value": {
+                    "type": "RECIPIENT_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "organisation": {
+                        "name": "Pacific Rim Trading Co.",
+                        "streetAddress": "88 Marina Boulevard",
+                        "city": "Singapore",
+                        "postCode": "018984",
+                        "countryIso3": "SGP",
+                        "natureOfBusiness": "Commodities Trading"
+                      }
+                    }
+                  }
+                },
+                "referenceSanctionHitIndividual": {
+                  "summary": "REFERENCE_SANCTION_HIT_SUBMISSION (individual)",
+                  "description": "Submit individual information for a reference sanction hit case.",
+                  "value": {
+                    "type": "REFERENCE_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "individual": {
+                        "name": "Robert Downy Jr",
+                        "countryOfResidenceIso3": "EGY",
+                        "dob": "22/08/1975",
+                        "nationality": "Egyptian"
+                      }
+                    }
+                  }
+                },
+                "referenceSanctionHitOrganisation": {
+                  "summary": "REFERENCE_SANCTION_HIT_SUBMISSION (organisation)",
+                  "description": "Submit organisation information for a reference sanction hit case.",
+                  "value": {
+                    "type": "REFERENCE_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "organisation": {
+                        "name": "Global Trading Partners LLC",
+                        "streetAddress": "1500 Commerce Street, Suite 400",
+                        "city": "Dubai",
+                        "postCode": "00000",
+                        "countryIso3": "ARE",
+                        "natureOfBusiness": "Import/Export Trading",
+                        "website": "https://www.globaltrading-partners.com"
+                      }
+                    }
+                  }
+                },
+                "referenceSanctionHitVessel": {
+                  "summary": "REFERENCE_SANCTION_HIT_SUBMISSION (vessel)",
+                  "description": "Submit vessel information for a reference sanction hit case.",
+                  "value": {
+                    "type": "REFERENCE_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "vessel": {
+                        "vesselImoNumber": "9074729"
+                      }
+                    }
+                  }
+                },
+                "referenceSanctionHitMultiple": {
+                  "summary": "REFERENCE_SANCTION_HIT_SUBMISSION (multiple)",
+                  "description": "Submit information when multiple entities are involved in a reference sanction hit case.",
+                  "value": {
+                    "type": "REFERENCE_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "multiple": {
+                        "explanation": "This payment reference involves a consortium of three companies: Alpha Corp (USA), Beta Ltd (UK), and Gamma GmbH (Germany). The payment is for a joint infrastructure project where funds are distributed proportionally: 40% to Alpha Corp, 35% to Beta Ltd, and 25% to Gamma GmbH."
+                      }
+                    }
+                  }
+                },
+                "referenceSanctionHitOther": {
+                  "summary": "REFERENCE_SANCTION_HIT_SUBMISSION (other)",
+                  "description": "Submit information for entity types not covered by standard categories.",
+                  "value": {
+                    "type": "REFERENCE_SANCTION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "other": {
+                        "explanation": "The payment reference relates to a charitable foundation registered with the UN. The Foundation for Educational Development (FED) is a non-profit organization established in 2010, registered under Swiss law with headquarters in Geneva. Registration number: CH-660.0.000.000-1."
+                      }
+                    }
+                  }
+                },
+                "referenceLocationHit": {
+                  "summary": "REFERENCE_LOCATION_HIT_SUBMISSION",
+                  "description": "Submit location-related information for a reference location hit case.",
+                  "value": {
+                    "type": "REFERENCE_LOCATION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "other": {
+                        "relatedToLocation": "The payment reference mentions Crimea due to historical business operations that were fully wound down in 2014.",
+                        "paymentExplanation": "Current payment is for consulting services rendered in London, UK.",
+                        "location": "Crimea, Ukraine",
+                        "referenceDescription": "Invoice CRM-2026-0042 - Consulting services for Q2 2026."
+                      }
+                    }
+                  }
+                },
+                "recipientLocationHit": {
+                  "summary": "RECIPIENT_LOCATION_HIT_SUBMISSION",
+                  "description": "Submit location-related information for a recipient location hit case.",
+                  "value": {
+                    "type": "RECIPIENT_LOCATION_HIT_SUBMISSION",
+                    "submissionData": {
+                      "other": {
+                        "relatedToLocation": "Recipient company has a branch registration in the flagged jurisdiction for administrative purposes only.",
+                        "paymentExplanation": "Payment for software licenses delivered electronically.",
+                        "location": "Minsk, Belarus",
+                        "businessWebsite": "https://www.recipient-software.ie"
+                      }
                     }
                   }
                 }
@@ -13697,6 +14220,25 @@
                       "type": "DEPOSIT_SANCTION_HIT_SUBMISSION",
                       "author": "PARTNER"
                     }
+                  },
+                  "fileSubmissionResponse": {
+                    "summary": "FILE_SUBMISSION message created",
+                    "value": {
+                      "id": "880e8400-e29b-41d4-a716-446655440003",
+                      "caseId": 12345678,
+                      "createdAt": "2026-07-27T15:10:00.000",
+                      "content": {
+                        "submissionData": {
+                          "profileId": 14556049,
+                          "fileIds": [
+                            "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                            "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+                          ]
+                        }
+                      },
+                      "type": "FILE_SUBMISSION",
+                      "author": "PARTNER"
+                    }
                   }
                 }
               }
@@ -13711,21 +14253,221 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad request - validation failed or business rule violation",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-400-bad-request"
                 },
-                "example": {
-                  "error": "BAD_REQUEST",
-                  "message": "Invalid request body",
-                  "errors": [
-                    {
-                      "field": "type",
-                      "message": "must not be null"
+                "examples": {
+                  "missingType": {
+                    "summary": "Missing type",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "parameter_missing",
+                          "ref": "type",
+                          "detail": null
+                        }
+                      ]
                     }
-                  ]
+                  },
+                  "invalidType": {
+                    "summary": "Invalid type value",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_value",
+                          "ref": "type",
+                          "detail": null
+                        }
+                      ]
+                    }
+                  },
+                  "missingSubmissionData": {
+                    "summary": "Missing submissionData",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "parameter_missing",
+                          "ref": "submissionData",
+                          "detail": null
+                        }
+                      ]
+                    }
+                  },
+                  "invalidSubmissionDataFormat": {
+                    "summary": "Malformed submissionData structure",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_request",
+                          "ref": "submissionData",
+                          "detail": "Invalid submission data format"
+                        }
+                      ]
+                    }
+                  },
+                  "missingFreeText": {
+                    "summary": "Missing freeText for FREEFORM submission",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "parameter_missing",
+                          "ref": "freeText",
+                          "detail": "Submission data must contain 'freeText' field for FREEFORM submission"
+                        }
+                      ]
+                    }
+                  },
+                  "missingProfileId": {
+                    "summary": "Missing profileId for FILE_SUBMISSION",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "parameter_missing",
+                          "ref": "profileId",
+                          "detail": "profileId is required"
+                        }
+                      ]
+                    }
+                  },
+                  "missingFileIds": {
+                    "summary": "Empty fileIds for FILE_SUBMISSION",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "parameter_missing",
+                          "ref": "fileIds",
+                          "detail": "fileIds must not be empty"
+                        }
+                      ]
+                    }
+                  },
+                  "duplicateFileIds": {
+                    "summary": "Duplicate file IDs in FILE_SUBMISSION",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_value",
+                          "ref": "fileIds",
+                          "detail": "fileIds must not contain duplicates"
+                        }
+                      ]
+                    }
+                  },
+                  "filesDoNotExist": {
+                    "summary": "One or more file IDs not found",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_value",
+                          "ref": "fileIds",
+                          "detail": "One or more files do not exist"
+                        }
+                      ]
+                    }
+                  },
+                  "filesWrongProfile": {
+                    "summary": "Files do not belong to the specified profile",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_value",
+                          "ref": "profileId",
+                          "detail": "One or more files do not belong to the specified profile"
+                        }
+                      ]
+                    }
+                  },
+                  "filesNotUploadedByYou": {
+                    "summary": "Files were not uploaded by you",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_value",
+                          "ref": "fileIds",
+                          "detail": "One or more files were not created by the Partner"
+                        }
+                      ]
+                    }
+                  },
+                  "invalidSanctionHitStructure": {
+                    "summary": "Invalid sanction hit submission structure",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "invalid_request",
+                          "ref": "submissionData",
+                          "detail": "Submission must contain either 'individual' or 'organisation' data"
+                        }
+                      ]
+                    }
+                  },
+                  "missingCountryOfResidence": {
+                    "summary": "Missing countryOfResidenceIso3 for recipient/reference individual",
+                    "value": {
+                      "type": "/errors/types/validation",
+                      "title": "Validation Error",
+                      "status": 400,
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "errors": [
+                        {
+                          "code": "parameter_missing",
+                          "ref": "countryOfResidenceIso3",
+                          "detail": "countryOfResidenceIso3 is required for recipient individual"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             },
@@ -13746,8 +14488,10 @@
                   "$ref": "#/components/schemas/error-401-unauthorized"
                 },
                 "example": {
-                  "error": "UNAUTHORIZED",
-                  "message": "Authentication required"
+                  "type": "/errors/types/access",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "Authentication required"
                 }
               }
             },
@@ -13768,8 +14512,11 @@
                   "$ref": "#/components/schemas/error-403-forbidden"
                 },
                 "example": {
-                  "error": "FORBIDDEN",
-                  "message": "Insufficient permissions to access this resource"
+                  "type": "/errors/types/access",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Unauthorized",
+                  "code": "forbidden"
                 }
               }
             },
@@ -13783,15 +14530,19 @@
             }
           },
           "404": {
-            "description": "Not found - the requested resource does not exist",
+            "description": "Not found - case does not exist",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-404-not-found"
                 },
                 "example": {
-                  "error": "NOT_FOUND",
-                  "message": "Case not found"
+                  "type": "/errors/types/domain",
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "case not found: 12345678",
+                  "instance": "/public/v2/cases/12345678/messages",
+                  "code": "resource_not_found"
                 }
               }
             },
@@ -13804,16 +14555,47 @@
               }
             }
           },
-          "422": {
-            "description": "Unprocessable Entity Error",
+          "409": {
+            "description": "Conflict - operation not supported for the current case state",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/error-422-unprocessable-entity"
+                  "$ref": "#/components/schemas/error-409-conflict"
                 },
-                "example": {
-                  "error": "NOT_FOUND",
-                  "message": "Case not found"
+                "examples": {
+                  "caseInFinalState": {
+                    "summary": "Case is in a final state (RESOLVED or FAILED)",
+                    "value": {
+                      "type": "/errors/types/domain",
+                      "title": "Conflict",
+                      "status": 409,
+                      "detail": "Cannot submit message for case in final state: RESOLVED",
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "code": "operation_not_supported"
+                    }
+                  },
+                  "noWiseAgentAssigned": {
+                    "summary": "Wise Agent not assigned (FREEFORM or FILE_SUBMISSION)",
+                    "value": {
+                      "type": "/errors/types/domain",
+                      "title": "Conflict",
+                      "status": 409,
+                      "detail": "Wise Agent has not been assigned to case, message not allowed",
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "code": "operation_not_supported"
+                    }
+                  },
+                  "noStructuredRequest": {
+                    "summary": "Case not generated by Wise (structured submission types)",
+                    "value": {
+                      "type": "/errors/types/domain",
+                      "title": "Conflict",
+                      "status": 409,
+                      "detail": "Case was not generated by Wise with structured request, structured submission message not allowed",
+                      "instance": "/public/v2/cases/12345678/messages",
+                      "code": "operation_not_supported"
+                    }
+                  }
                 }
               }
             },
@@ -14763,9 +15545,9 @@
     },
     "/profiles/business-profile": {
       "post": {
-        "operationId": "profileBusinessCreateV5",
+        "operationId": "profileBusinessCreateV3",
         "summary": "Create a business profile",
-        "description": "Creates the business profile and its authorized representative in a single request.\n\n{% admonition type=\"info\" %}\nThis request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.\n{% /admonition %}\n\nSee [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.\n",
+        "description": "Creates the business profile and its authorized representative in a single request.\n\n{% admonition type=\"info\" %}\nThis request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.\n{% /admonition %}\n\nSee [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair - supplying both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n",
         "tags": [
           "profile"
         ],
@@ -14929,6 +15711,18 @@
                       "SOFTWARE_DEVELOPMENT_PUBLISHING",
                       "IT_CONSULTANCY_TECHNICAL_SUPPORT_SERVICES"
                     ]
+                  },
+                  "firstLevelCategory": {
+                    "type": "string",
+                    "deprecated": true,
+                    "description": "Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.\n",
+                    "example": "CONSULTING_IT_BUSINESS_SERVICES"
+                  },
+                  "secondLevelCategory": {
+                    "type": "string",
+                    "deprecated": true,
+                    "description": "Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.\n",
+                    "example": "DESIGN"
                   },
                   "operationalAddresses": {
                     "type": "array",
@@ -15149,7 +15943,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/business-profile-industry-categories"
+                  "$ref": "#/components/schemas/business-profile"
                 }
               }
             },
@@ -15399,9 +16193,9 @@
     },
     "/profiles/{profileId}/business-profile": {
       "put": {
-        "operationId": "profileBusinessUpdateV3",
+        "operationId": "profileBusinessUpdate",
         "summary": "Update a business profile",
-        "description": "Update user profile information for a business profile.\n\n{% admonition type=\"warning\" %}\nIf user profile has been verified then there are restrictions on what information is allowed to change.\n{% /admonition %}\n\nWhere permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).\n\nSee [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.\n",
+        "description": "Update user profile information for a business profile.\n\n{% admonition type=\"warning\" %}\nIf user profile has been verified then there are restrictions on what information is allowed to change.\n{% /admonition %}\n\nWhere permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).\n\nSee [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair, changing both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n",
         "tags": [
           "profile"
         ],
@@ -15571,6 +16365,18 @@
                       "IT_CONSULTANCY_TECHNICAL_SUPPORT_SERVICES"
                     ]
                   },
+                  "firstLevelCategory": {
+                    "type": "string",
+                    "deprecated": true,
+                    "description": "Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.\n",
+                    "example": "CONSULTING_IT_BUSINESS_SERVICES"
+                  },
+                  "secondLevelCategory": {
+                    "type": "string",
+                    "deprecated": true,
+                    "description": "Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.\n",
+                    "example": "DESIGN"
+                  },
                   "operationalAddresses": {
                     "type": "array",
                     "description": "List of operational addresses.",
@@ -15620,7 +16426,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/business-profile-industry-categories"
+                  "$ref": "#/components/schemas/business-profile"
                 }
               }
             },
@@ -15917,7 +16723,7 @@
                   "uniqueIdentifier": {
                     "type": "string",
                     "maxLength": 30,
-                    "description": "Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.",
+                    "description": "Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`. \n\nWhen using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).\n",
                     "example": "AA299822313"
                   },
                   "issueDate": {
@@ -15946,15 +16752,15 @@
                   },
                   "employerName": {
                     "type": "string",
-                    "description": "The name of the employer. Type must be EMIRATES_EMPLOYER."
+                    "description": "The name of the employer. Type must be `EMIRATES_EMPLOYER`."
                   },
                   "employerCity": {
                     "type": "string",
-                    "description": "The city of the employer. Type must be EMIRATES_EMPLOYER."
+                    "description": "The city of the employer. Type must be `EMIRATES_EMPLOYER`."
                   },
                   "employerCountry": {
                     "type": "string",
-                    "description": "2 characters ISO country code. Type must be EMIRATES_EMPLOYER."
+                    "description": "2 characters ISO country code. Type must be `EMIRATES_EMPLOYER`."
                   },
                   "birthCity": {
                     "type": "string",
@@ -16031,7 +16837,7 @@
             }
           },
           "422": {
-            "description": "Request could not be processed due to a missing prerequisite.\nReturned when submitting `FINANCIAL_CAPACITY_BR` for a profile that has no tax ID on record.\n",
+            "description": "Request could not be processed due to a missing prerequisite.\n\nReturned when submitting `FINANCIAL_CAPACITY_BR` for a profile that has no tax ID on record.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -16136,7 +16942,7 @@
                   "uniqueIdentifier": {
                     "type": "string",
                     "maxLength": 30,
-                    "description": "Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.",
+                    "description": "Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`. \n\nWhen using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).\n",
                     "example": "AA299822313"
                   },
                   "issueDate": {
@@ -21634,6 +22440,275 @@
         }
       }
     },
+    "/simulation/sanction-cases": {
+      "post": {
+        "operationId": "simulateSanctionCase",
+        "summary": "Simulate a sanction case",
+        "description": "Simulates the creation or closure of a sanction case for testing partner integrations.\n\nWhen `status` is `OPEN`, a new sanction case is created with the specified type and subtype.\nWhen `status` is `CLOSE`, an existing case (identified by `caseId`) is closed with the specified reason.\n\nThis endpoint is only available in sandbox environments.\n",
+        "tags": [
+          "simulation"
+        ],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "transferId",
+                  "profileId",
+                  "sanctionType",
+                  "status"
+                ],
+                "properties": {
+                  "transferId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The ID of the transfer associated with the sanction case."
+                  },
+                  "profileId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The profile ID linked to the transfer."
+                  },
+                  "sanctionType": {
+                    "type": "string",
+                    "enum": [
+                      "SANCTION"
+                    ],
+                    "description": "The type of sanction. Currently only `SANCTION` is supported."
+                  },
+                  "simulationSanctionSubType": {
+                    "type": "string",
+                    "enum": [
+                      "REFERENCE_SANCTION_HIT",
+                      "RECIPIENT_SANCTION_HIT",
+                      "REFERENCE_LOCATION_HIT",
+                      "RECIPIENT_LOCATION_HIT",
+                      "DEPOSIT_SANCTION_HIT"
+                    ],
+                    "description": "The specific subtype of sanction case to simulate. Required when `sanctionType` is `SANCTION`.\n- `REFERENCE_SANCTION_HIT`: Sanction hit on the transfer reference/sender\n- `RECIPIENT_SANCTION_HIT`: Sanction hit on the recipient\n- `REFERENCE_LOCATION_HIT`: Location-based hit on the reference/sender\n- `RECIPIENT_LOCATION_HIT`: Location-based hit on the recipient\n- `DEPOSIT_SANCTION_HIT`: Sanction hit on an incoming deposit\n"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "OPEN",
+                      "CLOSE"
+                    ],
+                    "description": "The action to perform.\n- `OPEN`: Create a new sanction case\n- `CLOSE`: Close an existing sanction case\n"
+                  },
+                  "caseId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "The self-service case ID to close. Required when `status` is `CLOSE`.\nWhen `status` is `OPEN`, this can optionally be provided to specify the case ID;\notherwise, one will be auto-generated.\n"
+                  },
+                  "closingReason": {
+                    "type": "string",
+                    "enum": [
+                      "EXPIRED",
+                      "INVALIDATED",
+                      "ABORTED",
+                      "COMPLETED"
+                    ],
+                    "description": "The reason for closing the case. Required when `status` is `CLOSE`.\n- `EXPIRED`: The case expired without resolution\n- `INVALIDATED`: The case was determined to be invalid\n- `ABORTED`: The case was aborted/cancelled\n- `COMPLETED`: The case was successfully resolved\n"
+                  }
+                }
+              },
+              "examples": {
+                "openReferenceSanctionHit": {
+                  "summary": "Open a reference sanction hit case",
+                  "value": {
+                    "transferId": 12345678,
+                    "profileId": 98765432,
+                    "sanctionType": "SANCTION",
+                    "simulationSanctionSubType": "REFERENCE_SANCTION_HIT",
+                    "status": "OPEN"
+                  }
+                },
+                "openRecipientLocationHit": {
+                  "summary": "Open a recipient location hit case",
+                  "value": {
+                    "transferId": 12345678,
+                    "profileId": 98765432,
+                    "sanctionType": "SANCTION",
+                    "simulationSanctionSubType": "RECIPIENT_LOCATION_HIT",
+                    "status": "OPEN"
+                  }
+                },
+                "closeCase": {
+                  "summary": "Close an existing case",
+                  "value": {
+                    "transferId": 12345678,
+                    "profileId": 98765432,
+                    "sanctionType": "SANCTION",
+                    "simulationSanctionSubType": "REFERENCE_SANCTION_HIT",
+                    "status": "CLOSE",
+                    "caseId": 999,
+                    "closingReason": "COMPLETED"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sanction case successfully closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "eventId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "The unique identifier for this simulation event."
+                    },
+                    "caseId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "The ID of the case in the partner support system. May be null if the case hasn't been fully processed yet.",
+                      "example": {
+                        "eventId": "550e8400-e29b-41d4-a716-446655440000",
+                        "caseId": 42
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "eventId": "550e8400-e29b-41d4-a716-446655440001",
+                  "caseId": 42
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
+          "201": {
+            "description": "Sanction case successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "eventId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "The unique identifier for this simulation event."
+                    },
+                    "caseId": {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "The ID of the case in the partner support system. May be null if the case hasn't been fully processed yet.",
+                      "example": {
+                        "eventId": "550e8400-e29b-41d4-a716-446655440000",
+                        "caseId": 42
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "missingSanctionSubType": {
+                    "summary": "Missing sanctionSubType",
+                    "value": {
+                      "properties": {
+                        "errors": [
+                          {
+                            "ref": "sanctionSubType",
+                            "detail": "sanctionSubType is required when sanctionType is SANCTION. Valid values: REFERENCE_SANCTION_HIT, RECIPIENT_SANCTION_HIT, REFERENCE_LOCATION_HIT, RECIPIENT_LOCATION_HIT, DEPOSIT_SANCTION_HIT"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "missingCaseId": {
+                    "summary": "Missing caseId for CLOSE",
+                    "value": {
+                      "properties": {
+                        "errors": [
+                          {
+                            "ref": "caseId",
+                            "detail": "caseId (self-service caseId) is required when status is CLOSE"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "missingClosingReason": {
+                    "summary": "Missing closingReason for CLOSE",
+                    "value": {
+                      "properties": {
+                        "errors": [
+                          {
+                            "ref": "closingReason",
+                            "detail": "closingReason is required when status is CLOSE. Valid values: EXPIRED, INVALIDATED, ABORTED, COMPLETED"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "invalidClosingReason": {
+                    "summary": "Invalid closingReason",
+                    "value": {
+                      "properties": {
+                        "errors": [
+                          {
+                            "ref": "closingReason",
+                            "detail": "Invalid closingReason. Valid values: EXPIRED, INVALIDATED, ABORTED, COMPLETED"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-External-Correlation-Id": {
+                "$ref": "#/components/headers/X-External-Correlation-Id"
+              },
+              "x-trace-id": {
+                "$ref": "#/components/headers/x-trace-id"
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/X-External-Correlation-Id"
+          }
+        ]
+      }
+    },
     "/spend/applications/{clientId}/spend-controls/rules": {
       "post": {
         "operationId": "spendControlsRuleCreate",
@@ -25531,7 +26606,7 @@
       "get": {
         "operationId": "transferPayoutInfoGet",
         "summary": "Get payout information",
-        "description": "Fetch banking reference information for transfers that are in `outgoing_payment_sent` status, enabling you to track transfers with the transfer recipient's bank.\n\nIt may take up to 3 days to get the correct information through this endpoint, as some partners don't share the information until 3 days later.\n",
+        "description": "Fetch banking reference information for transfers that are in `outgoing_payment_sent` status. Enables you to track transfers with the transfer recipient's bank.\n\n{% admonition type=\"warning\" %}\nQuerying this endpoint too soon after transfer creation may result in a `404` error.\n\nWe recommend relying on the [transfer state change webhook](/api-reference/webhook-event/eventtransfersstatechange) to inform you when the transfer state has changed to `outgoing_payment_sent`. In most cases this takes only a few seconds. However, some regions and banking partners can take longer. \n{% /admonition %}\n",
         "tags": [
           "transfer"
         ],
@@ -25614,7 +26689,7 @@
             }
           },
           "404": {
-            "description": "Transfer not found.",
+            "description": "Transfer not found (this error can also occur if querying the endpoint before the transfer has finished processing).",
             "headers": {
               "X-External-Correlation-Id": {
                 "$ref": "#/components/headers/X-External-Correlation-Id"
@@ -30275,6 +31350,15 @@
             "items": {
               "$ref": "#/components/schemas/PayInDetails"
             }
+          },
+          "payinSessionId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Optional ID of the payin session. Required if batch group funding is done using [Payin Funding API](/guides/product/send-money/funding/direct-debit/create-payin#create-payin).",
+            "example": "23330542-8e9e-419f-95eb-312b880f92ad"
           }
         }
       },
@@ -30383,7 +31467,7 @@
             "properties": {
               "value": {
                 "type": "string",
-                "description": "Status value. One of:\n- `ACTIVE` - Card is active and can be used\n- `INACTIVE` - Card is inactive and all transactions will be declined\n- `BLOCKED` - Card is blocked and cannot be reversed back to any state\n- `FROZEN` - Card is temporarily blocked\n- `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily (do not display to end customers)\n- `EXPIRED` - Card is expired\n- `PURGED` - Cardholder data (e.g. PAN, PIN) has been purged after the retention period (555 days after the card's expiry date)\n",
+                "description": "Status value. One of:\n- `ACTIVE` - Card is active and can be used\n- `INACTIVE` - Card is inactive and all transactions will be declined\n- `BLOCKED` - Card is blocked and cannot be reversed back to any state\n- `FROZEN` - Card is temporarily frozen; all authorization requests will be declined\n- `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily (do not display to end customers)\n- `EXPIRED` - Card is expired\n- `PURGED` - Cardholder data (e.g. PAN, PIN) has been purged after the retention period (555 days after the card's expiry date)\n",
                 "enum": [
                   "ACTIVE",
                   "INACTIVE",
@@ -30896,7 +31980,7 @@
                 "fee_type": {
                   "type": "string",
                   "description": "Fee type",
-                  "example": "ATM_ACQUIRER"
+                  "example": "ATM_MACHINE"
                 }
               }
             }
@@ -32946,104 +34030,82 @@
         "title": "Validation Error",
         "description": "Details about a specific field validation error.",
         "properties": {
-          "field": {
+          "code": {
             "type": "string",
-            "description": "The field path that caused the validation error.\nUses dot notation for nested fields (e.g., `submissionData.individual.name`).\n",
+            "description": "Machine-readable validation error code.\n\nValues:\n- `parameter_missing` - A required field is null, empty, or blank\n- `parameter_invalid` - A field value is present but not acceptable\n- `invalid_value` - A field value fails a business validation rule\n- `invalid_request` - The request structure is malformed or invalid\n",
+            "example": "parameter_missing"
+          },
+          "ref": {
+            "type": "string",
+            "description": "The field that caused the validation error.\nFor nested fields, only the leaf property name is used (e.g., `name` not `submissionData.individual.name`).\n",
             "example": "type"
           },
-          "message": {
-            "type": "string",
-            "description": "Description of what validation rule was violated.",
-            "example": "must not be null"
-          },
-          "rejectedValue": {
-            "description": "The value that was rejected (if applicable).",
-            "example": null
+          "detail": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Human-readable description of the validation error. May be null.",
+            "example": "profileId is required"
           }
         },
         "required": [
-          "field",
-          "message"
+          "code",
+          "ref"
         ],
         "example": {
-          "field": "submissionData.individual.name",
-          "message": "must not be blank",
-          "rejectedValue": ""
+          "code": "parameter_missing",
+          "ref": "name",
+          "detail": "must not be blank"
         }
       },
       "error-response": {
         "type": "object",
         "title": "Error Response",
-        "description": "Standard error response structure returned by the API.\n\nAll error responses follow this consistent format with an error code,\nhuman-readable message, and optional validation errors array.\n",
+        "description": "Standard error response structure returned by the API based on RFC 9457 Problem Details.\n\nAll error responses follow this consistent format with a type URI,\nhuman-readable title and detail, and optional field-level validation errors array.\n",
         "properties": {
-          "error": {
+          "type": {
             "type": "string",
-            "description": "Machine-readable error code indicating the type of error.\n\nCommon codes:\n- `BAD_REQUEST` - Invalid request format or parameters\n- `VALIDATION_ERROR` - Request body validation failed\n- `RESOURCE_NOT_FOUND` - Requested resource does not exist\n- `UNAUTHORIZED` - Authentication required or failed\n- `FORBIDDEN` - Insufficient permissions\n- `CONFLICT` - Operation conflicts with current state\n- `INTERNAL_SERVER_ERROR` - Unexpected server error\n",
-            "example": "BAD_REQUEST"
+            "description": "URI reference identifying the error category.\n\nValues:\n- `/errors/types/validation` - Request validation failed\n- `/errors/types/domain` - Business rule violation\n- `/errors/types/access` - Authentication or authorization failure\n- `/errors/types/internal` - Unexpected server error\n",
+            "example": "/errors/types/validation"
           },
-          "message": {
+          "title": {
             "type": "string",
-            "description": "Human-readable error message describing what went wrong.",
-            "example": "Invalid request body"
+            "description": "Short human-readable summary of the error category.",
+            "example": "Validation Error"
           },
-          "timestamp": {
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code.",
+            "example": 400
+          },
+          "detail": {
             "type": "string",
-            "format": "date-time",
-            "description": "ISO 8601 timestamp when the error occurred.",
-            "example": "2026-08-03T10:30:00.000Z"
+            "description": "Human-readable explanation of this specific error occurrence.",
+            "example": "Cannot submit message for case in final state: RESOLVED"
           },
-          "path": {
+          "instance": {
             "type": "string",
             "description": "The request path that caused the error.",
-            "example": "/public/2026Q3/v2/cases/12345678"
+            "example": "/public/v2/cases/12345678"
+          },
+          "code": {
+            "type": "string",
+            "description": "Machine-readable error code. Present on domain and access errors.\n\nCommon codes:\n- `operation_not_supported` - Business rule prevents this action\n- `resource_not_found` - Requested resource does not exist\n- `forbidden` - Insufficient permissions\n- `rate_limit_exceeded` - Too many requests\n",
+            "example": "operation_not_supported"
           },
           "errors": {
             "type": "array",
-            "description": "List of field-level validation errors.\nOnly present for validation errors (HTTP 400).\n",
+            "description": "List of field-level validation errors.\nOnly present for validation errors (type `/errors/types/validation`).\n",
             "items": {
               "$ref": "#/components/schemas/validation-error"
             }
           }
         },
         "required": [
-          "error",
-          "message"
-        ]
-      },
-      "error-400-bad-request": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/error-response"
-          },
-          {
-            "type": "object",
-            "title": "Bad Request Error (400)",
-            "description": "Returned when the request is malformed or contains invalid data.\n\n**Common causes:**\n- Missing required fields (`type`, `submissionData`)\n- Invalid enum values for `type`\n- Malformed JSON in request body\n- Invalid field values that fail validation\n",
-            "properties": {
-              "error": {
-                "example": "BAD_REQUEST"
-              },
-              "message": {
-                "example": "Invalid request body"
-              }
-            },
-            "example": {
-              "error": "BAD_REQUEST",
-              "message": "Validation failed for request body",
-              "timestamp": "2026-08-03T10:30:00.000Z",
-              "path": "/public/2026Q3/v2/cases/12345678/messages",
-              "errors": [
-                {
-                  "field": "type",
-                  "message": "must not be null"
-                },
-                {
-                  "field": "submissionData",
-                  "message": "must not be null"
-                }
-              ]
-            }
-          }
+          "type",
+          "title",
+          "status"
         ]
       },
       "error-401-unauthorized": {
@@ -33055,19 +34117,11 @@
             "type": "object",
             "title": "Unauthorized Error (401)",
             "description": "Returned when authentication is missing or invalid.\n\n**Common causes:**\n- Missing `Authorization` header\n- Invalid or expired API token\n- Malformed authorization header format\n",
-            "properties": {
-              "error": {
-                "example": "UNAUTHORIZED"
-              },
-              "message": {
-                "example": "Authentication required"
-              }
-            },
             "example": {
-              "error": "UNAUTHORIZED",
-              "message": "Invalid or missing authentication credentials",
-              "timestamp": "2026-08-03T10:30:00.000Z",
-              "path": "/public/2026Q3/v2/cases/12345678"
+              "type": "/errors/types/access",
+              "title": "Unauthorized",
+              "status": 401,
+              "detail": "Authentication required"
             }
           }
         ]
@@ -33081,19 +34135,12 @@
             "type": "object",
             "title": "Forbidden Error (403)",
             "description": "Returned when the authenticated client lacks permission to access the resource.\n\n**Common causes:**\n- Case belongs to a different partner (client key mismatch)\n- Attempting to access a case type not permitted for this client\n",
-            "properties": {
-              "error": {
-                "example": "FORBIDDEN"
-              },
-              "message": {
-                "example": "Access denied"
-              }
-            },
             "example": {
-              "error": "FORBIDDEN",
-              "message": "You do not have permission to access this resource",
-              "timestamp": "2026-08-03T10:30:00.000Z",
-              "path": "/public/2026Q3/v2/cases/12345678"
+              "type": "/errors/types/access",
+              "title": "Forbidden",
+              "status": 403,
+              "detail": "Unauthorized",
+              "code": "forbidden"
             }
           }
         ]
@@ -33107,19 +34154,13 @@
             "type": "object",
             "title": "Not Found Error (404)",
             "description": "Returned when the requested case does not exist.\n\n**Common causes:**\n- Invalid `caseId` that doesn't exist\n- Case was deleted or archived\n- Typo in the case ID\n",
-            "properties": {
-              "error": {
-                "example": "RESOURCE_NOT_FOUND"
-              },
-              "message": {
-                "example": "Case not found"
-              }
-            },
             "example": {
-              "error": "RESOURCE_NOT_FOUND",
-              "message": "Case with id 99999999 not found",
-              "timestamp": "2026-08-03T10:30:00.000Z",
-              "path": "/public/2026Q3/v2/cases/99999999"
+              "type": "/errors/types/domain",
+              "title": "Not Found",
+              "status": 404,
+              "detail": "case not found: 99999999",
+              "instance": "/public/v2/cases/99999999",
+              "code": "resource_not_found"
             }
           }
         ]
@@ -33133,7 +34174,8 @@
           "REFERENCE_SANCTION_HIT_SUBMISSION",
           "RECIPIENT_SANCTION_HIT_SUBMISSION",
           "REFERENCE_LOCATION_HIT_SUBMISSION",
-          "RECIPIENT_LOCATION_HIT_SUBMISSION"
+          "RECIPIENT_LOCATION_HIT_SUBMISSION",
+          "FILE_SUBMISSION"
         ],
         "example": "FREEFORM"
       },
@@ -33528,6 +34570,45 @@
           }
         ]
       },
+      "submission-data-file": {
+        "type": "object",
+        "title": "FILE_SUBMISSION Submission Data",
+        "description": "Submission data for FILE_SUBMISSION message type.\nUsed to attach previously uploaded files to a case.\n\n**Prerequisites:**\n- Files must be uploaded via `POST /cases/{caseId}/files` before submitting\n- Case must not be in RESOLVED or FAILED status\n- Files must belong to the specified profile\n- Files must have been uploaded by the same partner\n\n**Validation Rules:**\n- `profileId` is REQUIRED\n- `fileIds` is REQUIRED and must not be empty\n- `fileIds` must not contain duplicates\n- All file IDs must reference existing files\n- All files must belong to the specified `profileId`\n- All files must have been created by the submitting partner\n",
+        "properties": {
+          "profileId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The profile ID that the files belong to.\nMust match the profile associated with the uploaded files.\n",
+            "example": 14556049
+          },
+          "fileIds": {
+            "type": "array",
+            "description": "List of file IDs to attach to the case.\nFiles must have been previously uploaded via the file upload endpoint.\n",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "description": "UUID of a previously uploaded file."
+            },
+            "example": [
+              "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+              "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+            ]
+          }
+        },
+        "required": [
+          "profileId",
+          "fileIds"
+        ],
+        "example": {
+          "profileId": 14556049,
+          "fileIds": [
+            "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+          ]
+        }
+      },
       "message-submission-request": {
         "type": "object",
         "description": "Request body for submitting a message to a case.\n\nThe structure of `submissionData` depends on the `type` field.\n",
@@ -33547,6 +34628,9 @@
               },
               {
                 "$ref": "#/components/schemas/submission-data-location-hit"
+              },
+              {
+                "$ref": "#/components/schemas/submission-data-file"
               }
             ]
           }
@@ -33582,7 +34666,7 @@
           },
           "content": {
             "type": "object",
-            "description": "The content of the created message.\n- For FREEFORM: contains `text.freeText`\n- For SUBMISSION types: contains `submissionData`\n",
+            "description": "The content of the created message.\n- For FREEFORM: contains `text.freeText`\n- For SUBMISSION types: contains `submissionData`\n- For FILE_SUBMISSION: contains `submissionData` with `profileId` and `fileIds`\n",
             "additionalProperties": true
           },
           "type": {
@@ -33594,7 +34678,8 @@
               "REFERENCE_SANCTION_HIT_SUBMISSION",
               "RECIPIENT_SANCTION_HIT_SUBMISSION",
               "REFERENCE_LOCATION_HIT_SUBMISSION",
-              "RECIPIENT_LOCATION_HIT_SUBMISSION"
+              "RECIPIENT_LOCATION_HIT_SUBMISSION",
+              "FILE_SUBMISSION"
             ],
             "example": "FREEFORM"
           },
@@ -33616,28 +34701,47 @@
           "author"
         ]
       },
-      "error-422-unprocessable-entity": {
+      "error-400-bad-request": {
         "allOf": [
           {
             "$ref": "#/components/schemas/error-response"
           },
           {
             "type": "object",
-            "title": "Unprocessable Entity Error (422)",
-            "description": "Returned when the request is syntactically correct but semantically invalid.\n\n**Common causes:**\n- Submission type does not match case sub-type (e.g., submitting DEPOSIT_SANCTION_HIT_SUBMISSION for a RECIPIENT_SANCTION_HIT case)\n- Missing required fields for the submission type (e.g., `countryOfResidenceIso3` missing for RECIPIENT sanction hit individual)\n- Providing both `individual` AND `organisation` when only one is allowed\n- Invalid ISO country code format\n- Invalid date format for `dob`\n",
-            "properties": {
-              "error": {
-                "example": "UNPROCESSABLE_ENTITY"
-              },
-              "message": {
-                "example": "Submission type mismatch"
-              }
-            },
+            "title": "Bad Request Error (400)",
+            "description": "Returned when the request is malformed, contains invalid data, or violates a business rule.\n\n**Validation errors** (`/errors/types/validation`) include an `errors` array\nwith field-level details. Each entry has a `code`, `ref` (field name), and optional `detail`.\n\n**Common causes:**\n- Missing required fields (`type`, `submissionData`)\n- Invalid enum values for `type`\n- Malformed JSON in request body\n- Invalid field values that fail validation\n- Missing or invalid file IDs for FILE_SUBMISSION\n",
             "example": {
-              "error": "UNPROCESSABLE_ENTITY",
-              "message": "Submission type DEPOSIT_SANCTION_HIT_SUBMISSION is not valid for case sub-type RECIPIENT_SANCTION_HIT",
-              "timestamp": "2026-08-03T10:30:00.000Z",
-              "path": "/public/2026Q3/v2/cases/12345678/messages"
+              "type": "/errors/types/validation",
+              "title": "Validation Error",
+              "status": 400,
+              "instance": "/public/v2/cases/12345678/messages",
+              "errors": [
+                {
+                  "code": "parameter_missing",
+                  "ref": "type",
+                  "detail": null
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "error-409-conflict": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/error-response"
+          },
+          {
+            "type": "object",
+            "title": "Conflict Error (409)",
+            "description": "Returned when the operation conflicts with the current state of the case.\n\n**Common causes:**\n- Submitting a message to a case in a final state (`RESOLVED` or `FAILED`)\n- Submitting FREEFORM or FILE_SUBMISSION when no Wise Agent is assigned to the case\n- Submitting a structured response when the case was not generated by Wise\n",
+            "example": {
+              "type": "/errors/types/domain",
+              "title": "Conflict",
+              "status": 409,
+              "detail": "Cannot submit message for case in final state: RESOLVED",
+              "instance": "/public/v2/cases/12345678/messages",
+              "code": "operation_not_supported"
             }
           }
         ]
@@ -33936,18 +35040,18 @@
           "firstLevelCategory": {
             "type": "string",
             "deprecated": true,
-            "description": "Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n",
+            "description": "Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n\nPopulated only when the profile was classified with the legacy fields, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats.\n",
             "example": "CONSULTING_IT_BUSINESS_SERVICES"
           },
           "secondLevelCategory": {
             "type": "string",
             "deprecated": true,
-            "description": "Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n",
+            "description": "Deprecated. New integrations should use `industryCategories`. See [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).\n\nPopulated only when the profile was classified with the legacy fields, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats, where it may return `UNMAPPED` if the `industryCategories` combination has no legacy equivalent.\n",
             "example": "IT_DEVELOPMENT"
           },
           "industryCategories": {
             "type": "array",
-            "description": "One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.",
+            "description": "One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.\n\nPopulated only when the profile was classified with `industryCategories`, otherwise `null`. Create and update responses return the format you did not send as `null`, only [retrieve a profile](/api-reference/profile/profileget) derives both formats.\n",
             "items": {
               "type": "string"
             },
@@ -33991,146 +35095,6 @@
             "$ref": "#/components/schemas/business-profile"
           }
         ]
-      },
-      "business-profile-industry-categories": {
-        "title": "Business Profile",
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Type of profile.",
-            "enum": [
-              "BUSINESS"
-            ],
-            "example": "BUSINESS"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Unique identifier for the profile.",
-            "example": 14599371
-          },
-          "publicId": {
-            "type": "string",
-            "description": "Publicly accessible identifier for the profile.",
-            "example": "f0e9d8c7-b6a5-4321-fedc-ba9876543210"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int64",
-            "description": "The ID of the user associated with this profile.",
-            "example": 9889627
-          },
-          "address": {
-            "description": "Main registered address of the business.",
-            "$ref": "#/components/schemas/address"
-          },
-          "email": {
-            "type": "string",
-            "description": "Primary email address for the business.",
-            "example": "info@innovate-solutions.co.uk"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the profile was created (ISO 8601 format).",
-            "example": "2024-03-10T09:00:00"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the profile was last updated (ISO 8601 format).",
-            "example": "2025-06-18T14:22:00"
-          },
-          "currentState": {
-            "type": "string",
-            "description": "Current status of this profile.",
-            "enum": [
-              "HIDDEN",
-              "VISIBLE",
-              "DEACTIVATED"
-            ],
-            "example": "VISIBLE"
-          },
-          "contactDetails": {
-            "type": "object",
-            "description": "Contact information for the business.",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "Contact email address.",
-                "example": "contact@innovate-solutions.co.uk"
-              },
-              "phoneNumber": {
-                "type": "string",
-                "description": "Contact phone number.",
-                "example": "+441617891234"
-              }
-            }
-          },
-          "businessName": {
-            "type": "string",
-            "description": "Registered business name.",
-            "example": "Innovate Solutions Ltd"
-          },
-          "registrationNumber": {
-            "type": "string",
-            "description": "Business registration number.",
-            "example": "SC1234567890ABCD"
-          },
-          "webpage": {
-            "type": "string",
-            "description": "Business website URL.",
-            "example": "https://www.innovate-solutions.co.uk"
-          },
-          "companyType": {
-            "type": "string",
-            "description": "Type of company.",
-            "example": "LIMITED_COMPANY"
-          },
-          "companyRole": {
-            "type": "string",
-            "description": "Role of the person managing the business profile.",
-            "enum": [
-              "OWNER",
-              "DIRECTOR",
-              "OTHER"
-            ],
-            "example": "OWNER"
-          },
-          "businessFreeFormDescription": {
-            "type": "string",
-            "description": "Free-form description of the business activities.",
-            "example": "We create cutting-edge software for businesses."
-          },
-          "industryCategories": {
-            "type": "array",
-            "minItems": 1,
-            "description": "One or more industry categories classifying the business. See [Business Categories](guides/product/kyc/business-categories) for the full list of valid values.",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "SOFTWARE_DEVELOPMENT_PUBLISHING",
-              "IT_CONSULTANCY_TECHNICAL_SUPPORT_SERVICES"
-            ]
-          },
-          "operationalAddresses": {
-            "type": "array",
-            "description": "An array of operational addresses for the business.",
-            "items": {
-              "$ref": "#/components/schemas/address"
-            }
-          },
-          "fullName": {
-            "type": "string",
-            "description": "Full legal name of the business.",
-            "example": "Innovate Solutions Ltd"
-          }
-        }
       },
       "director": {
         "type": "object",
@@ -37061,7 +38025,7 @@
               },
               "reference": {
                 "type": "string",
-                "description": "Unique customer ID in your system. This allows Wise to uniquely identify each originator. Must be the same ID across all transfers sent by the originator.",
+                "description": "Unique customer ID in your system. This allows Wise to identify each originator for compliance purposes. All transfers sent by the same originator must use the same `originator.reference` value.",
                 "example": "CST-2991992"
               },
               "name": {
@@ -40625,7 +41589,7 @@
               },
               "card_status": {
                 "type": "string",
-                "description": "The updated card status. Possible values:\n- `ACTIVE` - Card is active and can be used.\n- `INACTIVE` - Card is inactive and all transactions will be declined.\n- `BLOCKED` - Card is blocked and cannot be reversed back to any state.\n- `FROZEN` - Card is \"blocked\", but temporarily.\n- `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily due to, for example, fraud reasons.\n- `EXPIRED` - Card is expired.\n- `PURGED` - The cardhoder data (ex: PAN, PIN) have been purged after exceeds the retention period (555 days after the card's expiry date).\n",
+                "description": "The updated card status. Possible values:\n- `ACTIVE` - Card is active and can be used.\n- `INACTIVE` - Card is inactive and all transactions will be declined.\n- `BLOCKED` - Card is blocked and cannot be reversed back to any state.\n- `FROZEN` - Card is temporarily frozen; all authorization requests will be declined.\n- `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily due to, for example, fraud reasons.\n- `EXPIRED` - Card is expired.\n- `PURGED` - The cardhoder data (ex: PAN, PIN) have been purged after exceeds the retention period (555 days after the card's expiry date).\n",
                 "example": "FROZEN"
               },
               "changed_by": {
@@ -40703,7 +41667,7 @@
               },
               "card_status": {
                 "type": "string",
-                "description": "The updated card status. Possible values:\n- `ACTIVE` - Card is active and can be used.\n- `INACTIVE` - Card is inactive and all transactions will be declined.\n- `BLOCKED` - Card is blocked and cannot be reversed back to any state.\n- `FROZEN` - Card is \"blocked\", but temporarily.\n- `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily due to, for example, fraud reasons.\n- `EXPIRED` - Card is expired.\n- `PURGED` - The cardholder data (ex: PAN, PIN) have been purged after exceeds the retention period (555 days after the card's expiry date).\n",
+                "description": "The updated card status. Possible values:\n- `ACTIVE` - Card is active and can be used.\n- `INACTIVE` - Card is inactive and all transactions will be declined.\n- `BLOCKED` - Card is blocked and cannot be reversed back to any state.\n- `FROZEN` - Card is temporarily frozen; all authorization requests will be declined.\n- `PARTNER_SUSPENDED` - Card is suspended by Wise temporarily due to, for example, fraud reasons.\n- `EXPIRED` - Card is expired.\n- `PURGED` - The cardholder data (ex: PAN, PIN) have been purged after exceeds the retention period (555 days after the card's expiry date).\n",
                 "example": "FROZEN"
               },
               "changed_by": {

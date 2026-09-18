@@ -11,6 +11,168 @@ import type * as Wise from "../../../../index.js";
  *             freeText: "The transfer has been verified and approved by our compliance team."
  *         }
  *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "FILE_SUBMISSION",
+ *         submissionData: {
+ *             profileId: BigInt("14556049"),
+ *             fileIds: ["a1b2c3d4-e5f6-7890-abcd-ef1234567890", "b2c3d4e5-f6a7-8901-bcde-f12345678901"]
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "DEPOSIT_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             individual: {
+ *                 name: "Maria Garcia Rodriguez",
+ *                 dob: "12/05/1988",
+ *                 nationality: "Spanish"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "DEPOSIT_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             organisation: {
+ *                 name: "Tech Solutions Europe S.A.",
+ *                 streetAddress: "Av. de la Libert\u00E9 25",
+ *                 city: "Luxembourg",
+ *                 postCode: "1931",
+ *                 countryIso3: "LUX",
+ *                 natureOfBusiness: "Software Development",
+ *                 website: "https://www.techsolutions-eu.com"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "RECIPIENT_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             individual: {
+ *                 name: "Li Wei Chen",
+ *                 countryOfResidenceIso3: "SGP",
+ *                 dob: "03/11/1982",
+ *                 nationality: "Singaporean"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "RECIPIENT_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             organisation: {
+ *                 name: "Pacific Rim Trading Co.",
+ *                 streetAddress: "88 Marina Boulevard",
+ *                 city: "Singapore",
+ *                 postCode: "018984",
+ *                 countryIso3: "SGP",
+ *                 natureOfBusiness: "Commodities Trading"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "REFERENCE_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             individual: {
+ *                 name: "Robert Downy Jr",
+ *                 countryOfResidenceIso3: "EGY",
+ *                 dob: "22/08/1975",
+ *                 nationality: "Egyptian"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "REFERENCE_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             organisation: {
+ *                 name: "Global Trading Partners LLC",
+ *                 streetAddress: "1500 Commerce Street, Suite 400",
+ *                 city: "Dubai",
+ *                 postCode: "00000",
+ *                 countryIso3: "ARE",
+ *                 natureOfBusiness: "Import/Export Trading",
+ *                 website: "https://www.globaltrading-partners.com"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "REFERENCE_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             vessel: {
+ *                 vesselImoNumber: "9074729"
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "REFERENCE_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             multiple: {
+ *                 explanation: "This payment reference involves a consortium of three companies: Alpha Corp (USA), Beta Ltd (UK), and Gamma GmbH (Germany). The payment is for a joint infrastructure project where funds are distributed proportionally: 40% to Alpha Corp, 35% to Beta Ltd, and 25% to Gamma GmbH."
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "REFERENCE_SANCTION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             other: {
+ *                 explanation: "The payment reference relates to a charitable foundation registered with the UN. The Foundation for Educational Development (FED) is a non-profit organization established in 2010, registered under Swiss law with headquarters in Geneva. Registration number: CH-660.0.000.000-1."
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "REFERENCE_LOCATION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             other: {
+ *                 relatedToLocation: "The payment reference mentions Crimea due to historical business operations that were fully wound down in 2014.",
+ *                 paymentExplanation: "Current payment is for consulting services rendered in London, UK.",
+ *                 location: "Crimea, Ukraine",
+ *                 referenceDescription: "Invoice CRM-2026-0042 - Consulting services for Q2 2026."
+ *             }
+ *         }
+ *     }
+ *
+ * @example
+ *     {
+ *         caseId: BigInt("1000000"),
+ *         type: "RECIPIENT_LOCATION_HIT_SUBMISSION",
+ *         submissionData: {
+ *             other: {
+ *                 relatedToLocation: "Recipient company has a branch registration in the flagged jurisdiction for administrative purposes only.",
+ *                 paymentExplanation: "Payment for software licenses delivered electronically.",
+ *                 location: "Minsk, Belarus",
+ *                 businessWebsite: "https://www.recipient-software.ie"
+ *             }
+ *         }
+ *     }
  */
 export interface MessageSubmissionRequest {
     /** The unique identifier of the case. */
@@ -27,5 +189,6 @@ export namespace MessageSubmissionRequest {
     export type SubmissionData =
         | Wise.SubmissionDataFreeform
         | Wise.SubmissionDataSanctionHit
-        | Wise.SubmissionDataLocationHit;
+        | Wise.SubmissionDataLocationHit
+        | Wise.SubmissionDataFile;
 }

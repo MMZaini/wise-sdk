@@ -1,6 +1,6 @@
 {
   "name": "@mmzaini/wise-react",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "React components for displaying Wise account details and balances",
   "license": "MIT",
   "author": "MMZaini",

@@ -486,9 +486,13 @@ class TransfersClient:
         self, *, transfer_id: int, request_options: typing.Optional[RequestOptions] = None
     ) -> GetPayoutInfoTransfersResponse:
         """
-        Fetch banking reference information for transfers that are in `outgoing_payment_sent` status, enabling you to track transfers with the transfer recipient's bank.
+        Fetch banking reference information for transfers that are in `outgoing_payment_sent` status. Enables you to track transfers with the transfer recipient's bank.
 
-        It may take up to 3 days to get the correct information through this endpoint, as some partners don't share the information until 3 days later.
+        {% admonition type="warning" %}
+        Querying this endpoint too soon after transfer creation may result in a `404` error.
+
+        We recommend relying on the [transfer state change webhook](/api-reference/webhook-event/eventtransfersstatechange) to inform you when the transfer state has changed to `outgoing_payment_sent`. In most cases this takes only a few seconds. However, some regions and banking partners can take longer.
+        {% /admonition %}
 
         Parameters
         ----------
@@ -1169,9 +1173,13 @@ class AsyncTransfersClient:
         self, *, transfer_id: int, request_options: typing.Optional[RequestOptions] = None
     ) -> GetPayoutInfoTransfersResponse:
         """
-        Fetch banking reference information for transfers that are in `outgoing_payment_sent` status, enabling you to track transfers with the transfer recipient's bank.
+        Fetch banking reference information for transfers that are in `outgoing_payment_sent` status. Enables you to track transfers with the transfer recipient's bank.
 
-        It may take up to 3 days to get the correct information through this endpoint, as some partners don't share the information until 3 days later.
+        {% admonition type="warning" %}
+        Querying this endpoint too soon after transfer creation may result in a `404` error.
+
+        We recommend relying on the [transfer state change webhook](/api-reference/webhook-event/eventtransfersstatechange) to inform you when the transfer state has changed to `outgoing_payment_sent`. In most cases this takes only a few seconds. However, some regions and banking partners can take longer.
+        {% /admonition %}
 
         Parameters
         ----------

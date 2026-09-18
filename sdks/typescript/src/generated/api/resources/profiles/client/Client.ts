@@ -208,7 +208,7 @@ export class ProfilesClient {
      * This request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.
      * {% /admonition %}
      *
-     * See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+     * See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair - supplying both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
      *
      * @param {Wise.CreateBusinessProfilesRequest} request
      * @param {ProfilesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -294,14 +294,14 @@ export class ProfilesClient {
     public createBusiness(
         request: Wise.CreateBusinessProfilesRequest = {},
         requestOptions?: ProfilesClient.RequestOptions,
-    ): core.HttpResponsePromise<Wise.BusinessProfileIndustryCategories> {
+    ): core.HttpResponsePromise<Wise.BusinessProfile> {
         return core.HttpResponsePromise.fromPromise(this.__createBusiness(request, requestOptions));
     }
 
     private async __createBusiness(
         request: Wise.CreateBusinessProfilesRequest = {},
         requestOptions?: ProfilesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wise.BusinessProfileIndustryCategories>> {
+    ): Promise<core.WithRawResponse<Wise.BusinessProfile>> {
         const { "X-idempotence-uuid": idempotenceUuid, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -333,10 +333,7 @@ export class ProfilesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wise.BusinessProfileIndustryCategories,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wise.BusinessProfile, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -529,7 +526,7 @@ export class ProfilesClient {
      *
      * Where permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).
      *
-     * See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+     * See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair, changing both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
      *
      * @param {Wise.UpdateBusinessProfilesRequest} request
      * @param {ProfilesClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -546,14 +543,14 @@ export class ProfilesClient {
     public updateBusiness(
         request: Wise.UpdateBusinessProfilesRequest,
         requestOptions?: ProfilesClient.RequestOptions,
-    ): core.HttpResponsePromise<Wise.BusinessProfileIndustryCategories> {
+    ): core.HttpResponsePromise<Wise.BusinessProfile> {
         return core.HttpResponsePromise.fromPromise(this.__updateBusiness(request, requestOptions));
     }
 
     private async __updateBusiness(
         request: Wise.UpdateBusinessProfilesRequest,
         requestOptions?: ProfilesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wise.BusinessProfileIndustryCategories>> {
+    ): Promise<core.WithRawResponse<Wise.BusinessProfile>> {
         const { profileId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -584,10 +581,7 @@ export class ProfilesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wise.BusinessProfileIndustryCategories,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wise.BusinessProfile, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {

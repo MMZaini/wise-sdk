@@ -10,6 +10,7 @@ MessageSubmissionResponseType = typing.Union[
         "RECIPIENT_SANCTION_HIT_SUBMISSION",
         "REFERENCE_LOCATION_HIT_SUBMISSION",
         "RECIPIENT_LOCATION_HIT_SUBMISSION",
+        "FILE_SUBMISSION",
     ],
     typing.Any,
 ]

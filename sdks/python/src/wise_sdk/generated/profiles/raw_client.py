@@ -15,7 +15,7 @@ from ..errors.bad_request_error import BadRequestError
 from ..errors.too_many_requests_error import TooManyRequestsError
 from ..errors.unprocessable_entity_error import UnprocessableEntityError
 from ..profile.types.profile import Profile
-from ..types.business_profile_industry_categories import BusinessProfileIndustryCategories
+from ..types.business_profile import BusinessProfile
 from .types.check_verification_status_profiles_response import CheckVerificationStatusProfilesResponse
 from .types.create_business_profiles_request_address import CreateBusinessProfilesRequestAddress
 from .types.create_business_profiles_request_business_representative import (
@@ -268,13 +268,15 @@ class RawProfilesClient:
         external_customer_id: typing.Optional[str] = OMIT,
         actor_email: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         business_representative: typing.Optional[CreateBusinessProfilesRequestBusinessRepresentative] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[BusinessProfileIndustryCategories]:
+    ) -> HttpResponse[BusinessProfile]:
         """
         Creates the business profile and its authorized representative in a single request.
 
@@ -282,7 +284,7 @@ class RawProfilesClient:
         This request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.
         {% /admonition %}
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair - supplying both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -328,6 +330,12 @@ class RawProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -343,7 +351,7 @@ class RawProfilesClient:
 
         Returns
         -------
-        HttpResponse[BusinessProfileIndustryCategories]
+        HttpResponse[BusinessProfile]
             Created business profile.
         """
         _request_options_with_retries_disabled: typing.Optional[RequestOptions] = (
@@ -369,6 +377,8 @@ class RawProfilesClient:
                 "externalCustomerId": external_customer_id,
                 "actorEmail": actor_email,
                 "industryCategories": industry_categories,
+                "firstLevelCategory": first_level_category,
+                "secondLevelCategory": second_level_category,
                 "operationalAddresses": convert_and_respect_annotation_metadata(
                     object_=operational_addresses,
                     annotation=typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem],
@@ -391,9 +401,9 @@ class RawProfilesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    BusinessProfileIndustryCategories,
+                    BusinessProfile,
                     parse_obj_as(
-                        type_=BusinessProfileIndustryCategories,  # type: ignore
+                        type_=BusinessProfile,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -611,12 +621,14 @@ class RawProfilesClient:
         company_role: typing.Optional[UpdateBusinessProfilesRequestCompanyRole] = OMIT,
         external_customer_id: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[BusinessProfileIndustryCategories]:
+    ) -> HttpResponse[BusinessProfile]:
         """
         Update user profile information for a business profile.
 
@@ -626,7 +638,7 @@ class RawProfilesClient:
 
         Where permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair, changing both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -671,6 +683,12 @@ class RawProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -683,7 +701,7 @@ class RawProfilesClient:
 
         Returns
         -------
-        HttpResponse[BusinessProfileIndustryCategories]
+        HttpResponse[BusinessProfile]
             Updated business profile.
         """
         _request_options_with_retries_disabled: typing.Optional[RequestOptions] = (
@@ -709,6 +727,8 @@ class RawProfilesClient:
                 "companyRole": company_role,
                 "externalCustomerId": external_customer_id,
                 "industryCategories": industry_categories,
+                "firstLevelCategory": first_level_category,
+                "secondLevelCategory": second_level_category,
                 "operationalAddresses": convert_and_respect_annotation_metadata(
                     object_=operational_addresses,
                     annotation=typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem],
@@ -725,9 +745,9 @@ class RawProfilesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    BusinessProfileIndustryCategories,
+                    BusinessProfile,
                     parse_obj_as(
-                        type_=BusinessProfileIndustryCategories,  # type: ignore
+                        type_=BusinessProfile,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -954,7 +974,9 @@ class RawProfilesClient:
             Document type.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.
@@ -972,13 +994,13 @@ class RawProfilesClient:
             2 characters ISO country code.
 
         employer_name : typing.Optional[str]
-            The name of the employer. Type must be EMIRATES_EMPLOYER.
+            The name of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_city : typing.Optional[str]
-            The city of the employer. Type must be EMIRATES_EMPLOYER.
+            The city of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_country : typing.Optional[str]
-            2 characters ISO country code. Type must be EMIRATES_EMPLOYER.
+            2 characters ISO country code. Type must be `EMIRATES_EMPLOYER`.
 
         birth_city : typing.Optional[str]
             The city of birth of the customer.
@@ -1111,7 +1133,9 @@ class RawProfilesClient:
             Person last name in document.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.
@@ -1599,13 +1623,15 @@ class AsyncRawProfilesClient:
         external_customer_id: typing.Optional[str] = OMIT,
         actor_email: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         business_representative: typing.Optional[CreateBusinessProfilesRequestBusinessRepresentative] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[BusinessProfileIndustryCategories]:
+    ) -> AsyncHttpResponse[BusinessProfile]:
         """
         Creates the business profile and its authorized representative in a single request.
 
@@ -1613,7 +1639,7 @@ class AsyncRawProfilesClient:
         This request accepts an optional field in the header, `X-idempotence-uuid`. This should be unique for each Profile you create. In the event that the request fails, you should use the same value again when retrying. If the `X-idempotence-uuid` header is not provided and a Profile already exists, then you will receive a response with an HTTP status code `409`.
         {% /admonition %}
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair - supplying both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -1659,6 +1685,12 @@ class AsyncRawProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](/guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -1674,7 +1706,7 @@ class AsyncRawProfilesClient:
 
         Returns
         -------
-        AsyncHttpResponse[BusinessProfileIndustryCategories]
+        AsyncHttpResponse[BusinessProfile]
             Created business profile.
         """
         _request_options_with_retries_disabled: typing.Optional[RequestOptions] = (
@@ -1700,6 +1732,8 @@ class AsyncRawProfilesClient:
                 "externalCustomerId": external_customer_id,
                 "actorEmail": actor_email,
                 "industryCategories": industry_categories,
+                "firstLevelCategory": first_level_category,
+                "secondLevelCategory": second_level_category,
                 "operationalAddresses": convert_and_respect_annotation_metadata(
                     object_=operational_addresses,
                     annotation=typing.Sequence[CreateBusinessProfilesRequestOperationalAddressesItem],
@@ -1722,9 +1756,9 @@ class AsyncRawProfilesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    BusinessProfileIndustryCategories,
+                    BusinessProfile,
                     parse_obj_as(
-                        type_=BusinessProfileIndustryCategories,  # type: ignore
+                        type_=BusinessProfile,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1944,12 +1978,14 @@ class AsyncRawProfilesClient:
         company_role: typing.Optional[UpdateBusinessProfilesRequestCompanyRole] = OMIT,
         external_customer_id: typing.Optional[str] = OMIT,
         industry_categories: typing.Optional[typing.Sequence[str]] = OMIT,
+        first_level_category: typing.Optional[str] = OMIT,
+        second_level_category: typing.Optional[str] = OMIT,
         operational_addresses: typing.Optional[
             typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]
         ] = OMIT,
         webpage: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[BusinessProfileIndustryCategories]:
+    ) -> AsyncHttpResponse[BusinessProfile]:
         """
         Update user profile information for a business profile.
 
@@ -1959,7 +1995,7 @@ class AsyncRawProfilesClient:
 
         Where permitted, use the update window functionality by [opening the update window](/api-reference/profile/profileupdatewindowopen), submitting the updated information using this endpoint, and finally [closing the update window](/api-reference/profile/profileupdatewindowclose).
 
-        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values, and [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories) if you are moving from a previous version of this endpoint.
+        See [Business Categories](/guides/product/kyc/business-categories) for the list of valid `industryCategories` values. Send either `industryCategories` or the deprecated `firstLevelCategory`/`secondLevelCategory` pair, changing both in one request returns a `400`. If you currently send the legacy fields, see [Migrating to industry categories](/guides/product/kyc/migrate-business-profile-industry-categories).
 
         Parameters
         ----------
@@ -2004,6 +2040,12 @@ class AsyncRawProfilesClient:
         industry_categories : typing.Optional[typing.Sequence[str]]
             One or more industry categories classifying the business. See [Business Categories](guides/product/kyc/business-categories) for the full list of valid values.
 
+        first_level_category : typing.Optional[str]
+            Legacy primary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
+        second_level_category : typing.Optional[str]
+            Legacy secondary [business category](/guides/product/kyc/business-categories). Use `industryCategories` instead. Cannot be combined with `industryCategories`.
+
         operational_addresses : typing.Optional[typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem]]
             List of operational addresses.
 
@@ -2016,7 +2058,7 @@ class AsyncRawProfilesClient:
 
         Returns
         -------
-        AsyncHttpResponse[BusinessProfileIndustryCategories]
+        AsyncHttpResponse[BusinessProfile]
             Updated business profile.
         """
         _request_options_with_retries_disabled: typing.Optional[RequestOptions] = (
@@ -2042,6 +2084,8 @@ class AsyncRawProfilesClient:
                 "companyRole": company_role,
                 "externalCustomerId": external_customer_id,
                 "industryCategories": industry_categories,
+                "firstLevelCategory": first_level_category,
+                "secondLevelCategory": second_level_category,
                 "operationalAddresses": convert_and_respect_annotation_metadata(
                     object_=operational_addresses,
                     annotation=typing.Sequence[UpdateBusinessProfilesRequestOperationalAddressesItem],
@@ -2058,9 +2102,9 @@ class AsyncRawProfilesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    BusinessProfileIndustryCategories,
+                    BusinessProfile,
                     parse_obj_as(
-                        type_=BusinessProfileIndustryCategories,  # type: ignore
+                        type_=BusinessProfile,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -2287,7 +2331,9 @@ class AsyncRawProfilesClient:
             Document type.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.
@@ -2305,13 +2351,13 @@ class AsyncRawProfilesClient:
             2 characters ISO country code.
 
         employer_name : typing.Optional[str]
-            The name of the employer. Type must be EMIRATES_EMPLOYER.
+            The name of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_city : typing.Optional[str]
-            The city of the employer. Type must be EMIRATES_EMPLOYER.
+            The city of the employer. Type must be `EMIRATES_EMPLOYER`.
 
         employer_country : typing.Optional[str]
-            2 characters ISO country code. Type must be EMIRATES_EMPLOYER.
+            2 characters ISO country code. Type must be `EMIRATES_EMPLOYER`.
 
         birth_city : typing.Optional[str]
             The city of birth of the customer.
@@ -2444,7 +2490,9 @@ class AsyncRawProfilesClient:
             Person last name in document.
 
         unique_identifier : typing.Optional[str]
-            Document number or value. Must be digits only when SSN or FINANCIAL_CAPACITY_BR.
+            Document number or value. Must be digits only for `SSN` or `FINANCIAL_CAPACITY_BR`.
+
+            When using `FINANCIAL_CAPACITY_BR`, the value must contain the financial capacity amount in BRL (Brazilian Real).
 
         issue_date : typing.Optional[str]
             Document issue date.

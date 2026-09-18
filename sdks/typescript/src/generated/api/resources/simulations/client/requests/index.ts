@@ -1,6 +1,7 @@
 export { AddKycRequirementSimulationsRequest } from "./AddKycRequirementSimulationsRequest.js";
 export type { AuthorizeCardTransactionSimulationsRequest } from "./AuthorizeCardTransactionSimulationsRequest.js";
 export type { BankTransactionImportRequest } from "./BankTransactionImportRequest.js";
+export { ChangeSanctionCaseStateSimulationsRequest } from "./ChangeSanctionCaseStateSimulationsRequest.js";
 export type { ChangeTransferStateSimulationsRequest } from "./ChangeTransferStateSimulationsRequest.js";
 export type { ClearCardTransactionSimulationsRequest } from "./ClearCardTransactionSimulationsRequest.js";
 export type { CreateCardTransactionsSimulationsRequest } from "./CreateCardTransactionsSimulationsRequest.js";
