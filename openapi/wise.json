@@ -14420,22 +14420,6 @@
                       ]
                     }
                   },
-                  "filesNotUploadedByYou": {
-                    "summary": "Files were not uploaded by you",
-                    "value": {
-                      "type": "/errors/types/validation",
-                      "title": "Validation Error",
-                      "status": 400,
-                      "instance": "/public/v2/cases/12345678/messages",
-                      "errors": [
-                        {
-                          "code": "invalid_value",
-                          "ref": "fileIds",
-                          "detail": "One or more files were not created by the Partner"
-                        }
-                      ]
-                    }
-                  },
                   "invalidSanctionHitStructure": {
                     "summary": "Invalid sanction hit submission structure",
                     "value": {
@@ -34573,7 +34557,7 @@
       "submission-data-file": {
         "type": "object",
         "title": "FILE_SUBMISSION Submission Data",
-        "description": "Submission data for FILE_SUBMISSION message type.\nUsed to attach previously uploaded files to a case.\n\n**Prerequisites:**\n- Files must be uploaded via `POST /cases/{caseId}/files` before submitting\n- Case must not be in RESOLVED or FAILED status\n- Files must belong to the specified profile\n- Files must have been uploaded by the same partner\n\n**Validation Rules:**\n- `profileId` is REQUIRED\n- `fileIds` is REQUIRED and must not be empty\n- `fileIds` must not contain duplicates\n- All file IDs must reference existing files\n- All files must belong to the specified `profileId`\n- All files must have been created by the submitting partner\n",
+        "description": "Submission data for FILE_SUBMISSION message type.\nUsed to attach previously uploaded files to a case.\n\n**Prerequisites:**\n- Files must be uploaded via `POST /cases/{caseId}/files` before submitting\n- Case must not be in RESOLVED or FAILED status\n- Files must belong to the specified profile\n\n**Validation Rules:**\n- `profileId` is REQUIRED\n- `fileIds` is REQUIRED and must not be empty\n- `fileIds` must not contain duplicates\n- All file IDs must reference existing files\n- All files must belong to the specified `profileId`\n",
         "properties": {
           "profileId": {
             "type": "integer",
