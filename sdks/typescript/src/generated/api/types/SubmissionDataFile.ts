@@ -8,7 +8,6 @@
  * - Files must be uploaded via `POST /cases/{caseId}/files` before submitting
  * - Case must not be in RESOLVED or FAILED status
  * - Files must belong to the specified profile
- * - Files must have been uploaded by the same partner
  *
  * **Validation Rules:**
  * - `profileId` is REQUIRED
@@ -16,7 +15,6 @@
  * - `fileIds` must not contain duplicates
  * - All file IDs must reference existing files
  * - All files must belong to the specified `profileId`
- * - All files must have been created by the submitting partner
  */
 export interface SubmissionDataFile {
     /**
